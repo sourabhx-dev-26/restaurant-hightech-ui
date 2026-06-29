@@ -2,1625 +2,954 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>STRATA — Reservation Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Maison — Reserve Your Evening</title>
 <style>
-  :root {
-    --bg-void: #03050F;
-    --bg-deep: #070B1A;
-    --bg-glass: rgba(0, 229, 255, 0.04);
-    --bg-glass-hover: rgba(0, 229, 255, 0.08);
-    --cyan: #00E5FF;
-    --cyan-dim: rgba(0, 229, 255, 0.3);
-    --cyan-glow: rgba(0, 229, 255, 0.15);
-    --gold: #FFD166;
-    --gold-dim: rgba(255, 209, 102, 0.3);
-    --green: #00FF88;
-    --green-dim: rgba(0, 255, 136, 0.2);
-    --white: #F0F4FF;
-    --white-dim: rgba(240, 244, 255, 0.5);
-    --white-muted: rgba(240, 244, 255, 0.25);
-    --border: rgba(0, 229, 255, 0.15);
-    --border-bright: rgba(0, 229, 255, 0.35);
-    --nav-h: 64px;
-    --bar-h: 72px;
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --radius-sm: 8px;
-  }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── TOKENS ── */
+:root {
+  --bg:           #0F0C0A;
+  --bg-mid:       #161210;
+  --bg-card:      #1C1714;
+  --bg-input:     #221E1B;
+  --burgundy:     #7C2D3E;
+  --burgundy-lt:  #A3405A;
+  --amber:        #C8873A;
+  --amber-lt:     #E0A055;
+  --rose:         #E8C4B0;
+  --cream:        #F7EDE4;
+  --text:         #F0E6DC;
+  --text-mid:     #B8A99A;
+  --text-dim:     #6E5E54;
+  --border:       rgba(200,135,58,0.15);
+  --border-warm:  rgba(200,135,58,0.30);
+  --shadow:       rgba(0,0,0,0.5);
+  --r-sm:  10px;
+  --r-md:  18px;
+  --r-lg:  26px;
+  --r-xl:  36px;
+  --ease:  cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-  html { scroll-behavior: smooth; font-size: 16px; }
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 
-  body {
-    background: var(--bg-void);
-    color: var(--white);
-    font-family: 'Courier New', 'SF Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-    padding-top: var(--nav-h);
-    padding-bottom: var(--bar-h);
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* ═══════════════════════════════════════════
-     CYBER GRID BACKGROUND
-  ═══════════════════════════════════════════ */
-  #cyberCanvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.5;
-  }
+/* ── AMBIENT BACKGROUND ── */
+.bg-wrap {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.bg-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+}
+.bg-orb-1 {
+  width: 480px; height: 480px; top: -120px; left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(124,45,62,0.28) 0%, transparent 70%);
+  animation: orbDrift1 14s ease-in-out infinite alternate;
+}
+.bg-orb-2 {
+  width: 320px; height: 320px; bottom: 10%; right: -80px;
+  background: radial-gradient(circle, rgba(200,135,58,0.14) 0%, transparent 70%);
+  animation: orbDrift2 18s ease-in-out infinite alternate;
+}
+.bg-orb-3 {
+  width: 240px; height: 240px; bottom: 30%; left: -60px;
+  background: radial-gradient(circle, rgba(124,45,62,0.12) 0%, transparent 70%);
+  animation: orbDrift3 22s ease-in-out infinite alternate;
+}
+@keyframes orbDrift1 { 0%{transform:translateX(-55%) scale(1)} 100%{transform:translateX(-45%) scale(1.12)} }
+@keyframes orbDrift2 { 0%{transform:scale(1) translate(0,0)} 100%{transform:scale(1.2) translate(-20px,-30px)} }
+@keyframes orbDrift3 { 0%{transform:scale(1)} 100%{transform:scale(1.15) translate(20px, -20px)} }
 
-  .aurora {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .aurora::before {
-    content: '';
-    position: absolute;
-    width: 800px; height: 800px;
-    top: -200px; left: -200px;
-    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
-    animation: auroraDrift 12s ease-in-out infinite alternate;
-  }
-  .aurora::after {
-    content: '';
-    position: absolute;
-    width: 600px; height: 600px;
-    bottom: -100px; right: -100px;
-    background: radial-gradient(circle, rgba(255,209,102,0.06) 0%, transparent 70%);
-    animation: auroraDrift2 15s ease-in-out infinite alternate;
-  }
-  @keyframes auroraDrift {
-    from { transform: translate(0, 0) scale(1); }
-    to   { transform: translate(120px, 80px) scale(1.3); }
-  }
-  @keyframes auroraDrift2 {
-    from { transform: translate(0, 0) scale(1.1); }
-    to   { transform: translate(-80px, -60px) scale(0.9); }
-  }
+/* ── PARTICLES ── */
+.particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sp {
+  position: absolute; border-radius: 50%; opacity: 0;
+  animation: floatUp var(--d, 12s) var(--dl, 0s) ease-in-out infinite;
+}
+@keyframes floatUp {
+  0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+  15%  { opacity: var(--op, 0.35); }
+  85%  { opacity: var(--op, 0.2); }
+  100% { opacity: 0; transform: translateY(-90vh) scale(1); }
+}
 
-  /* ═══════════════════════════════════════════
-     PAGE LOAD INTRO
-  ═══════════════════════════════════════════ */
-  #introScreen {
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--bg-void);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 20px;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-  }
-  #introScreen.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+/* ── LAYOUT ── */
+.page { position: relative; z-index: 1; }
 
-  .intro-logo {
-    font-size: clamp(40px, 10vw, 72px);
-    font-weight: 900;
-    letter-spacing: 0.2em;
-    color: var(--cyan);
-    text-shadow: 0 0 40px var(--cyan), 0 0 80px rgba(0,229,255,0.4);
-    animation: logoPulse 1.5s ease infinite alternate;
-  }
-  @keyframes logoPulse {
-    from { text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,229,255,0.3); }
-    to   { text-shadow: 0 0 60px var(--cyan), 0 0 120px rgba(0,229,255,0.5); }
-  }
-  .intro-bar-wrap {
-    width: min(280px, 70vw);
-    height: 3px;
-    background: rgba(0,229,255,0.15);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .intro-bar {
-    height: 100%;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    animation: introScan 1.8s ease forwards;
-    width: 0;
-  }
-  @keyframes introScan {
-    0%   { width: 0; opacity: 1; }
-    80%  { width: 100%; opacity: 1; }
-    100% { width: 100%; opacity: 0; }
-  }
-  .intro-text {
-    font-size: 11px;
-    letter-spacing: 0.3em;
-    color: var(--cyan-dim);
-    animation: blink 0.8s step-start infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 22px;
+  background: rgba(15,12,10,0.75);
+  backdrop-filter: blur(24px) saturate(160%);
+  border-bottom: 1px solid rgba(200,135,58,0.08);
+  animation: navIn 0.7s var(--ease) both;
+}
+@keyframes navIn { from{opacity:0;transform:translateY(-100%)} to{opacity:1;transform:translateY(0)} }
 
-  /* ═══════════════════════════════════════════
-     NAVIGATION
-  ═══════════════════════════════════════════ */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    height: var(--nav-h);
-    z-index: 100;
-    display: flex; align-items: center;
-    padding: 0 clamp(16px, 4vw, 32px);
-    background: rgba(3, 5, 15, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-  }
-  .nav-logo {
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 0.25em;
-    color: var(--cyan);
-    text-shadow: 0 0 20px var(--cyan);
-    flex-shrink: 0;
-  }
-  .nav-divider {
-    width: 1px; height: 24px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-  .nav-title {
-    font-size: clamp(10px, 2.5vw, 13px);
-    letter-spacing: 0.15em;
-    color: var(--white-dim);
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .nav-status {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 10px; letter-spacing: 0.2em;
-    color: var(--green);
-    flex-shrink: 0;
-  }
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 8px var(--green);
-    animation: statusPulse 2s ease infinite;
-  }
-  @keyframes statusPulse {
-    0%, 100% { box-shadow: 0 0 6px var(--green); transform: scale(1); }
-    50%       { box-shadow: 0 0 16px var(--green); transform: scale(1.2); }
-  }
+.nav-left {}
+.nav-logo {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--cream);
+  line-height: 1;
+}
+.nav-sub {
+  font-size: 10px; color: var(--text-dim); letter-spacing: 0.10em;
+  text-transform: uppercase; margin-top: 1px;
+}
+.nav-status {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 13px; border-radius: 100px;
+  background: rgba(200,135,58,0.10);
+  border: 1px solid rgba(200,135,58,0.22);
+  font-size: 11px; font-weight: 600; color: var(--amber-lt);
+  letter-spacing: 0.05em;
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+  animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* ═══════════════════════════════════════════
-     SIGNAL BARS
-  ═══════════════════════════════════════════ */
-  .signal-bars {
-    display: flex; align-items: flex-end; gap: 2px; height: 16px;
-    flex-shrink: 0;
-  }
-  .signal-bars span {
-    width: 3px; border-radius: 1px;
-    background: var(--cyan);
-    animation: signalAnim 1.4s ease infinite;
-  }
-  .signal-bars span:nth-child(1) { height: 4px;  animation-delay: 0s; }
-  .signal-bars span:nth-child(2) { height: 7px;  animation-delay: 0.2s; }
-  .signal-bars span:nth-child(3) { height: 11px; animation-delay: 0.4s; }
-  .signal-bars span:nth-child(4) { height: 16px; animation-delay: 0.6s; }
-  @keyframes signalAnim {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
-  }
+/* ── HERO ── */
+#hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 28px 80px;
+  text-align: center;
+  gap: 0;
+}
 
-  /* ═══════════════════════════════════════════
-     MAIN WRAPPER
-  ═══════════════════════════════════════════ */
-  .page-wrap {
-    position: relative; z-index: 1;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 0 clamp(14px, 4vw, 24px);
-  }
+.hero-kicker {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--amber); font-weight: 600; margin-bottom: 22px;
+  opacity: 0; animation: riseIn 0.7s 0.5s var(--ease) forwards;
+}
 
-  /* ═══════════════════════════════════════════
-     HERO SECTION
-  ═══════════════════════════════════════════ */
-  .hero {
-    padding: clamp(32px, 8vw, 56px) 0 clamp(24px, 6vw, 40px);
-    text-align: center;
-  }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 10px; letter-spacing: 0.35em;
-    color: var(--cyan);
-    margin-bottom: 20px;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    background: var(--bg-glass);
-    backdrop-filter: blur(10px);
-  }
-  .hero-eyebrow::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--cyan);
-    box-shadow: 0 0 8px var(--cyan);
-    animation: statusPulse 2s ease infinite;
-  }
-  .hero-h1 {
-    font-size: clamp(30px, 9vw, 52px);
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin-bottom: 14px;
-    background: linear-gradient(135deg, var(--white) 0%, var(--cyan) 50%, var(--gold) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .hero-sub {
-    font-size: clamp(12px, 3vw, 15px);
-    color: var(--white-muted);
-    line-height: 1.7;
-    letter-spacing: 0.05em;
-    max-width: 380px;
-    margin: 0 auto 32px;
-  }
+.hero-headline {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(36px, 10vw, 56px);
+  font-weight: 700; line-height: 1.15; letter-spacing: -0.01em;
+  color: var(--cream); margin-bottom: 20px;
+  opacity: 0; animation: riseIn 0.8s 0.65s var(--ease) forwards;
+}
+.hero-headline em {
+  font-style: italic; color: var(--rose);
+  background: linear-gradient(135deg, var(--rose), var(--amber-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
 
-  /* ═══════════════════════════════════════════
-     ANIMATED CAPSULE TICKET (Hero Visual)
-  ═══════════════════════════════════════════ */
-  .capsule-wrap {
-    position: relative;
-    margin: 0 auto 8px;
-    max-width: 360px;
-  }
-  .capsule {
-    position: relative;
-    background: linear-gradient(135deg,
-      rgba(0,229,255,0.07) 0%,
-      rgba(255,209,102,0.05) 50%,
-      rgba(0,229,255,0.04) 100%);
-    border: 1px solid var(--border-bright);
-    border-radius: 20px;
-    padding: 20px 20px 18px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    overflow: hidden;
-    animation: capsuleFloat 4s ease-in-out infinite alternate;
-    box-shadow:
-      0 0 0 1px rgba(0,229,255,0.08),
-      0 24px 64px rgba(0,0,0,0.6),
-      inset 0 1px 0 rgba(0,229,255,0.2);
-  }
-  @keyframes capsuleFloat {
-    from { transform: translateY(0); }
-    to   { transform: translateY(-10px); }
-  }
+.hero-desc {
+  font-size: 15px; color: var(--text-mid); line-height: 1.7;
+  max-width: 300px; margin: 0 auto 40px;
+  opacity: 0; animation: riseIn 0.8s 0.8s var(--ease) forwards;
+}
 
-  /* Scanner beam */
-  .capsule::before {
-    content: '';
-    position: absolute;
-    left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    top: -2px;
-    animation: scanBeam 3s linear infinite;
-    box-shadow: 0 0 12px var(--cyan);
-  }
-  @keyframes scanBeam {
-    from { top: -2px; opacity: 0.8; }
-    to   { top: calc(100% + 2px); opacity: 0.4; }
-  }
+/* ── CANDLELIGHT VISUAL ── */
+.candle-wrap {
+  width: 220px; height: 220px; position: relative; margin: 0 auto 44px;
+  opacity: 0; animation: riseIn 1s 0.9s var(--ease) forwards;
+}
+.candle-ring {
+  position: absolute; border-radius: 50%;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+  border: 1px solid transparent;
+}
+.candle-ring-1 {
+  width: 220px; height: 110px; top: 56%;
+  border-color: rgba(200,135,58,0.12);
+  background: radial-gradient(ellipse 60% 40% at 50% 100%, rgba(200,135,58,0.07), transparent);
+  animation: tableGlow 4s ease-in-out infinite alternate;
+}
+.candle-ring-2 {
+  width: 170px; height: 80px; top: 58%;
+  border-color: rgba(200,135,58,0.18);
+  animation: tableGlow 4s 0.5s ease-in-out infinite alternate;
+}
+.candle-ring-3 {
+  width: 120px; height: 55px; top: 60%;
+  border-color: rgba(200,135,58,0.25);
+  animation: tableGlow 4s 1s ease-in-out infinite alternate;
+}
+.candle-ring-4 {
+  width: 70px; height: 32px; top: 63%;
+  border-color: rgba(200,135,58,0.38);
+  animation: tableGlow 4s 1.5s ease-in-out infinite alternate;
+}
+@keyframes tableGlow {
+  0% { opacity: 0.6; transform: translate(-50%,-50%) scaleX(0.95); }
+  100% { opacity: 1; transform: translate(-50%,-50%) scaleX(1.05); }
+}
+.candle-core {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px; height: 42px;
+  background: linear-gradient(180deg, var(--cream) 0%, var(--amber) 60%, rgba(200,135,58,0.2) 100%);
+  border-radius: 2px; margin-top: -12px;
+}
+.candle-flame {
+  position: absolute; left: 50%; bottom: 100%;
+  transform: translateX(-50%);
+  width: 14px; height: 22px;
+  background: radial-gradient(ellipse at 50% 70%, var(--cream) 0%, var(--amber) 35%, rgba(200,135,58,0.4) 75%, transparent 100%);
+  border-radius: 50% 50% 30% 30%;
+  filter: blur(1.5px);
+  animation: flicker 1.8s ease-in-out infinite alternate;
+  box-shadow: 0 0 18px 6px rgba(200,135,58,0.5), 0 0 40px 10px rgba(200,135,58,0.15);
+}
+@keyframes flicker {
+  0%   { transform: translateX(-50%) scaleX(1)   scaleY(1)    skewX(0deg); }
+  25%  { transform: translateX(-52%) scaleX(0.9)  scaleY(1.04) skewX(2deg); }
+  50%  { transform: translateX(-48%) scaleX(1.08) scaleY(0.96) skewX(-1deg); }
+  75%  { transform: translateX(-51%) scaleX(0.95) scaleY(1.02) skewX(1deg); }
+  100% { transform: translateX(-50%) scaleX(1.02) scaleY(1.05) skewX(-2deg); }
+}
+.candle-glow {
+  position: absolute; left: 50%; top: 38%;
+  transform: translate(-50%, -50%);
+  width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,135,58,0.22) 0%, transparent 70%);
+  filter: blur(12px);
+  animation: glowBreath 2.5s ease-in-out infinite alternate;
+}
+@keyframes glowBreath { 0%{opacity:0.6;transform:translate(-50%,-50%) scale(0.9)} 100%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }
 
-  /* Data stream dots */
-  .data-stream {
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 3px;
-    overflow: hidden;
-    opacity: 0.4;
-  }
-  .data-stream::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 30%;
-    background: linear-gradient(to bottom, transparent, var(--cyan), transparent);
-    animation: streamFlow 2s linear infinite;
-  }
-  @keyframes streamFlow {
-    from { top: -30%; }
-    to   { top: 130%; }
-  }
+.candle-plate {
+  position: absolute; left: 50%; bottom: 20%; transform: translateX(-50%);
+  width: 60px; height: 8px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(200,135,58,0.25), transparent 70%);
+  filter: blur(3px);
+}
 
-  .cap-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed rgba(0,229,255,0.2);
-  }
-  .cap-logo-txt {
-    font-size: 14px; font-weight: 900;
-    letter-spacing: 0.2em; color: var(--cyan);
-    text-shadow: 0 0 12px var(--cyan);
-  }
-  .cap-type-badge {
-    font-size: 9px; letter-spacing: 0.2em;
-    padding: 3px 10px;
-    border: 1px solid var(--gold-dim);
-    border-radius: 100px;
-    color: var(--gold);
-    background: rgba(255,209,102,0.06);
-    transition: all 0.4s ease;
-  }
+.hero-cta {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 17px 36px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-lt));
+  color: var(--cream); font-size: 16px; font-weight: 600; letter-spacing: 0.03em;
+  border: none; cursor: pointer;
+  box-shadow: 0 8px 32px rgba(124,45,62,0.45), 0 2px 8px rgba(0,0,0,0.3);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  opacity: 0; animation: riseIn 0.7s 1.1s var(--ease) forwards;
+}
+.hero-cta:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(124,45,62,0.55), 0 4px 12px rgba(0,0,0,0.35); }
+.hero-cta:active { transform: scale(0.97); }
+.cta-shine {
+  position: absolute; inset: 0; left: -100%; width: 50%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+  animation: shine 3.5s 2s ease-in-out infinite;
+}
+@keyframes shine { 0%,60%{left:-100%} 100%{left:180%} }
+.cta-icon { font-size: 18px; }
 
-  .cap-row {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px; margin-bottom: 14px;
-  }
-  .cap-field label {
-    display: block;
-    font-size: 8px; letter-spacing: 0.25em;
-    color: var(--white-muted);
-    margin-bottom: 3px;
-  }
-  .cap-field span {
-    font-size: 13px; font-weight: 700;
-    color: var(--white);
-    letter-spacing: 0.05em;
-    display: block;
-    min-height: 18px;
-    transition: all 0.3s ease;
-  }
-  .cap-field span.filled { color: var(--cyan); }
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .cap-divider-perf {
-    display: flex; align-items: center;
-    margin: 14px 0;
-    gap: 0;
-  }
-  .perf-half {
-    flex: 1; height: 1px;
-    background: repeating-linear-gradient(90deg,
-      rgba(0,229,255,0.25) 0, rgba(0,229,255,0.25) 4px,
-      transparent 4px, transparent 8px);
-  }
-  .perf-circle {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: var(--bg-void);
-    border: 1px solid rgba(0,229,255,0.25);
-    flex-shrink: 0;
-  }
+/* ── BOOKING TYPE ── */
+#booking-type {
+  padding: 48px 22px 36px;
+}
+.section-kicker {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--amber); font-weight: 600; text-align: center; margin-bottom: 10px;
+}
+.section-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(24px, 6.5vw, 34px); font-weight: 700; line-height: 1.2;
+  text-align: center; color: var(--cream); letter-spacing: -0.01em;
+  margin-bottom: 32px;
+}
 
-  .cap-bottom {
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .cap-amount-wrap label {
-    display: block;
-    font-size: 8px; letter-spacing: 0.25em;
-    color: var(--white-muted);
-    margin-bottom: 2px;
-  }
-  .cap-amount {
-    font-size: 22px; font-weight: 900;
-    color: var(--gold);
-    text-shadow: 0 0 16px var(--gold-dim);
-    letter-spacing: 0.05em;
-    transition: all 0.4s ease;
-  }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-  /* QR pulse block */
-  .qr-pulse {
-    width: 52px; height: 52px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    display: grid; grid-template-columns: repeat(5, 1fr);
-    gap: 2px; padding: 6px;
-    position: relative; overflow: hidden;
-  }
-  .qr-pulse::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,229,255,0.15), transparent);
-    animation: qrGlow 2s ease infinite alternate;
-  }
-  @keyframes qrGlow {
-    from { opacity: 0.3; }
-    to   { opacity: 1; }
-  }
-  .qr-cell {
-    border-radius: 1px;
-    background: var(--cyan);
-    opacity: 0;
-    animation: qrFlicker 2.5s ease infinite;
-  }
-  .qr-cell:nth-child(odd)  { animation-delay: calc(var(--i) * 0.1s); }
-  .qr-cell:nth-child(even) { background: var(--gold); animation-delay: calc(var(--i) * 0.15s); }
-  @keyframes qrFlicker {
-    0%, 100% { opacity: 0.1; }
-    50%       { opacity: 0.9; }
-  }
+.mode-card {
+  position: relative; border-radius: var(--r-lg); padding: 26px 18px 22px;
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  cursor: pointer; overflow: hidden; user-select: none;
+  transition: border-color 0.35s var(--ease), transform 0.3s var(--ease), box-shadow 0.35s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.mode-card:hover { transform: translateY(-2px); border-color: var(--border-warm); }
+.mode-card.active {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 1px rgba(200,135,58,0.35), 0 12px 40px rgba(200,135,58,0.12);
+}
 
-  /* Moving route line */
-  .route-line {
-    position: absolute;
-    bottom: 0; left: 20px; right: 20px;
-    height: 1px;
-    overflow: hidden;
-  }
-  .route-line::after {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 40%;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    animation: routeMove 2.5s linear infinite;
-  }
-  @keyframes routeMove {
-    from { left: -40%; }
-    to   { left: 140%; }
-  }
+.mode-bg {
+  position: absolute; inset: 0; opacity: 0; border-radius: inherit;
+  background: radial-gradient(ellipse at 30% 0%, rgba(200,135,58,0.12), transparent 65%);
+  transition: opacity 0.5s var(--ease);
+}
+.mode-card.active .mode-bg { opacity: 1; }
 
-  /* ═══════════════════════════════════════════
-     GLASS LAYER PANELS
-  ═══════════════════════════════════════════ */
-  .layers-section {
-    padding: 8px 0 24px;
-  }
-  .layers-title {
-    font-size: 9px; letter-spacing: 0.35em;
-    color: var(--white-muted);
-    margin-bottom: 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .layers-title::after {
-    content: ''; flex: 1; height: 1px;
-    background: var(--border);
-  }
+.mode-icon {
+  font-size: 30px; display: block; margin-bottom: 14px; line-height: 1;
+  transition: transform 0.4s var(--ease);
+}
+.mode-card.active .mode-icon { transform: scale(1.1); }
+.mode-name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px; font-weight: 700; color: var(--cream);
+  margin-bottom: 5px; line-height: 1.2;
+}
+.mode-desc {
+  font-size: 12px; color: var(--text-dim); line-height: 1.5;
+}
+.mode-tick {
+  position: absolute; top: 14px; right: 14px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--amber); display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--bg);
+  opacity: 0; transform: scale(0.5); transition: opacity 0.3s, transform 0.4s var(--ease);
+}
+.mode-card.active .mode-tick { opacity: 1; transform: scale(1); }
 
-  .layers-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .layer-card {
-    background: var(--bg-glass);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 14px 14px 12px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    position: relative;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, background 0.3s;
-  }
-  .layer-card.revealed {
-    opacity: 1; transform: translateY(0);
-  }
-  .layer-card:hover {
-    border-color: var(--border-bright);
-    background: var(--bg-glass-hover);
-  }
-  .layer-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .layer-card:hover::before { opacity: 1; }
+/* ── RESERVATION FORM ── */
+#reservation {
+  padding: 12px 22px 140px;
+}
 
-  .lc-icon {
-    font-size: 18px; margin-bottom: 8px;
-    filter: drop-shadow(0 0 8px var(--cyan));
-  }
-  .lc-name {
-    font-size: 9px; letter-spacing: 0.2em;
-    color: var(--cyan);
-    margin-bottom: 4px;
-  }
-  .lc-desc {
-    font-size: 10px; line-height: 1.5;
-    color: var(--white-muted);
-    letter-spacing: 0.03em;
-  }
-  .lc-indicator {
-    display: inline-block;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
-    margin-right: 4px;
-    animation: statusPulse 2s ease infinite;
-  }
-  .lc-status {
-    margin-top: 8px;
-    font-size: 8px; letter-spacing: 0.2em;
-    color: var(--white-muted);
-    display: flex; align-items: center;
-  }
+.form-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r-xl); padding: 30px 24px 28px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+}
 
-  /* ═══════════════════════════════════════════
-     BOOKING MODE CARDS
-  ═══════════════════════════════════════════ */
-  .mode-section { padding: 8px 0 24px; }
-  .section-label {
-    font-size: 9px; letter-spacing: 0.35em;
-    color: var(--white-muted);
-    margin-bottom: 14px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-label::after {
-    content: ''; flex: 1; height: 1px;
-    background: var(--border);
-  }
+.form-header { margin-bottom: 28px; }
+.form-eyebrow {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--amber); font-weight: 600; margin-bottom: 6px;
+}
+.form-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px; font-weight: 700; color: var(--cream); line-height: 1.2;
+}
 
-  .mode-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .mode-card {
-    background: var(--bg-glass);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 20px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .mode-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0,229,255,0.08), transparent);
-    opacity: 0;
-    transition: opacity 0.35s;
-  }
-  .mode-card.active {
-    border-color: var(--cyan);
-    background: rgba(0, 229, 255, 0.08);
-    box-shadow: 0 0 30px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.05);
-  }
-  .mode-card.active::after { opacity: 1; }
-  .mode-card:hover:not(.active) {
-    border-color: var(--border-bright);
-    transform: translateY(-2px);
-  }
-  .mode-card:hover::after { opacity: 0.5; }
+.form-body { display: flex; flex-direction: column; gap: 20px; }
 
-  .mc-icon {
-    font-size: 28px; margin-bottom: 10px;
-    display: block;
-    filter: drop-shadow(0 0 10px currentColor);
-    transition: transform 0.3s;
-  }
-  .mode-card:hover .mc-icon { transform: scale(1.1); }
-  .mc-name {
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 0.15em;
-    color: var(--white);
-    margin-bottom: 4px;
-    display: block;
-  }
-  .mc-sub {
-    font-size: 9px; letter-spacing: 0.1em;
-    color: var(--white-muted);
-    display: block;
-    line-height: 1.4;
-  }
-  .mc-amount {
-    margin-top: 10px;
-    font-size: 13px; font-weight: 900;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    display: block;
-    text-shadow: 0 0 10px var(--gold-dim);
-  }
-  .mc-check {
-    position: absolute; top: 10px; right: 10px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--cyan);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; color: var(--bg-void);
-    font-weight: 900;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 2;
-  }
-  .mode-card.active .mc-check { opacity: 1; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-  /* ═══════════════════════════════════════════
-     RESERVATION FORM
-  ═══════════════════════════════════════════ */
-  .form-section {
-    padding: 8px 0 32px;
-  }
-  .form-capsule {
-    background: linear-gradient(160deg,
-      rgba(0,229,255,0.05) 0%,
-      rgba(255,209,102,0.03) 100%);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px 20px;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    position: relative;
-    overflow: hidden;
-  }
-  .form-capsule::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), transparent);
-  }
+.field label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.field label span { color: var(--burgundy-lt); margin-left: 2px; }
 
-  .field-group {
-    margin-bottom: 16px;
-  }
-  .field-group label {
-    display: block;
-    font-size: 9px; letter-spacing: 0.25em;
-    color: var(--cyan);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-  }
-  .field-group input,
-  .field-group textarea,
-  .field-group select {
-    width: 100%;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    color: var(--white);
-    font-family: inherit;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .field-group select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300E5FF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    cursor: pointer;
-  }
-  .field-group select option {
-    background: #0A0D1A;
-    color: var(--white);
-  }
-  .field-group input:focus,
-  .field-group textarea:focus,
-  .field-group select:focus {
-    border-color: var(--cyan);
-    box-shadow: 0 0 0 3px var(--cyan-glow), 0 0 20px rgba(0,229,255,0.1);
-    background: rgba(0,229,255,0.04);
-  }
-  .field-group input::placeholder,
-  .field-group textarea::placeholder { color: rgba(240,244,255,0.2); }
-  .field-group textarea { min-height: 80px; resize: none; }
+input, select, textarea {
+  width: 100%;
+  background: var(--bg-input); border: 1.5px solid rgba(200,135,58,0.14);
+  border-radius: var(--r-md); color: var(--text); font-family: inherit;
+  font-size: 15px; padding: 14px 16px;
+  outline: none; appearance: none; -webkit-appearance: none;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: rgba(200,135,58,0.55);
+  background: rgba(34,30,27,0.9);
+  box-shadow: 0 0 0 3px rgba(200,135,58,0.12);
+}
+input::placeholder, textarea::placeholder { color: var(--text-dim); }
+select option { background: #1C1714; color: var(--text); }
+textarea { resize: none; height: 88px; line-height: 1.55; }
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.55) sepia(0.3); cursor: pointer; }
+input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(0.55) sepia(0.3); cursor: pointer; }
 
-  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* Hall fields */
+.hall-fields {
+  display: flex; flex-direction: column; gap: 20px;
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height 0.55s var(--ease), opacity 0.4s var(--ease);
+}
+.hall-fields.open { max-height: 300px; opacity: 1; }
 
-  .hall-fields {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-  }
-  .hall-fields.visible {
-    max-height: 400px;
-    opacity: 1;
-  }
+/* Divider */
+.form-divider {
+  display: flex; align-items: center; gap: 12px; margin: 2px 0;
+}
+.form-divider::before, .form-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.form-divider span {
+  font-size: 10px; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase;
+}
 
-  .form-advance-row {
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(255,209,102,0.06);
-    border: 1px solid var(--gold-dim);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    margin-bottom: 20px;
-  }
-  .far-label {
-    font-size: 9px; letter-spacing: 0.2em;
-    color: var(--white-muted);
-  }
-  .far-amount {
-    font-size: 20px; font-weight: 900;
-    color: var(--gold);
-    text-shadow: 0 0 12px var(--gold-dim);
-    letter-spacing: 0.05em;
-    transition: all 0.4s ease;
-  }
+/* Advance row */
+.advance-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(200,135,58,0.06); border: 1px solid rgba(200,135,58,0.20);
+  border-radius: var(--r-md); padding: 17px 18px;
+}
+.advance-label { font-size: 13px; color: var(--text-mid); }
+.advance-label strong { display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; margin-bottom: 2px; }
+.advance-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 26px; font-weight: 700; letter-spacing: -0.01em;
+  color: var(--amber-lt);
+}
 
-  /* Submit button */
-  .btn-submit {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(0,229,255,0.1));
-    border: 1px solid var(--cyan);
-    border-radius: var(--radius-md);
-    color: var(--cyan);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .btn-submit::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-    animation: btnShine 3s linear infinite;
-  }
-  @keyframes btnShine {
-    from { left: -60%; }
-    to   { left: 160%; }
-  }
-  .btn-submit:hover {
-    background: rgba(0,229,255,0.2);
-    box-shadow: 0 0 30px rgba(0,229,255,0.3);
-    transform: translateY(-1px);
-  }
-  .btn-submit:active { transform: translateY(0); }
+/* Submit */
+.submit-btn {
+  width: 100%; position: relative; overflow: hidden;
+  padding: 18px 24px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-lt) 100%);
+  color: var(--cream); font-size: 16px; font-weight: 600; letter-spacing: 0.04em;
+  border: none; cursor: pointer;
+  box-shadow: 0 8px 28px rgba(124,45,62,0.4);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  -webkit-tap-highlight-color: transparent; margin-top: 6px;
+}
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(124,45,62,0.5); }
+.submit-btn:active { transform: scale(0.98); }
+.submit-btn-shine {
+  position: absolute; inset: 0; left: -100%; width: 50%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  animation: shine 4s 3s ease-in-out infinite;
+}
 
-  /* ═══════════════════════════════════════════
-     PAYMENT MODAL
-  ═══════════════════════════════════════════ */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    z-index: 500;
-    background: rgba(3, 5, 15, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    display: flex; align-items: flex-end; justify-content: center;
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
-  }
-  .modal-overlay.open {
-    opacity: 1; visibility: visible;
-  }
-  .modal {
-    width: 100%;
-    max-width: 500px;
-    background: linear-gradient(160deg, #0A0F22 0%, #07090F 100%);
-    border: 1px solid var(--border-bright);
-    border-bottom: none;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: 28px 24px 40px;
-    position: relative;
-    overflow: hidden;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .modal-overlay.open .modal {
-    transform: translateY(0);
-  }
-  .modal::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  }
-  .modal-handle {
-    width: 40px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 0 auto 24px;
-  }
-  .modal-title {
-    font-size: 11px; letter-spacing: 0.3em;
-    color: var(--cyan);
-    margin-bottom: 6px;
-    text-align: center;
-  }
-  .modal-amount-big {
-    font-size: clamp(36px, 9vw, 48px);
-    font-weight: 900;
-    color: var(--gold);
-    text-align: center;
-    text-shadow: 0 0 30px var(--gold-dim);
-    margin-bottom: 4px;
-    letter-spacing: 0.05em;
-  }
-  .modal-desc {
-    font-size: 10px; letter-spacing: 0.15em;
-    color: var(--white-muted);
-    text-align: center;
-    margin-bottom: 28px;
-  }
+/* ── BOTTOM BAR ── */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  background: rgba(15,12,10,0.92);
+  backdrop-filter: blur(28px) saturate(160%);
+  border-top: 1px solid rgba(200,135,58,0.12);
+  box-shadow: 0 -16px 40px rgba(0,0,0,0.4);
+  animation: barUp 0.7s 1.3s var(--ease) both;
+}
+@keyframes barUp { from{opacity:0;transform:translateY(100%)} to{opacity:1;transform:translateY(0)} }
 
-  .mock-payment-box {
-    background: rgba(0,0,0,0.3);
-    border: 1px dashed var(--border);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .mpb-label {
-    font-size: 9px; letter-spacing: 0.25em;
-    color: var(--white-muted);
-    margin-bottom: 8px;
-  }
-  .mpb-methods {
-    display: flex; justify-content: center; gap: 12px;
-    flex-wrap: wrap;
-  }
-  .mpb-method {
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 10px; letter-spacing: 0.1em;
-    color: var(--white-dim);
-    background: rgba(0,229,255,0.04);
-  }
+.bar-info { flex: 1; min-width: 0; }
+.bar-mode {
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-dim); margin-bottom: 1px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bar-amount {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 22px; font-weight: 700; color: var(--amber-lt); line-height: 1.1;
+}
+.bar-btn {
+  flex-shrink: 0; padding: 13px 24px; border-radius: 100px;
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-lt));
+  color: var(--cream); font-size: 15px; font-weight: 600; letter-spacing: 0.03em;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(124,45,62,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent; white-space: nowrap;
+}
+.bar-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 26px rgba(124,45,62,0.5); }
+.bar-btn:active { transform: scale(0.97); }
 
-  .btn-pay {
-    width: 100%;
-    padding: 17px;
-    background: linear-gradient(135deg, var(--cyan) 0%, rgba(0,200,230,0.8) 100%);
-    border: none;
-    border-radius: var(--radius-md);
-    color: var(--bg-void);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 0.25em;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    box-shadow: 0 8px 32px rgba(0,229,255,0.25);
-  }
-  .btn-pay:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 48px rgba(0,229,255,0.35);
-  }
-  .btn-pay:active { transform: translateY(0); }
-  .btn-pay.loading {
-    pointer-events: none;
-    opacity: 0.7;
-  }
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(8,6,5,0.82); backdrop-filter: blur(6px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.4s var(--ease);
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
 
-  .btn-modal-close {
-    display: block; width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    background: none; border: none;
-    color: var(--white-muted);
-    font-family: inherit;
-    font-size: 10px; letter-spacing: 0.2em;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .btn-modal-close:hover { color: var(--white); }
+.modal-sheet {
+  width: 100%; max-width: 480px;
+  background: var(--bg-card); border: 1px solid var(--border-warm);
+  border-radius: 32px 32px 0 0; padding: 8px 26px calc(42px + env(safe-area-inset-bottom));
+  transform: translateY(100%); transition: transform 0.5s var(--ease);
+  position: relative; overflow: hidden;
+}
+.modal-overlay.open .modal-sheet { transform: translateY(0); }
 
-  /* ═══════════════════════════════════════════
-     SUCCESS TOAST
-  ═══════════════════════════════════════════ */
-  .toast {
-    position: fixed;
-    top: calc(var(--nav-h) + 12px);
-    left: 50%; transform: translateX(-50%) translateY(-20px);
-    z-index: 600;
-    background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.08));
-    border: 1px solid rgba(0,255,136,0.4);
-    border-radius: 100px;
-    padding: 12px 24px;
-    display: flex; align-items: center; gap: 10px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    pointer-events: none;
-    max-width: calc(100vw - 32px);
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast-icon {
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-  .toast-text {
-    font-size: 11px; letter-spacing: 0.15em;
-    color: var(--green);
-    font-weight: 700;
-  }
+.modal-handle {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: rgba(200,135,58,0.25); margin: 16px auto 28px;
+}
 
-  /* ═══════════════════════════════════════════
-     STICKY BOTTOM BAR
-  ═══════════════════════════════════════════ */
-  .bottom-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(3, 5, 15, 0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    padding: 12px clamp(16px, 4vw, 24px);
-    display: flex; align-items: center; gap: 14px;
-  }
-  .bb-info {
-    flex: 1;
-    min-width: 0;
-  }
-  .bb-mode {
-    font-size: 9px; letter-spacing: 0.2em;
-    color: var(--white-muted);
-    margin-bottom: 2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .bb-amount {
-    font-size: 18px; font-weight: 900;
-    color: var(--gold);
-    letter-spacing: 0.05em;
-    text-shadow: 0 0 12px var(--gold-dim);
-    line-height: 1;
-  }
-  .bb-btn {
-    flex-shrink: 0;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(0,229,255,0.08));
-    border: 1px solid var(--cyan);
-    border-radius: var(--radius-md);
-    color: var(--cyan);
-    font-family: inherit;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .bb-btn::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%; width: 60%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: btnShine 2.5s linear infinite;
-  }
-  .bb-btn:hover {
-    background: rgba(0,229,255,0.2);
-    box-shadow: 0 0 20px rgba(0,229,255,0.25);
-  }
+/* Flame visual in modal */
+.modal-flame-wrap {
+  width: 80px; height: 80px; position: relative; margin: 0 auto 24px;
+}
+.modal-flame-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(200,135,58,0.25);
+  animation: ringPulse 2.5s ease-in-out infinite alternate;
+}
+.modal-flame-ring-2 {
+  inset: 10px; border-color: rgba(200,135,58,0.4);
+  animation: ringPulse 2.5s 0.4s ease-in-out infinite alternate;
+}
+@keyframes ringPulse { 0%{opacity:0.4;transform:scale(0.95)} 100%{opacity:1;transform:scale(1.05)} }
+.modal-flame-inner {
+  position: absolute; inset: 20px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,135,58,0.55), rgba(124,45,62,0.3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  animation: glowBreath 2s ease-in-out infinite alternate;
+}
 
-  /* ═══════════════════════════════════════════
-     SCROLL REVEAL
-  ═══════════════════════════════════════════ */
-  .reveal {
-    opacity: 0; transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.visible { opacity: 1; transform: none; }
+.modal-badge-row { display: flex; justify-content: center; margin-bottom: 8px; }
+.modal-badge {
+  padding: 5px 14px; border-radius: 100px;
+  background: rgba(200,135,58,0.12); border: 1px solid rgba(200,135,58,0.3);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--amber-lt);
+  text-transform: uppercase;
+}
+.modal-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 26px; font-weight: 700; text-align: center; color: var(--cream);
+  letter-spacing: -0.01em; margin-bottom: 6px;
+}
+.modal-desc {
+  font-size: 13px; color: var(--text-mid); text-align: center; margin-bottom: 28px; line-height: 1.6;
+}
 
-  /* ═══════════════════════════════════════════
-     SCROLLBAR
-  ═══════════════════════════════════════════ */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: var(--bg-void); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.modal-amount-card {
+  background: rgba(200,135,58,0.07); border: 1px solid rgba(200,135,58,0.22);
+  border-radius: var(--r-lg); padding: 22px 20px; text-align: center; margin-bottom: 24px;
+}
+.modal-amount-label {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim); font-weight: 600; margin-bottom: 8px;
+}
+.modal-amount-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 42px; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--amber-lt); line-height: 1;
+}
+.modal-amount-note {
+  font-size: 12px; color: var(--text-dim); margin-top: 6px; line-height: 1.5;
+}
 
-  /* ═══════════════════════════════════════════
-     UTILS
-  ═══════════════════════════════════════════ */
-  .mt-4 { margin-top: 4px; }
-  .mt-8 { margin-top: 8px; }
-  .mt-16 { margin-top: 16px; }
+.modal-pay-btn {
+  width: 100%; padding: 18px; border-radius: 100px;
+  background: linear-gradient(135deg, #2D7A47, #3A9A5C);
+  color: #fff; font-size: 16px; font-weight: 600; letter-spacing: 0.04em;
+  border: none; cursor: pointer; position: relative; overflow: hidden;
+  box-shadow: 0 8px 28px rgba(45,122,71,0.4);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.modal-pay-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(45,122,71,0.5); }
+.modal-pay-btn:active { transform: scale(0.98); }
+.pay-shine {
+  position: absolute; inset: 0; left: -100%; width: 50%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  animation: shine 4s ease-in-out infinite;
+}
+.modal-note {
+  font-size: 11px; color: var(--text-dim); text-align: center;
+  margin-top: 16px; line-height: 1.6;
+}
 
-  @media (max-width: 400px) {
-    .mode-grid { gap: 8px; }
-    .mode-card { padding: 16px 12px; }
-    .field-row { grid-template-columns: 1fr; gap: 0; }
-    .layers-grid { gap: 8px; }
-  }
+/* ── TOAST ── */
+.toast {
+  position: fixed; top: 80px; left: 50%;
+  transform: translateX(-50%) translateY(-110px);
+  z-index: 300; width: calc(100% - 48px); max-width: 340px;
+  background: rgba(30,26,22,0.95); border: 1px solid rgba(200,135,58,0.35);
+  backdrop-filter: blur(20px); border-radius: var(--r-lg);
+  padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+  opacity: 0; pointer-events: none;
+  transition: transform 0.55s var(--ease), opacity 0.5s;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast-icon {
+  width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%;
+  background: rgba(45,122,71,0.2); border: 1px solid rgba(45,122,71,0.4);
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.toast-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px; font-weight: 700; color: var(--cream); margin-bottom: 2px;
+}
+.toast-sub { font-size: 12px; color: var(--text-mid); line-height: 1.45; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(24px); }
+.reveal.in { opacity: 1; transform: translateY(0); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 380px) {
+  .hero-headline { font-size: 32px; }
+  .mode-name { font-size: 15px; }
+  .candle-wrap { width: 180px; height: 180px; }
+  .candle-ring-1 { width: 180px; height: 90px; }
+  .candle-ring-2 { width: 136px; height: 65px; }
+  .candle-ring-3 { width: 94px; height: 44px; }
+  .candle-ring-4 { width: 56px; height: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
 </style>
 </head>
 <body>
 
-<!-- Intro Screen -->
-<div id="introScreen">
-  <div class="intro-logo">STRATA</div>
-  <div class="intro-bar-wrap"><div class="intro-bar"></div></div>
-  <div class="intro-text">INITIALIZING RESERVATION CONSOLE…</div>
+<!-- AMBIENT -->
+<div class="bg-wrap">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
 </div>
+<div class="particles" id="particles"></div>
 
-<!-- Cyber Grid Canvas -->
-<canvas id="cyberCanvas"></canvas>
-<div class="aurora"></div>
+<div class="page">
 
-<!-- Navigation -->
-<nav>
-  <div class="nav-logo">STRATA</div>
-  <div class="nav-divider"></div>
-  <div class="nav-title">DEMO RESERVATIONS</div>
-  <div class="signal-bars">
-    <span></span><span></span><span></span><span></span>
-  </div>
-  <div class="nav-status">
-    <div class="status-dot"></div>
-    LIVE
-  </div>
-</nav>
-
-<!-- Toast -->
-<div class="toast" id="toast">
-  <span class="toast-icon">✦</span>
-  <span class="toast-text" id="toastText">RESERVATION CONFIRMED</span>
-</div>
-
-<!-- Page Content -->
-<div class="page-wrap">
+  <!-- NAV -->
+  <nav>
+    <div class="nav-left">
+      <div class="nav-logo">Maison</div>
+      <div class="nav-sub">DEMO Reservations</div>
+    </div>
+    <div class="nav-status">
+      <div class="status-dot"></div>
+      Open
+    </div>
+  </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-eyebrow">PREMIUM DINING ACCESS</div>
-    <h1 class="hero-h1">Reserve Your<br>Perfect Experience</h1>
-    <p class="hero-sub">Secure your table, private room, or banquet hall at STRATA. Real-time availability. Instant confirmation.</p>
+  <section id="hero">
+    <div class="hero-kicker">Fine Dining · Private Events</div>
 
-    <!-- Animated Capsule Ticket -->
-    <div class="capsule-wrap">
-      <div class="capsule">
-        <div class="data-stream"></div>
-        <div class="cap-header">
-          <span class="cap-logo-txt">STRATA</span>
-          <span class="cap-type-badge" id="capBadge">TABLE ACCESS</span>
-        </div>
-        <div class="cap-row">
-          <div class="cap-field">
-            <label>GUEST</label>
-            <span id="capName">—</span>
-          </div>
-          <div class="cap-field">
-            <label>COVERS</label>
-            <span id="capGuests">—</span>
-          </div>
-          <div class="cap-field">
-            <label>DATE</label>
-            <span id="capDate">—</span>
-          </div>
-          <div class="cap-field">
-            <label>TIME</label>
-            <span id="capTime">—</span>
-          </div>
-        </div>
-        <div class="cap-divider-perf">
-          <div class="perf-half"></div>
-          <div class="perf-circle"></div>
-          <div class="perf-half"></div>
-        </div>
-        <div class="cap-bottom">
-          <div class="cap-amount-wrap">
-            <label>ADVANCE</label>
-            <div class="cap-amount" id="capAmount">₹299</div>
-          </div>
-          <div class="qr-pulse" id="qrBlock">
-            <!-- 25 cells -->
-            <div class="qr-cell" style="--i:0"></div>
-            <div class="qr-cell" style="--i:1"></div>
-            <div class="qr-cell" style="--i:2"></div>
-            <div class="qr-cell" style="--i:3"></div>
-            <div class="qr-cell" style="--i:4"></div>
-            <div class="qr-cell" style="--i:5"></div>
-            <div class="qr-cell" style="--i:6"></div>
-            <div class="qr-cell" style="--i:7"></div>
-            <div class="qr-cell" style="--i:8"></div>
-            <div class="qr-cell" style="--i:9"></div>
-            <div class="qr-cell" style="--i:10"></div>
-            <div class="qr-cell" style="--i:11"></div>
-            <div class="qr-cell" style="--i:12"></div>
-            <div class="qr-cell" style="--i:13"></div>
-            <div class="qr-cell" style="--i:14"></div>
-            <div class="qr-cell" style="--i:15"></div>
-            <div class="qr-cell" style="--i:16"></div>
-            <div class="qr-cell" style="--i:17"></div>
-            <div class="qr-cell" style="--i:18"></div>
-            <div class="qr-cell" style="--i:19"></div>
-            <div class="qr-cell" style="--i:20"></div>
-            <div class="qr-cell" style="--i:21"></div>
-            <div class="qr-cell" style="--i:22"></div>
-            <div class="qr-cell" style="--i:23"></div>
-            <div class="qr-cell" style="--i:24"></div>
-          </div>
-        </div>
-        <div class="route-line"></div>
+    <h1 class="hero-headline">Reserve Your<br><em>Perfect Evening</em></h1>
+
+    <p class="hero-desc">Handcrafted menus. Intimate spaces. An evening that stays with you long after the last course.</p>
+
+    <!-- CANDLELIGHT VISUAL -->
+    <div class="candle-wrap">
+      <div class="candle-ring candle-ring-1"></div>
+      <div class="candle-ring candle-ring-2"></div>
+      <div class="candle-ring candle-ring-3"></div>
+      <div class="candle-ring candle-ring-4"></div>
+      <div class="candle-glow"></div>
+      <div class="candle-core">
+        <div class="candle-flame"></div>
       </div>
+      <div class="candle-plate"></div>
     </div>
+
+    <button class="hero-cta" onclick="scrollToReservation()">
+      <div class="cta-shine"></div>
+      <span>Book a Table</span>
+      <span class="cta-icon">↓</span>
+    </button>
   </section>
 
-  <!-- GLASS LAYER PANELS -->
-  <section class="layers-section">
-    <div class="layers-title">SYSTEM LAYERS</div>
-    <div class="layers-grid">
-      <div class="layer-card">
-        <div class="lc-icon">◈</div>
-        <div class="lc-name">LIVE SLOT LAYER</div>
-        <div class="lc-desc">Real-time availability tracking across all dining zones.</div>
-        <div class="lc-status"><span class="lc-indicator"></span>ACTIVE</div>
-      </div>
-      <div class="layer-card">
-        <div class="lc-icon">⬡</div>
-        <div class="lc-name">PAYMENT LAYER</div>
-        <div class="lc-desc">Encrypted advance booking deposit with instant receipt.</div>
-        <div class="lc-status"><span class="lc-indicator"></span>SECURED</div>
-      </div>
-      <div class="layer-card">
-        <div class="lc-icon">⬢</div>
-        <div class="lc-name">RECEPTION SYNC</div>
-        <div class="lc-desc">Host console notified 30 min before your arrival.</div>
-        <div class="lc-status"><span class="lc-indicator"></span>SYNCED</div>
-      </div>
-      <div class="layer-card">
-        <div class="lc-icon">◆</div>
-        <div class="lc-name">VIP REQUEST</div>
-        <div class="lc-desc">Special arrangements routed to the chef and concierge.</div>
-        <div class="lc-status"><span class="lc-indicator"></span>READY</div>
-      </div>
+  <!-- BOOKING TYPE -->
+  <section id="booking-type">
+    <div class="reveal">
+      <div class="section-kicker">Choose Your Experience</div>
+      <h2 class="section-title">How would you like to dine?</h2>
     </div>
-  </section>
 
-  <!-- BOOKING MODE -->
-  <section class="mode-section reveal" id="modeSection">
-    <div class="section-label">SELECT MODE</div>
-    <div class="mode-grid">
-      <div class="mode-card active" id="modeTable" onclick="setMode('table')">
-        <span class="mc-check">✓</span>
-        <span class="mc-icon">⊞</span>
-        <span class="mc-name">TABLE</span>
-        <span class="mc-sub">Intimate dining for 1–12 guests</span>
-        <span class="mc-amount">₹299</span>
+    <div class="mode-grid reveal">
+      <div class="mode-card active" id="card-table" onclick="setMode('table')">
+        <div class="mode-bg"></div>
+        <div class="mode-tick">✓</div>
+        <span class="mode-icon">🍽️</span>
+        <div class="mode-name">Table Dining</div>
+        <div class="mode-desc">Intimate dining for 1–12 guests</div>
       </div>
-      <div class="mode-card" id="modeHall" onclick="setMode('hall')">
-        <span class="mc-check">✓</span>
-        <span class="mc-icon">⊟</span>
-        <span class="mc-name">HALL / ROOM</span>
-        <span class="mc-sub">Private events &amp; banquets</span>
-        <span class="mc-amount">₹1,999</span>
+      <div class="mode-card" id="card-hall" onclick="setMode('hall')">
+        <div class="mode-bg"></div>
+        <div class="mode-tick">✓</div>
+        <span class="mode-icon">🏛️</span>
+        <div class="mode-name">Private Hall</div>
+        <div class="mode-desc">Events & banquets for groups</div>
       </div>
     </div>
   </section>
 
   <!-- RESERVATION FORM -->
-  <section class="form-section reveal" id="formSection">
-    <div class="section-label">RESERVATION FORM</div>
-    <div class="form-capsule">
-      <div class="field-group">
-        <label>FULL NAME</label>
-        <input type="text" id="fName" placeholder="Enter your name" autocomplete="name">
-      </div>
-      <div class="field-group">
-        <label>PHONE NUMBER</label>
-        <input type="tel" id="fPhone" placeholder="+91 00000 00000" autocomplete="tel">
-      </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label>DATE</label>
-          <input type="date" id="fDate">
-        </div>
-        <div class="field-group">
-          <label>TIME</label>
-          <input type="time" id="fTime" value="19:00">
-        </div>
-      </div>
-      <div class="field-group">
-        <label>NUMBER OF GUESTS</label>
-        <input type="number" id="fGuests" placeholder="2" min="1" max="500">
+  <section id="reservation">
+    <div class="form-card reveal">
+      <div class="form-header">
+        <div class="form-eyebrow">Your Details</div>
+        <div class="form-title" id="form-title">Table Reservation</div>
       </div>
 
-      <!-- Hall-only fields -->
-      <div class="hall-fields" id="hallFields">
-        <div class="field-group">
-          <label>EVENT TYPE</label>
-          <select id="fEvent">
-            <option value="">Select event type</option>
-            <option>Corporate Dinner</option>
-            <option>Birthday Celebration</option>
-            <option>Anniversary</option>
-            <option>Wedding Reception</option>
-            <option>Conference Lunch</option>
-            <option>Product Launch</option>
-            <option>Other</option>
+      <form class="form-body" id="res-form" onsubmit="openModal(event)">
+
+        <div class="field">
+          <label for="f-name">Guest Name <span>*</span></label>
+          <input type="text" id="f-name" placeholder="Your full name" required autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="f-phone">Phone Number <span>*</span></label>
+          <input type="tel" id="f-phone" placeholder="+91 98765 43210" required autocomplete="tel">
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="f-date">Date <span>*</span></label>
+            <input type="date" id="f-date" required>
+          </div>
+          <div class="field">
+            <label for="f-time">Time <span>*</span></label>
+            <input type="time" id="f-time" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-guests">Number of Guests <span>*</span></label>
+          <select id="f-guests" required>
+            <option value="" disabled selected>Select guests</option>
+            <option>1 guest</option>
+            <option>2 guests</option>
+            <option>3 guests</option>
+            <option>4 guests</option>
+            <option>5 guests</option>
+            <option>6 guests</option>
+            <option>8 guests</option>
+            <option>10 guests</option>
+            <option>12 guests</option>
+            <option>15+ guests</option>
           </select>
         </div>
-        <div class="field-group">
-          <label>SPACE TYPE</label>
-          <select id="fSpace">
-            <option value="">Select space</option>
-            <option>Private Room (up to 20)</option>
-            <option>Semi-Private Room (up to 40)</option>
-            <option>Banquet Hall A (up to 100)</option>
-            <option>Grand Banquet Hall (up to 300)</option>
-            <option>Rooftop Pavilion (up to 80)</option>
-          </select>
+
+        <!-- HALL ONLY -->
+        <div class="hall-fields" id="hall-fields">
+          <div class="form-divider"><span>Event Details</span></div>
+          <div class="field">
+            <label for="f-event">Event Type <span>*</span></label>
+            <select id="f-event">
+              <option value="" disabled selected>Select occasion</option>
+              <option>Birthday Celebration</option>
+              <option>Anniversary Dinner</option>
+              <option>Wedding Reception</option>
+              <option>Corporate Gathering</option>
+              <option>Private Party</option>
+              <option>Product Launch</option>
+              <option>Other Occasion</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-space">Preferred Space <span>*</span></label>
+            <select id="f-space">
+              <option value="" disabled selected>Select space</option>
+              <option>Rose Hall — up to 50</option>
+              <option>Oak Terrace — up to 80</option>
+              <option>Ivory Suite — up to 20</option>
+              <option>Grand Ballroom — up to 200</option>
+              <option>Library Room — up to 14</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="field-group">
-        <label>SPECIAL REQUEST</label>
-        <textarea id="fRequest" placeholder="Dietary requirements, décor, occasion details…"></textarea>
-      </div>
-
-      <div class="form-advance-row">
-        <div>
-          <div class="far-label">ADVANCE DEPOSIT</div>
-          <div style="font-size:9px;letter-spacing:0.1em;color:rgba(240,244,255,0.25);margin-top:2px;">Adjusted on final bill</div>
+        <div class="field">
+          <label for="f-special">Special Request</label>
+          <textarea id="f-special" placeholder="Dietary needs, occasion notes, seating preferences…"></textarea>
         </div>
-        <div class="far-amount" id="formAmount">₹299</div>
-      </div>
 
-      <button class="btn-submit" onclick="handleSubmit()">
-        CONFIRM &amp; PROCEED TO PAYMENT
-      </button>
+        <div class="advance-row">
+          <div class="advance-label">
+            <strong>Advance to confirm</strong>
+            <span id="advance-desc">Table booking deposit</span>
+          </div>
+          <div class="advance-value" id="advance-amount">₹299</div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <div class="submit-btn-shine"></div>
+          <span id="submit-label">Confirm Reservation</span>
+        </button>
+
+      </form>
     </div>
   </section>
 
-</div><!-- end page-wrap -->
+</div><!-- /page -->
 
-<!-- Sticky Bottom Bar -->
+<!-- BOTTOM BAR -->
 <div class="bottom-bar">
-  <div class="bb-info">
-    <div class="bb-mode" id="bbMode">TABLE BOOKING — ADVANCE</div>
-    <div class="bb-amount" id="bbAmount">₹299</div>
+  <div class="bar-info">
+    <div class="bar-mode" id="bar-mode">Table Dining · Advance</div>
+    <div class="bar-amount" id="bar-amount">₹299</div>
   </div>
-  <button class="bb-btn" onclick="scrollToForm()">BOOK NOW</button>
+  <button class="bar-btn" onclick="scrollToReservation()">Reserve →</button>
 </div>
 
-<!-- Payment Modal -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modal">
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-sheet" id="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">DEMO PAYMENT PORTAL</div>
-    <div class="modal-amount-big" id="modalAmount">₹299</div>
-    <div class="modal-desc" id="modalDesc">TABLE BOOKING — ADVANCE DEPOSIT</div>
-    <div class="mock-payment-box">
-      <div class="mpb-label">SIMULATED PAYMENT OPTIONS</div>
-      <div class="mpb-methods">
-        <span class="mpb-method">UPI</span>
-        <span class="mpb-method">CARD</span>
-        <span class="mpb-method">NET BANKING</span>
-      </div>
+
+    <div class="modal-flame-wrap">
+      <div class="modal-flame-ring"></div>
+      <div class="modal-flame-ring modal-flame-ring-2"></div>
+      <div class="modal-flame-inner">🕯️</div>
     </div>
-    <button class="btn-pay" id="btnPay" onclick="simulatePayment()">
-      PAY NOW — <span id="btnPayAmt">₹299</span>
+
+    <div class="modal-badge-row">
+      <div class="modal-badge" id="modal-badge">Table Dining</div>
+    </div>
+    <div class="modal-title">Confirm &amp; Pay Advance</div>
+    <div class="modal-desc" id="modal-desc">Secure your table with a small advance deposit. The remaining balance is settled at the restaurant.</div>
+
+    <div class="modal-amount-card">
+      <div class="modal-amount-label">Advance Amount</div>
+      <div class="modal-amount-value" id="modal-amount">₹299</div>
+      <div class="modal-amount-note" id="modal-note">Balance due at restaurant · Demo only</div>
+    </div>
+
+    <button class="modal-pay-btn" onclick="simulateSuccess()">
+      <div class="pay-shine"></div>
+      Simulate Payment
     </button>
-    <button class="btn-modal-close" onclick="closeModal()">CANCEL</button>
+    <div class="modal-note">This is a demonstration. No real payment is processed.<br>You'll receive a confirmation once our team reviews.</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✅</div>
+  <div>
+    <div class="toast-title">Reservation Confirmed!</div>
+    <div class="toast-sub" id="toast-sub">Your table is secured. We'll be in touch shortly.</div>
+  </div>
+</div>
+
 <script>
-/* ─── STATE ─── */
-let currentMode = 'table';
-const AMOUNTS = { table: 299, hall: 1999 };
+/* ── STATE ── */
+let mode = 'table';
+const AMOUNTS = { table: '₹299', hall: '₹1,999' };
 
-/* ─── INTRO ─── */
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('introScreen').classList.add('gone');
-    initScrollReveal();
-    revealLayerCards();
-  }, 2200);
-});
-
-/* ─── CANVAS GRID ─── */
-(function initCanvas() {
-  const canvas = document.getElementById('cyberCanvas');
-  const ctx = canvas.getContext('2d');
-  let W, H;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+/* ── PARTICLES ── */
+(function() {
+  const wrap = document.getElementById('particles');
+  const colors = ['rgba(200,135,58,', 'rgba(232,196,176,', 'rgba(124,45,62,'];
+  for (let i = 0; i < 28; i++) {
+    const el = document.createElement('div');
+    el.className = 'sp';
+    const size = 2 + Math.random() * 3;
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    el.style.cssText = [
+      `left:${Math.random()*100}%`,
+      `top:${40 + Math.random()*60}%`,
+      `width:${size}px`,
+      `height:${size}px`,
+      `background:${c}${0.3 + Math.random()*0.4})`,
+      `--d:${9 + Math.random()*12}s`,
+      `--dl:${Math.random()*10}s`,
+      `--op:${0.2 + Math.random()*0.35}`,
+    ].join(';');
+    wrap.appendChild(el);
   }
-
-  resize();
-  window.addEventListener('resize', resize);
-
-  let t = 0;
-  const dots = Array.from({length: 40}, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    vx: (Math.random() - 0.5) * 0.4,
-    vy: (Math.random() - 0.5) * 0.4,
-    size: Math.random() * 1.5 + 0.5
-  }));
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    /* Grid */
-    const gridSize = 52;
-    ctx.strokeStyle = 'rgba(0,229,255,0.04)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < W; x += gridSize) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y < H; y += gridSize) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
-
-    /* Diagonal accent lines */
-    ctx.strokeStyle = 'rgba(0,229,255,0.025)';
-    for (let i = -H; i < W + H; i += 150) {
-      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H * 0.5, H); ctx.stroke();
-    }
-
-    /* Moving dots */
-    dots.forEach(d => {
-      d.x += d.vx; d.y += d.vy;
-      if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
-      if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0,229,255,0.35)';
-      ctx.fill();
-    });
-
-    /* Subtle scan line */
-    const scanY = (t * 0.5) % (H + 40) - 20;
-    const grad = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(0.5, 'rgba(0,229,255,0.04)');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, scanY - 60, W, 120);
-
-    t++;
-    requestAnimationFrame(draw);
-  }
-  draw();
 })();
 
-/* ─── MIN DATE ─── */
-(function setMinDate() {
-  const dateInput = document.getElementById('fDate');
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm   = String(today.getMonth() + 1).padStart(2, '0');
-  const dd   = String(today.getDate()).padStart(2, '0');
-  dateInput.min = `${yyyy}-${mm}-${dd}`;
-  dateInput.value = `${yyyy}-${mm}-${dd}`;
-  updateCapsule();
+/* ── MIN DATE ── */
+(function() {
+  const d = document.getElementById('f-date');
+  const now = new Date();
+  const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2,'0'), day = String(now.getDate()).padStart(2,'0');
+  d.min = `${y}-${m}-${day}`;
 })();
 
-/* ─── MODE TOGGLE ─── */
-function setMode(mode) {
-  currentMode = mode;
+/* ── MODE SWITCH ── */
+function setMode(m) {
+  mode = m;
+  const isHall = m === 'hall';
 
-  document.getElementById('modeTable').classList.toggle('active', mode === 'table');
-  document.getElementById('modeHall').classList.toggle('active', mode === 'hall');
+  document.getElementById('card-table').classList.toggle('active', !isHall);
+  document.getElementById('card-hall').classList.toggle('active', isHall);
 
-  const hallFields = document.getElementById('hallFields');
-  hallFields.classList.toggle('visible', mode === 'hall');
+  const hallFields = document.getElementById('hall-fields');
+  hallFields.classList.toggle('open', isHall);
 
-  const amt = mode === 'table' ? '₹299' : '₹1,999';
-
-  // Update all amount displays
-  document.getElementById('capAmount').textContent  = amt;
-  document.getElementById('formAmount').textContent  = amt;
-  document.getElementById('bbAmount').textContent    = amt;
-  document.getElementById('modalAmount').textContent = amt;
-  document.getElementById('btnPayAmt').textContent   = amt;
-
-  const badge = mode === 'table' ? 'TABLE ACCESS' : 'HALL ACCESS';
-  document.getElementById('capBadge').textContent = badge;
-
-  const bbMode = mode === 'table' ? 'TABLE BOOKING — ADVANCE' : 'HALL BOOKING — ADVANCE';
-  document.getElementById('bbMode').textContent = bbMode;
-
-  const modalDesc = mode === 'table' ? 'TABLE BOOKING — ADVANCE DEPOSIT' : 'HALL / ROOM BOOKING — ADVANCE DEPOSIT';
-  document.getElementById('modalDesc').textContent = modalDesc;
-}
-
-/* ─── LIVE CAPSULE UPDATE ─── */
-function updateCapsule() {
-  const name   = document.getElementById('fName').value.trim();
-  const guests = document.getElementById('fGuests').value.trim();
-  const dateV  = document.getElementById('fDate').value;
-  const timeV  = document.getElementById('fTime').value;
-
-  const capName   = document.getElementById('capName');
-  const capGuests = document.getElementById('capGuests');
-  const capDate   = document.getElementById('capDate');
-  const capTime   = document.getElementById('capTime');
-
-  if (name) {
-    capName.textContent = name.substring(0, 14).toUpperCase();
-    capName.classList.add('filled');
+  const fEvent = document.getElementById('f-event');
+  const fSpace = document.getElementById('f-space');
+  if (isHall) {
+    fEvent.setAttribute('required',''); fSpace.setAttribute('required','');
   } else {
-    capName.textContent = '—'; capName.classList.remove('filled');
+    fEvent.removeAttribute('required'); fSpace.removeAttribute('required');
   }
 
-  if (guests) {
-    capGuests.textContent = guests + ' PAX';
-    capGuests.classList.add('filled');
-  } else {
-    capGuests.textContent = '—'; capGuests.classList.remove('filled');
-  }
+  const amount = AMOUNTS[m];
+  const label = isHall ? 'Private Hall' : 'Table Dining';
+  const desc  = isHall ? 'Hall & event deposit' : 'Table booking deposit';
 
-  if (dateV) {
-    const d = new Date(dateV + 'T00:00:00');
-    const opts = { day:'2-digit', month:'short', year:'numeric' };
-    capDate.textContent = d.toLocaleDateString('en-IN', opts).toUpperCase();
-    capDate.classList.add('filled');
-  } else {
-    capDate.textContent = '—'; capDate.classList.remove('filled');
-  }
-
-  if (timeV) {
-    const [h, m] = timeV.split(':');
-    const hr = parseInt(h);
-    const ampm = hr >= 12 ? 'PM' : 'AM';
-    const hr12 = hr % 12 || 12;
-    capTime.textContent = `${String(hr12).padStart(2,'0')}:${m} ${ampm}`;
-    capTime.classList.add('filled');
-  } else {
-    capTime.textContent = '—'; capTime.classList.remove('filled');
-  }
+  document.getElementById('advance-amount').textContent = amount;
+  document.getElementById('advance-desc').textContent = desc;
+  document.getElementById('bar-mode').textContent = `${label} · Advance`;
+  document.getElementById('bar-amount').textContent = amount;
+  document.getElementById('form-title').textContent = isHall ? 'Hall Reservation' : 'Table Reservation';
+  document.getElementById('submit-label').textContent = isHall ? 'Reserve the Hall' : 'Confirm Reservation';
+  document.getElementById('modal-badge').textContent = label;
+  document.getElementById('modal-amount').textContent = amount;
+  document.getElementById('modal-desc').textContent = isHall
+    ? 'Secure your hall with a deposit. A member of our events team will confirm your booking personally.'
+    : 'Secure your table with a small advance deposit. The remaining balance is settled at the restaurant.';
+  document.getElementById('modal-note').textContent = isHall
+    ? 'Full balance due before event · Demo only'
+    : 'Balance due at restaurant · Demo only';
 }
 
-['fName','fGuests','fDate','fTime'].forEach(id => {
-  document.getElementById(id).addEventListener('input', updateCapsule);
-});
-
-/* ─── SCROLL TO FORM ─── */
-function scrollToForm() {
-  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+/* ── SCROLL ── */
+function scrollToReservation() {
+  document.getElementById('reservation').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-/* ─── SUBMIT ─── */
-function handleSubmit() {
-  const name  = document.getElementById('fName').value.trim();
-  const phone = document.getElementById('fPhone').value.trim();
-  const date  = document.getElementById('fDate').value;
-  const time  = document.getElementById('fTime').value;
-  const guests= document.getElementById('fGuests').value.trim();
-
-  if (!name || !phone || !date || !time || !guests) {
-    shakeMissing();
-    return;
-  }
-  if (currentMode === 'hall') {
-    const ev = document.getElementById('fEvent').value;
-    const sp = document.getElementById('fSpace').value;
-    if (!ev || !sp) { shakeMissing(); return; }
-  }
-  openModal();
-}
-
-function shakeMissing() {
-  const form = document.querySelector('.form-capsule');
-  form.style.animation = 'none';
-  form.offsetHeight; // reflow
-  form.style.animation = 'shakeForm 0.4s ease';
-  setTimeout(() => form.style.animation = '', 500);
-}
-
-/* ─── MODAL ─── */
-function openModal() {
-  const amt = currentMode === 'table' ? '₹299' : '₹1,999';
-  document.getElementById('modalAmount').textContent = amt;
-  document.getElementById('btnPayAmt').textContent   = amt;
-  document.getElementById('modalOverlay').classList.add('open');
+/* ── MODAL ── */
+function openModal(e) {
+  e.preventDefault();
+  document.getElementById('modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-
 function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('modal').classList.remove('open');
   document.body.style.overflow = '';
-  const btn = document.getElementById('btnPay');
-  btn.textContent = 'PAY NOW — ' + (currentMode === 'table' ? '₹299' : '₹1,999');
-  btn.classList.remove('loading');
 }
-
 function handleOverlayClick(e) {
-  if (e.target === document.getElementById('modalOverlay')) closeModal();
+  if (e.target === document.getElementById('modal')) closeModal();
 }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
-
-/* ─── SIMULATE PAYMENT ─── */
-function simulatePayment() {
-  const btn = document.getElementById('btnPay');
-  btn.classList.add('loading');
-  btn.textContent = 'PROCESSING…';
-
-  setTimeout(() => {
-    closeModal();
-    showToast();
-    confettiPulse();
-  }, 1800);
-}
-
-/* ─── TOAST ─── */
-function showToast() {
+/* ── SUCCESS ── */
+function simulateSuccess() {
+  closeModal();
+  const isHall = mode === 'hall';
+  document.getElementById('toast-sub').textContent = isHall
+    ? 'Your hall is secured. Our events team will reach out soon.'
+    : 'Your table is confirmed. We look forward to welcoming you.';
   const toast = document.getElementById('toast');
-  const name  = document.getElementById('fName').value.trim() || 'GUEST';
-  document.getElementById('toastText').textContent =
-    'CONFIRMED — ' + name.toUpperCase().substring(0, 10);
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 4000);
+  setTimeout(() => toast.classList.remove('show'), 4500);
+  document.getElementById('res-form').reset();
 }
 
-/* ─── CONFETTI PULSE (brief glow) ─── */
-function confettiPulse() {
-  const cap = document.querySelector('.capsule');
-  cap.style.boxShadow = '0 0 60px rgba(0,229,255,0.4), 0 0 120px rgba(0,229,255,0.2)';
-  setTimeout(() => {
-    cap.style.boxShadow = '';
-  }, 1500);
-}
-
-/* ─── SCROLL REVEAL ─── */
-function initScrollReveal() {
-  const items = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  items.forEach(el => io.observe(el));
-}
-
-/* ─── LAYER CARDS STAGGERED REVEAL ─── */
-function revealLayerCards() {
-  const cards = document.querySelectorAll('.layer-card');
-  cards.forEach((c, i) => {
-    setTimeout(() => c.classList.add('revealed'), 400 + i * 120);
-  });
-}
-
-/* ─── SHAKE KEYFRAME (injected) ─── */
-(function injectShake() {
-  const s = document.createElement('style');
-  s.textContent = `
-    @keyframes shakeForm {
-      0%, 100% { transform: translateX(0); }
-      20%       { transform: translateX(-8px); }
-      40%       { transform: translateX(8px); }
-      60%       { transform: translateX(-5px); }
-      80%       { transform: translateX(5px); }
+/* ── SCROLL REVEAL ── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in');
+      revealObs.unobserve(entry.target);
     }
-  `;
-  document.head.appendChild(s);
-})();
-
-/* ─── INIT ─── */
-updateCapsule();
+  });
+}, { threshold: 0.10 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 </script>
 </body>
 </html>
