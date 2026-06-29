@@ -1,1736 +1,1626 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#02040a" />
-  <title>DEMO Reservations — Futuristic Ticket Console</title>
-
-  <style>
-    :root {
-      --bg: #02040a;
-      --card: rgba(7, 18, 34, 0.74);
-      --card2: rgba(12, 28, 52, 0.90);
-      --line: rgba(154, 242, 255, 0.18);
-      --line2: rgba(154, 242, 255, 0.34);
-      --cyan: #55eaff;
-      --cyan2: #b8fbff;
-      --lime: #7cffb2;
-      --violet: #9a7cff;
-      --pink: #ff4fd8;
-      --orange: #ffad66;
-      --text: #eafcff;
-      --muted: rgba(234, 252, 255, 0.62);
-      --soft: rgba(234, 252, 255, 0.34);
-      --radius: 28px;
-      --safe: env(safe-area-inset-bottom);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html {
-      background: var(--bg);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      color: var(--text);
-      background: var(--bg);
-      overflow-x: hidden;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    button,
-    input,
-    select,
-    textarea {
-      font: inherit;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      min-height: 56px;
-      padding: 15px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(154, 242, 255, 0.16);
-      outline: none;
-      color: var(--text);
-      background:
-        linear-gradient(145deg, rgba(7,18,34,.92), rgba(7,18,34,.58));
-      box-shadow: inset 0 0 22px rgba(0,0,0,.26);
-      transition: 0.22s ease;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: rgba(85, 234, 255, 0.55);
-      box-shadow:
-        inset 0 0 22px rgba(0,0,0,.28),
-        0 0 0 4px rgba(85,234,255,.08),
-        0 0 32px rgba(85,234,255,.12);
-      transform: translateY(-1px);
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: rgba(234,252,255,.30);
-    }
-
-    select option {
-      background: #07111f;
-      color: white;
-    }
-
-    textarea {
-      resize: none;
-      line-height: 1.45;
-    }
-
-    .space {
-      position: fixed;
-      inset: 0;
-      z-index: -20;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% -10%, rgba(85,234,255,.18), transparent 34%),
-        radial-gradient(circle at 6% 18%, rgba(124,255,178,.18), transparent 28%),
-        radial-gradient(circle at 93% 22%, rgba(154,124,255,.22), transparent 30%),
-        radial-gradient(circle at 50% 112%, rgba(255,79,216,.12), transparent 35%),
-        linear-gradient(145deg, #02040a 0%, #06101e 52%, #010205 100%);
-    }
-
-    .space::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .42;
-      background-image:
-        linear-gradient(rgba(154,242,255,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(154,242,255,.055) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: radial-gradient(circle at 50% 32%, black 0%, rgba(0,0,0,.65) 45%, transparent 82%);
-      animation: gridFall 18s linear infinite;
-    }
-
-    .space::after {
-      content: "";
-      position: absolute;
-      inset: -36%;
-      opacity: .82;
-      filter: blur(48px);
-      background:
-        conic-gradient(from 80deg at 50% 50%,
-          transparent,
-          rgba(85,234,255,.14),
-          transparent,
-          rgba(154,124,255,.13),
-          transparent,
-          rgba(124,255,178,.10),
-          transparent
-        );
-      animation: aurora 26s linear infinite;
-    }
-
-    @keyframes gridFall {
-      to { transform: translateY(42px); }
-    }
-
-    @keyframes aurora {
-      to { transform: rotate(360deg); }
-    }
-
-    .orb {
-      position: fixed;
-      z-index: -18;
-      border-radius: 999px;
-      filter: blur(70px);
-      opacity: .32;
-      pointer-events: none;
-      animation: orbFloat 8s ease-in-out infinite alternate;
-    }
-
-    .o1 {
-      width: 285px;
-      height: 285px;
-      background: var(--cyan);
-      left: -135px;
-      top: 12%;
-    }
-
-    .o2 {
-      width: 270px;
-      height: 270px;
-      background: var(--violet);
-      right: -135px;
-      top: 33%;
-      animation-delay: -3s;
-    }
-
-    .o3 {
-      width: 240px;
-      height: 240px;
-      background: var(--lime);
-      left: 34%;
-      bottom: -160px;
-      opacity: .20;
-      animation-delay: -6s;
-    }
-
-    @keyframes orbFloat {
-      from { transform: translate3d(0,0,0) scale(1); }
-      to { transform: translate3d(25px,-38px,0) scale(1.14); }
-    }
-
-    .rain {
-      position: fixed;
-      inset: 0;
-      z-index: -16;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .ray {
-      position: absolute;
-      top: -25%;
-      width: 1px;
-      height: 150px;
-      opacity: .25;
-      background: linear-gradient(to bottom, transparent, rgba(85,234,255,.55), transparent);
-      animation: rayFall linear infinite;
-    }
-
-    @keyframes rayFall {
-      to { transform: translateY(135vh); }
-    }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      z-index: -15;
-      opacity: .10;
-      pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-    }
-
-    .boot {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at center, rgba(85,234,255,.22), transparent 35%),
-        #02040a;
-      animation: bootOut .8s ease 1.55s both;
-    }
-
-    @keyframes bootOut {
-      to { opacity: 0; visibility: hidden; transform: scale(1.04); }
-    }
-
-    .boot-core {
-      width: 172px;
-      height: 172px;
-      border-radius: 50%;
-      position: relative;
-      display: grid;
-      place-items: center;
-    }
-
-    .boot-core::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background:
-        conic-gradient(from 0deg,
-          var(--cyan),
-          transparent,
-          var(--lime),
-          transparent,
-          var(--violet),
-          transparent,
-          var(--cyan)
-        );
-      filter: drop-shadow(0 0 34px rgba(85,234,255,.34));
-      animation: spin 1.05s linear infinite;
-    }
-
-    .boot-core::after {
-      content: "RESERVE";
-      position: absolute;
-      inset: 22px;
-      border-radius: inherit;
-      background: #06101e;
-      display: grid;
-      place-items: center;
-      color: var(--cyan2);
-      font-weight: 1000;
-      letter-spacing: .28em;
-      padding-left: .28em;
-      font-size: 11px;
-      box-shadow: inset 0 0 34px rgba(0,0,0,.66);
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .app {
-      width: min(100%, 560px);
-      min-height: 100vh;
-      margin: 0 auto;
-      padding: 12px 12px calc(118px + var(--safe));
-    }
-
-    .hud {
-      position: sticky;
-      top: 0;
-      z-index: 60;
-      padding: 8px 0 12px;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-    }
-
-    .hud-card {
-      border: 1px solid rgba(154,242,255,.16);
-      background: rgba(5, 13, 26, .72);
-      border-radius: 28px;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 22px 80px rgba(0,0,0,.35);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 19px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      color: #021018;
-      background: linear-gradient(135deg, var(--cyan2), var(--cyan), var(--violet));
-      font-weight: 1000;
-      box-shadow: 0 0 32px rgba(85,234,255,.35);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .logo::after {
-      content: "";
-      position: absolute;
-      inset: -80%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
-      transform: translateX(-90%) rotate(35deg);
-      animation: shine 3s ease-in-out infinite;
-    }
-
-    @keyframes shine {
-      0%, 36% { transform: translateX(-90%) rotate(35deg); }
-      72%, 100% { transform: translateX(90%) rotate(35deg); }
-    }
-
-    .brand small {
-      display: block;
-      color: var(--cyan2);
-      font-size: 10px;
-      font-weight: 1000;
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      opacity: .86;
-    }
-
-    .brand strong {
-      display: block;
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1;
-      letter-spacing: -.04em;
-      margin-top: 3px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .live {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 10px 11px;
-      border-radius: 999px;
-      border: 1px solid rgba(124,255,178,.26);
-      background: rgba(124,255,178,.08);
-      color: #caffdd;
-      font-size: 10px;
-      font-weight: 1000;
-      white-space: nowrap;
-    }
-
-    .live i {
-      width: 8px;
-      height: 8px;
-      display: block;
-      border-radius: 50%;
-      background: var(--lime);
-      box-shadow: 0 0 18px var(--lime);
-      animation: pulse 1.15s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%,100% { opacity: .45; transform: scale(.84); }
-      50% { opacity: 1; transform: scale(1.28); }
-    }
-
-    .panel {
-      border: 1px solid rgba(154,242,255,.15);
-      background:
-        linear-gradient(145deg, rgba(10, 25, 48, .86), rgba(6, 14, 28, .62));
-      box-shadow:
-        0 30px 110px rgba(0,0,0,.45),
-        inset 0 0 0 1px rgba(255,255,255,.025);
-      border-radius: var(--radius);
-      backdrop-filter: blur(26px);
-      -webkit-backdrop-filter: blur(26px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background:
-        linear-gradient(135deg,
-          rgba(85,234,255,.55),
-          rgba(124,255,178,.22),
-          rgba(154,124,255,.24),
-          transparent 68%
-        );
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .hero {
-      padding-top: 16px;
-    }
-
-    .hero-panel {
-      min-height: calc(100svh - 155px);
-      padding: 18px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 16px;
-      animation: rise .75s ease both;
-    }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(28px) scale(.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(154,242,255,.14);
-      background: rgba(154,242,255,.055);
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 1000;
-      white-space: nowrap;
-    }
-
-    .chip.cyan {
-      color: var(--cyan2);
-      border-color: rgba(85,234,255,.26);
-      background: rgba(85,234,255,.085);
-    }
-
-    .chip.lime {
-      color: #caffdd;
-      border-color: rgba(124,255,178,.24);
-      background: rgba(124,255,178,.08);
-    }
-
-    .chip.violet {
-      color: #ddd2ff;
-      border-color: rgba(154,124,255,.26);
-      background: rgba(154,124,255,.08);
-    }
-
-    .kicker {
-      color: var(--cyan2);
-      font-size: 10px;
-      font-weight: 1000;
-      letter-spacing: .30em;
-      text-transform: uppercase;
-      opacity: .86;
-    }
-
-    .headline {
-      font-size: clamp(45px, 14.8vw, 74px);
-      line-height: .80;
-      letter-spacing: -.105em;
-      font-weight: 1000;
-      margin-top: 12px;
-    }
-
-    .cyan-text {
-      color: var(--cyan);
-      text-shadow: 0 0 36px rgba(85,234,255,.34);
-    }
-
-    .lime-text {
-      color: var(--lime);
-      text-shadow: 0 0 36px rgba(124,255,178,.22);
-    }
-
-    .copy {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.72;
-      margin-top: 16px;
-      max-width: 98%;
-    }
-
-    .console {
-      min-height: 350px;
-      border-radius: 36px;
-      border: 1px solid rgba(154,242,255,.14);
-      background:
-        radial-gradient(circle at 50% 42%, rgba(85,234,255,.16), transparent 34%),
-        radial-gradient(circle at 82% 20%, rgba(154,124,255,.16), transparent 29%),
-        linear-gradient(145deg, rgba(8, 25, 48, .82), rgba(4, 10, 22, .55));
-      position: relative;
-      overflow: hidden;
-      display: grid;
-      place-items: center;
-    }
-
-    .console::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      opacity: .18;
-      background:
-        repeating-linear-gradient(180deg, rgba(154,242,255,.09) 0 1px, transparent 1px 10px);
-      animation: scanLines 3.4s linear infinite;
-    }
-
-    @keyframes scanLines {
-      from { transform: translateY(-24px); }
-      to { transform: translateY(24px); }
-    }
-
-    .console::after {
-      content: "";
-      position: absolute;
-      width: 150%;
-      height: 56%;
-      left: -25%;
-      top: 22%;
-      background: linear-gradient(90deg, transparent, rgba(85,234,255,.12), rgba(124,255,178,.09), transparent);
-      transform: rotate(-12deg);
-      filter: blur(8px);
-      animation: waveBeam 4.4s ease-in-out infinite;
-    }
-
-    @keyframes waveBeam {
-      0%,100% { transform: translateX(-22%) rotate(-12deg); opacity: .18; }
-      50% { transform: translateX(22%) rotate(-12deg); opacity: .72; }
-    }
-
-    .scanline {
-      position: absolute;
-      left: 8%;
-      right: 8%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cyan), var(--lime), transparent);
-      box-shadow: 0 0 24px rgba(85,234,255,.45);
-      animation: scanlineMove 2.4s ease-in-out infinite;
-      z-index: 3;
-    }
-
-    @keyframes scanlineMove {
-      0%,100% { top: 18%; opacity: .16; transform: scaleX(.60); }
-      50% { top: 76%; opacity: 1; transform: scaleX(1); }
-    }
-
-    .ticket-stage {
-      width: 255px;
-      height: 250px;
-      position: relative;
-      z-index: 5;
-      perspective: 800px;
-      display: grid;
-      place-items: center;
-    }
-
-    .ticket-shadow {
-      position: absolute;
-      width: 205px;
-      height: 38px;
-      bottom: 30px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(85,234,255,.28), transparent 70%);
-      filter: blur(12px);
-      animation: shadowPulse 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes shadowPulse {
-      to { transform: scaleX(1.16); opacity: .55; }
-    }
-
-    .ticket {
-      width: 222px;
-      min-height: 154px;
-      border-radius: 28px;
-      position: absolute;
-      overflow: hidden;
-      border: 1px solid rgba(154,242,255,.22);
-      background:
-        radial-gradient(circle at 18% 20%, rgba(85,234,255,.22), transparent 32%),
-        linear-gradient(145deg, rgba(14, 36, 68, .96), rgba(8, 18, 38, .86));
-      box-shadow:
-        0 28px 80px rgba(0,0,0,.36),
-        0 0 46px rgba(85,234,255,.14);
-    }
-
-    .ticket.back {
-      transform: translateY(36px) rotate(-8deg) scale(.88);
-      opacity: .42;
-      animation: ticketBack 3.8s ease-in-out infinite alternate;
-    }
-
-    .ticket.mid {
-      transform: translateY(18px) rotate(7deg) scale(.94);
-      opacity: .64;
-      animation: ticketMid 3.6s ease-in-out infinite alternate;
-    }
-
-    .ticket.front {
-      transform: translateY(-2px) rotate(-1deg);
-      animation: ticketFloat 3.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes ticketBack {
-      to { transform: translateY(28px) rotate(-5deg) scale(.90); }
-    }
-
-    @keyframes ticketMid {
-      to { transform: translateY(10px) rotate(5deg) scale(.96); }
-    }
-
-    @keyframes ticketFloat {
-      to { transform: translateY(-13px) rotate(1.5deg); }
-    }
-
-    .ticket::before,
-    .ticket::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #06101e;
-      transform: translateY(-50%);
-      z-index: 2;
-    }
-
-    .ticket::before { left: -12px; }
-    .ticket::after { right: -12px; }
-
-    .ticket-grid {
-      position: absolute;
-      inset: 0;
-      opacity: .16;
-      background-image:
-        linear-gradient(rgba(154,242,255,.20) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(154,242,255,.20) 1px, transparent 1px);
-      background-size: 18px 18px;
-      animation: microGrid 6s linear infinite;
-    }
-
-    @keyframes microGrid {
-      to { transform: translateY(18px); }
-    }
-
-    .ticket-content {
-      position: relative;
-      z-index: 3;
-      padding: 18px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .ticket-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .ticket-title {
-      font-size: 18px;
-      font-weight: 1000;
-      letter-spacing: -.04em;
-    }
-
-    .ticket-sub {
-      color: var(--soft);
-      font-size: 11px;
-      margin-top: 4px;
-      line-height: 1.35;
-    }
-
-    .qr {
-      width: 54px;
-      height: 54px;
-      flex: 0 0 auto;
-      border-radius: 14px;
-      padding: 6px;
-      border: 1px solid rgba(154,242,255,.18);
-      background:
-        linear-gradient(90deg, var(--cyan) 4px, transparent 4px) 0 0 / 12px 12px,
-        linear-gradient(var(--lime) 4px, transparent 4px) 0 0 / 12px 12px,
-        rgba(85,234,255,.08);
-      box-shadow: 0 0 25px rgba(85,234,255,.16);
-      animation: qrPulse 1.8s ease-in-out infinite;
-    }
-
-    @keyframes qrPulse {
-      0%,100% { filter: brightness(1); opacity: .72; }
-      50% { filter: brightness(1.55); opacity: 1; }
-    }
-
-    .ticket-route {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 10px;
-      margin-top: 2px;
-    }
-
-    .node {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      background: var(--lime);
-      box-shadow: 0 0 18px rgba(124,255,178,.75);
-    }
-
-    .route-line {
-      height: 2px;
-      border-radius: 999px;
-      background: rgba(154,242,255,.18);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .route-line::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      width: 40%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, transparent, var(--cyan2), transparent);
-      animation: routeMove 1.6s ease-in-out infinite;
-    }
-
-    @keyframes routeMove {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(260%); }
-    }
-
-    .ticket-bottom {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .wave-bars {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 14px;
-      height: 34px;
-      display: flex;
-      align-items: end;
-      justify-content: center;
-      gap: 5px;
-      opacity: .55;
-    }
-
-    .bar {
-      width: 4px;
-      border-radius: 999px;
-      background: linear-gradient(to top, var(--violet), var(--cyan));
-      animation: bars 1s ease-in-out infinite;
-    }
-
-    .bar:nth-child(1) { height: 8px; animation-delay: -.1s; }
-    .bar:nth-child(2) { height: 18px; animation-delay: -.2s; }
-    .bar:nth-child(3) { height: 12px; animation-delay: -.3s; }
-    .bar:nth-child(4) { height: 24px; animation-delay: -.4s; }
-    .bar:nth-child(5) { height: 15px; animation-delay: -.5s; }
-    .bar:nth-child(6) { height: 28px; animation-delay: -.6s; }
-    .bar:nth-child(7) { height: 11px; animation-delay: -.7s; }
-
-    @keyframes bars {
-      0%,100% { transform: scaleY(.55); opacity: .50; }
-      50% { transform: scaleY(1.2); opacity: 1; }
-    }
-
-    .console-label {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      z-index: 7;
-      padding: 13px;
-      border-radius: 24px;
-      border: 1px solid rgba(154,242,255,.14);
-      background: rgba(1, 8, 18, .54);
-      backdrop-filter: blur(16px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .console-label strong {
-      display: block;
-      font-size: 13px;
-      letter-spacing: -.03em;
-    }
-
-    .console-label span {
-      display: block;
-      color: var(--soft);
-      font-size: 10px;
-      margin-top: 3px;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .primary {
-      min-height: 58px;
-      width: 100%;
-      border-radius: 22px;
-      color: #021018;
-      background: linear-gradient(135deg, var(--cyan2), var(--cyan), var(--lime));
-      box-shadow: 0 20px 70px rgba(85,234,255,.24);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 16px;
-      font-weight: 1000;
-      font-size: 14px;
-      position: relative;
-      overflow: hidden;
-      transition: 0.22s ease;
-    }
-
-    .primary::after {
-      content: "";
-      position: absolute;
-      inset: -90% -40%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
-      transform: translateX(-85%) rotate(25deg);
-      animation: buttonLight 3s ease-in-out infinite;
-    }
-
-    @keyframes buttonLight {
-      0%,38% { transform: translateX(-85%) rotate(25deg); }
-      72%,100% { transform: translateX(85%) rotate(25deg); }
-    }
-
-    .primary:active {
-      transform: scale(.98);
-      filter: brightness(1.08);
-    }
-
-    .section {
-      margin-top: 16px;
-      animation: rise .75s ease both;
-    }
-
-    .section-head {
-      padding: 0 4px;
-      margin: 24px 0 12px;
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .section-title {
-      font-size: 28px;
-      line-height: .92;
-      letter-spacing: -.06em;
-      font-weight: 1000;
-      margin-top: 6px;
-    }
-
-    .section-sub {
-      color: var(--soft);
-      font-size: 12px;
-      line-height: 1.45;
-      margin-top: 6px;
-    }
-
-    .mode-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .mode {
-      min-height: 146px;
-      border-radius: 28px;
-      padding: 16px;
-      text-align: left;
-      color: var(--text);
-      background: rgba(7, 18, 34, .72);
-      border: 1px solid rgba(154,242,255,.13);
-      box-shadow: 0 18px 60px rgba(0,0,0,.26);
-      position: relative;
-      overflow: hidden;
-      transition: .22s ease;
-    }
-
-    .mode.active {
-      border-color: rgba(85,234,255,.44);
-      background:
-        radial-gradient(circle at 18% 10%, rgba(85,234,255,.18), transparent 42%),
-        rgba(9, 28, 52, .86);
-      box-shadow:
-        0 18px 70px rgba(0,0,0,.32),
-        0 0 38px rgba(85,234,255,.10);
-    }
-
-    .mode:active {
-      transform: scale(.98);
-    }
-
-    .mode-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 17px;
-      display: grid;
-      place-items: center;
-      background: rgba(85,234,255,.10);
-      border: 1px solid rgba(85,234,255,.18);
-      color: var(--cyan2);
-      margin-bottom: 14px;
-      font-size: 22px;
-    }
-
-    .mode strong {
-      display: block;
-      font-size: 16px;
-      letter-spacing: -.03em;
-    }
-
-    .mode span {
-      display: block;
-      color: var(--soft);
-      font-size: 11px;
-      line-height: 1.35;
-      margin-top: 6px;
-    }
-
-    .booking-panel {
-      padding: 16px;
-    }
-
-    .slot-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .slot {
-      min-height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      border: 1px solid rgba(154,242,255,.12);
-      background: rgba(154,242,255,.055);
-      color: var(--soft);
-      font-size: 10px;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .slot.active {
-      color: #021018;
-      background: linear-gradient(135deg, var(--cyan2), var(--cyan));
-      border-color: transparent;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    label {
-      display: block;
-      color: var(--soft);
-      font-size: 10px;
-      font-weight: 1000;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      margin: 0 0 7px 4px;
-    }
-
-    .two {
-      display: grid;
-      grid-template-columns: 1fr 120px;
-      gap: 10px;
-    }
-
-    .hall-only.hidden {
-      display: none;
-    }
-
-    .amount {
-      margin-top: 14px;
-      padding: 15px;
-      border-radius: 26px;
-      border: 1px solid rgba(85,234,255,.23);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(85,234,255,.16), transparent 40%),
-        rgba(85,234,255,.075);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .amount small {
-      display: block;
-      color: var(--soft);
-      font-size: 10px;
-      font-weight: 1000;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .amount strong {
-      display: block;
-      color: var(--cyan2);
-      font-size: 30px;
-      line-height: 1;
-      letter-spacing: -.06em;
-      margin-top: 5px;
-      text-shadow: 0 0 25px rgba(85,234,255,.28);
-    }
-
-    .bottom {
-      position: fixed;
-      left: 50%;
-      bottom: calc(12px + var(--safe));
-      transform: translateX(-50%);
-      z-index: 80;
-      width: min(calc(100% - 24px), 536px);
-      border: 1px solid rgba(154,242,255,.15);
-      background: rgba(5, 13, 26, .78);
-      box-shadow: 0 24px 80px rgba(0,0,0,.52);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 28px;
-      padding: 8px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bottom-copy {
-      min-width: 0;
-      padding-left: 8px;
-    }
-
-    .bottom-copy strong {
-      display: block;
-      font-size: 13px;
-      letter-spacing: -.03em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .bottom-copy span {
-      display: block;
-      color: var(--soft);
-      font-size: 10px;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .bottom-btn {
-      min-height: 48px;
-      padding: 0 16px;
-      border-radius: 20px;
-      color: #021018;
-      background: linear-gradient(135deg, var(--cyan2), var(--cyan));
-      font-weight: 1000;
-      font-size: 13px;
-      box-shadow: 0 12px 40px rgba(85,234,255,.20);
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: none;
-      place-items: end center;
-      background: rgba(0,0,0,.68);
-      padding: 14px;
-      backdrop-filter: blur(14px);
-    }
-
-    .modal.show {
-      display: grid;
-    }
-
-    .sheet {
-      width: min(100%, 540px);
-      border-radius: 34px;
-      border: 1px solid rgba(154,242,255,.16);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(85,234,255,.17), transparent 34%),
-        rgba(5, 13, 26, .95);
-      padding: 20px;
-      box-shadow: 0 30px 110px rgba(0,0,0,.75);
-      animation: sheetIn .35s ease both;
-    }
-
-    @keyframes sheetIn {
-      from { opacity: 0; transform: translateY(44px) scale(.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .pay-core {
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      margin: 6px auto 18px;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle, rgba(85,234,255,.16), transparent 48%),
-        conic-gradient(from 0deg, var(--cyan2), var(--cyan), var(--lime), var(--violet), var(--cyan2));
-      animation: spin 1.12s linear infinite;
-    }
-
-    .pay-core::after {
-      content: "₹";
-      width: 82px;
-      height: 82px;
-      border-radius: inherit;
-      display: grid;
-      place-items: center;
-      background: #06101e;
-      color: var(--cyan2);
-      font-size: 38px;
-      font-weight: 1000;
-      box-shadow: inset 0 0 30px rgba(0,0,0,.55);
-    }
-
-    .sheet h2 {
-      text-align: center;
-      font-size: 26px;
-      line-height: .95;
-      letter-spacing: -.06em;
-    }
-
-    .sheet p {
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
-      margin-top: 8px;
-    }
-
-    .pay-lines {
-      display: grid;
-      gap: 9px;
-      margin-top: 18px;
-    }
-
-    .pay-line {
-      border-radius: 18px;
-      border: 1px solid rgba(154,242,255,.12);
-      background: rgba(154,242,255,.045);
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: calc(94px + var(--safe));
-      transform: translateX(-50%) translateY(150%);
-      z-index: 260;
-      width: min(calc(100% - 24px), 520px);
-      border-radius: 24px;
-      border: 1px solid rgba(124,255,178,.25);
-      background: rgba(4, 23, 20, .90);
-      color: #caffdf;
-      padding: 16px;
-      font-size: 13px;
-      font-weight: 900;
-      line-height: 1.45;
-      backdrop-filter: blur(20px);
-      transition: transform .36s ease;
-      box-shadow: 0 24px 80px rgba(0,0,0,.45);
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: .72s ease;
-    }
-
-    .reveal.in {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 370px) {
-      .mode-grid,
-      .two {
-        grid-template-columns: 1fr;
-      }
-
-      .headline {
-        font-size: 43px;
-      }
-
-      .console {
-        min-height: 320px;
-      }
-
-      .bottom {
-        grid-template-columns: 1fr;
-      }
-
-      .bottom-copy {
-        display: none;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: .001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .001ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>STRATA — Reservation Console</title>
+<style>
+  :root {
+    --bg-void: #03050F;
+    --bg-deep: #070B1A;
+    --bg-glass: rgba(0, 229, 255, 0.04);
+    --bg-glass-hover: rgba(0, 229, 255, 0.08);
+    --cyan: #00E5FF;
+    --cyan-dim: rgba(0, 229, 255, 0.3);
+    --cyan-glow: rgba(0, 229, 255, 0.15);
+    --gold: #FFD166;
+    --gold-dim: rgba(255, 209, 102, 0.3);
+    --green: #00FF88;
+    --green-dim: rgba(0, 255, 136, 0.2);
+    --white: #F0F4FF;
+    --white-dim: rgba(240, 244, 255, 0.5);
+    --white-muted: rgba(240, 244, 255, 0.25);
+    --border: rgba(0, 229, 255, 0.15);
+    --border-bright: rgba(0, 229, 255, 0.35);
+    --nav-h: 64px;
+    --bar-h: 72px;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--white);
+    font-family: 'Courier New', 'SF Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-top: var(--nav-h);
+    padding-bottom: var(--bar-h);
+  }
+
+  /* ═══════════════════════════════════════════
+     CYBER GRID BACKGROUND
+  ═══════════════════════════════════════════ */
+  #cyberCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    top: -200px; left: -200px;
+    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+    animation: auroraDrift 12s ease-in-out infinite alternate;
+  }
+  .aurora::after {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    bottom: -100px; right: -100px;
+    background: radial-gradient(circle, rgba(255,209,102,0.06) 0%, transparent 70%);
+    animation: auroraDrift2 15s ease-in-out infinite alternate;
+  }
+  @keyframes auroraDrift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(120px, 80px) scale(1.3); }
+  }
+  @keyframes auroraDrift2 {
+    from { transform: translate(0, 0) scale(1.1); }
+    to   { transform: translate(-80px, -60px) scale(0.9); }
+  }
+
+  /* ═══════════════════════════════════════════
+     PAGE LOAD INTRO
+  ═══════════════════════════════════════════ */
+  #introScreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg-void);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 20px;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #introScreen.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .intro-logo {
+    font-size: clamp(40px, 10vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-shadow: 0 0 40px var(--cyan), 0 0 80px rgba(0,229,255,0.4);
+    animation: logoPulse 1.5s ease infinite alternate;
+  }
+  @keyframes logoPulse {
+    from { text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,229,255,0.3); }
+    to   { text-shadow: 0 0 60px var(--cyan), 0 0 120px rgba(0,229,255,0.5); }
+  }
+  .intro-bar-wrap {
+    width: min(280px, 70vw);
+    height: 3px;
+    background: rgba(0,229,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .intro-bar {
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: introScan 1.8s ease forwards;
+    width: 0;
+  }
+  @keyframes introScan {
+    0%   { width: 0; opacity: 1; }
+    80%  { width: 100%; opacity: 1; }
+    100% { width: 100%; opacity: 0; }
+  }
+  .intro-text {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--cyan-dim);
+    animation: blink 0.8s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ═══════════════════════════════════════════
+     NAVIGATION
+  ═══════════════════════════════════════════ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    z-index: 100;
+    display: flex; align-items: center;
+    padding: 0 clamp(16px, 4vw, 32px);
+    background: rgba(3, 5, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .nav-logo {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    color: var(--cyan);
+    text-shadow: 0 0 20px var(--cyan);
+    flex-shrink: 0;
+  }
+  .nav-divider {
+    width: 1px; height: 24px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .nav-title {
+    font-size: clamp(10px, 2.5vw, 13px);
+    letter-spacing: 0.15em;
+    color: var(--white-dim);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-status {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--green);
+    flex-shrink: 0;
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: statusPulse 2s ease infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { box-shadow: 0 0 6px var(--green); transform: scale(1); }
+    50%       { box-shadow: 0 0 16px var(--green); transform: scale(1.2); }
+  }
+
+  /* ═══════════════════════════════════════════
+     SIGNAL BARS
+  ═══════════════════════════════════════════ */
+  .signal-bars {
+    display: flex; align-items: flex-end; gap: 2px; height: 16px;
+    flex-shrink: 0;
+  }
+  .signal-bars span {
+    width: 3px; border-radius: 1px;
+    background: var(--cyan);
+    animation: signalAnim 1.4s ease infinite;
+  }
+  .signal-bars span:nth-child(1) { height: 4px;  animation-delay: 0s; }
+  .signal-bars span:nth-child(2) { height: 7px;  animation-delay: 0.2s; }
+  .signal-bars span:nth-child(3) { height: 11px; animation-delay: 0.4s; }
+  .signal-bars span:nth-child(4) { height: 16px; animation-delay: 0.6s; }
+  @keyframes signalAnim {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
+  /* ═══════════════════════════════════════════
+     MAIN WRAPPER
+  ═══════════════════════════════════════════ */
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 clamp(14px, 4vw, 24px);
+  }
+
+  /* ═══════════════════════════════════════════
+     HERO SECTION
+  ═══════════════════════════════════════════ */
+  .hero {
+    padding: clamp(32px, 8vw, 56px) 0 clamp(24px, 6vw, 40px);
+    text-align: center;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; letter-spacing: 0.35em;
+    color: var(--cyan);
+    margin-bottom: 20px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: statusPulse 2s ease infinite;
+  }
+  .hero-h1 {
+    font-size: clamp(30px, 9vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--white) 0%, var(--cyan) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: clamp(12px, 3vw, 15px);
+    color: var(--white-muted);
+    line-height: 1.7;
+    letter-spacing: 0.05em;
+    max-width: 380px;
+    margin: 0 auto 32px;
+  }
+
+  /* ═══════════════════════════════════════════
+     ANIMATED CAPSULE TICKET (Hero Visual)
+  ═══════════════════════════════════════════ */
+  .capsule-wrap {
+    position: relative;
+    margin: 0 auto 8px;
+    max-width: 360px;
+  }
+  .capsule {
+    position: relative;
+    background: linear-gradient(135deg,
+      rgba(0,229,255,0.07) 0%,
+      rgba(255,209,102,0.05) 50%,
+      rgba(0,229,255,0.04) 100%);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    padding: 20px 20px 18px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
+    animation: capsuleFloat 4s ease-in-out infinite alternate;
+    box-shadow:
+      0 0 0 1px rgba(0,229,255,0.08),
+      0 24px 64px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(0,229,255,0.2);
+  }
+  @keyframes capsuleFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-10px); }
+  }
+
+  /* Scanner beam */
+  .capsule::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    top: -2px;
+    animation: scanBeam 3s linear infinite;
+    box-shadow: 0 0 12px var(--cyan);
+  }
+  @keyframes scanBeam {
+    from { top: -2px; opacity: 0.8; }
+    to   { top: calc(100% + 2px); opacity: 0.4; }
+  }
+
+  /* Data stream dots */
+  .data-stream {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 3px;
+    overflow: hidden;
+    opacity: 0.4;
+  }
+  .data-stream::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(to bottom, transparent, var(--cyan), transparent);
+    animation: streamFlow 2s linear infinite;
+  }
+  @keyframes streamFlow {
+    from { top: -30%; }
+    to   { top: 130%; }
+  }
+
+  .cap-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(0,229,255,0.2);
+  }
+  .cap-logo-txt {
+    font-size: 14px; font-weight: 900;
+    letter-spacing: 0.2em; color: var(--cyan);
+    text-shadow: 0 0 12px var(--cyan);
+  }
+  .cap-type-badge {
+    font-size: 9px; letter-spacing: 0.2em;
+    padding: 3px 10px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 100px;
+    color: var(--gold);
+    background: rgba(255,209,102,0.06);
+    transition: all 0.4s ease;
+  }
+
+  .cap-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .cap-field label {
+    display: block;
+    font-size: 8px; letter-spacing: 0.25em;
+    color: var(--white-muted);
+    margin-bottom: 3px;
+  }
+  .cap-field span {
+    font-size: 13px; font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    display: block;
+    min-height: 18px;
+    transition: all 0.3s ease;
+  }
+  .cap-field span.filled { color: var(--cyan); }
+
+  .cap-divider-perf {
+    display: flex; align-items: center;
+    margin: 14px 0;
+    gap: 0;
+  }
+  .perf-half {
+    flex: 1; height: 1px;
+    background: repeating-linear-gradient(90deg,
+      rgba(0,229,255,0.25) 0, rgba(0,229,255,0.25) 4px,
+      transparent 4px, transparent 8px);
+  }
+  .perf-circle {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg-void);
+    border: 1px solid rgba(0,229,255,0.25);
+    flex-shrink: 0;
+  }
+
+  .cap-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cap-amount-wrap label {
+    display: block;
+    font-size: 8px; letter-spacing: 0.25em;
+    color: var(--white-muted);
+    margin-bottom: 2px;
+  }
+  .cap-amount {
+    font-size: 22px; font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 16px var(--gold-dim);
+    letter-spacing: 0.05em;
+    transition: all 0.4s ease;
+  }
+
+  /* QR pulse block */
+  .qr-pulse {
+    width: 52px; height: 52px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 2px; padding: 6px;
+    position: relative; overflow: hidden;
+  }
+  .qr-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.15), transparent);
+    animation: qrGlow 2s ease infinite alternate;
+  }
+  @keyframes qrGlow {
+    from { opacity: 0.3; }
+    to   { opacity: 1; }
+  }
+  .qr-cell {
+    border-radius: 1px;
+    background: var(--cyan);
+    opacity: 0;
+    animation: qrFlicker 2.5s ease infinite;
+  }
+  .qr-cell:nth-child(odd)  { animation-delay: calc(var(--i) * 0.1s); }
+  .qr-cell:nth-child(even) { background: var(--gold); animation-delay: calc(var(--i) * 0.15s); }
+  @keyframes qrFlicker {
+    0%, 100% { opacity: 0.1; }
+    50%       { opacity: 0.9; }
+  }
+
+  /* Moving route line */
+  .route-line {
+    position: absolute;
+    bottom: 0; left: 20px; right: 20px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .route-line::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: routeMove 2.5s linear infinite;
+  }
+  @keyframes routeMove {
+    from { left: -40%; }
+    to   { left: 140%; }
+  }
+
+  /* ═══════════════════════════════════════════
+     GLASS LAYER PANELS
+  ═══════════════════════════════════════════ */
+  .layers-section {
+    padding: 8px 0 24px;
+  }
+  .layers-title {
+    font-size: 9px; letter-spacing: 0.35em;
+    color: var(--white-muted);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .layers-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .layers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .layer-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 14px 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, background 0.3s;
+  }
+  .layer-card.revealed {
+    opacity: 1; transform: translateY(0);
+  }
+  .layer-card:hover {
+    border-color: var(--border-bright);
+    background: var(--bg-glass-hover);
+  }
+  .layer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .layer-card:hover::before { opacity: 1; }
+
+  .lc-icon {
+    font-size: 18px; margin-bottom: 8px;
+    filter: drop-shadow(0 0 8px var(--cyan));
+  }
+  .lc-name {
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--cyan);
+    margin-bottom: 4px;
+  }
+  .lc-desc {
+    font-size: 10px; line-height: 1.5;
+    color: var(--white-muted);
+    letter-spacing: 0.03em;
+  }
+  .lc-indicator {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    margin-right: 4px;
+    animation: statusPulse 2s ease infinite;
+  }
+  .lc-status {
+    margin-top: 8px;
+    font-size: 8px; letter-spacing: 0.2em;
+    color: var(--white-muted);
+    display: flex; align-items: center;
+  }
+
+  /* ═══════════════════════════════════════════
+     BOOKING MODE CARDS
+  ═══════════════════════════════════════════ */
+  .mode-section { padding: 8px 0 24px; }
+  .section-label {
+    font-size: 9px; letter-spacing: 0.35em;
+    color: var(--white-muted);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  .mode-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .mode-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .mode-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.08), transparent);
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .mode-card.active {
+    border-color: var(--cyan);
+    background: rgba(0, 229, 255, 0.08);
+    box-shadow: 0 0 30px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.05);
+  }
+  .mode-card.active::after { opacity: 1; }
+  .mode-card:hover:not(.active) {
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+  }
+  .mode-card:hover::after { opacity: 0.5; }
+
+  .mc-icon {
+    font-size: 28px; margin-bottom: 10px;
+    display: block;
+    filter: drop-shadow(0 0 10px currentColor);
+    transition: transform 0.3s;
+  }
+  .mode-card:hover .mc-icon { transform: scale(1.1); }
+  .mc-name {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .mc-sub {
+    font-size: 9px; letter-spacing: 0.1em;
+    color: var(--white-muted);
+    display: block;
+    line-height: 1.4;
+  }
+  .mc-amount {
+    margin-top: 10px;
+    font-size: 13px; font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    display: block;
+    text-shadow: 0 0 10px var(--gold-dim);
+  }
+  .mc-check {
+    position: absolute; top: 10px; right: 10px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--bg-void);
+    font-weight: 900;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
+  .mode-card.active .mc-check { opacity: 1; }
+
+  /* ═══════════════════════════════════════════
+     RESERVATION FORM
+  ═══════════════════════════════════════════ */
+  .form-section {
+    padding: 8px 0 32px;
+  }
+  .form-capsule {
+    background: linear-gradient(160deg,
+      rgba(0,229,255,0.05) 0%,
+      rgba(255,209,102,0.03) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+  }
+  .form-capsule::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--gold), transparent);
+  }
+
+  .field-group {
+    margin-bottom: 16px;
+  }
+  .field-group label {
+    display: block;
+    font-size: 9px; letter-spacing: 0.25em;
+    color: var(--cyan);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .field-group input,
+  .field-group textarea,
+  .field-group select {
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--white);
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300E5FF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field-group select option {
+    background: #0A0D1A;
+    color: var(--white);
+  }
+  .field-group input:focus,
+  .field-group textarea:focus,
+  .field-group select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px var(--cyan-glow), 0 0 20px rgba(0,229,255,0.1);
+    background: rgba(0,229,255,0.04);
+  }
+  .field-group input::placeholder,
+  .field-group textarea::placeholder { color: rgba(240,244,255,0.2); }
+  .field-group textarea { min-height: 80px; resize: none; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .hall-fields {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  }
+  .hall-fields.visible {
+    max-height: 400px;
+    opacity: 1;
+  }
+
+  .form-advance-row {
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,209,102,0.06);
+    border: 1px solid var(--gold-dim);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .far-label {
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--white-muted);
+  }
+  .far-amount {
+    font-size: 20px; font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 12px var(--gold-dim);
+    letter-spacing: 0.05em;
+    transition: all 0.4s ease;
+  }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(0,229,255,0.1));
+    border: 1px solid var(--cyan);
+    border-radius: var(--radius-md);
+    color: var(--cyan);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    animation: btnShine 3s linear infinite;
+  }
+  @keyframes btnShine {
+    from { left: -60%; }
+    to   { left: 160%; }
+  }
+  .btn-submit:hover {
+    background: rgba(0,229,255,0.2);
+    box-shadow: 0 0 30px rgba(0,229,255,0.3);
+    transform: translateY(-1px);
+  }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* ═══════════════════════════════════════════
+     PAYMENT MODAL
+  ═══════════════════════════════════════════ */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    z-index: 500;
+    background: rgba(3, 5, 15, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .modal-overlay.open {
+    opacity: 1; visibility: visible;
+  }
+  .modal {
+    width: 100%;
+    max-width: 500px;
+    background: linear-gradient(160deg, #0A0F22 0%, #07090F 100%);
+    border: 1px solid var(--border-bright);
+    border-bottom: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 28px 24px 40px;
+    position: relative;
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .modal-overlay.open .modal {
+    transform: translateY(0);
+  }
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 24px;
+  }
+  .modal-title {
+    font-size: 11px; letter-spacing: 0.3em;
+    color: var(--cyan);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .modal-amount-big {
+    font-size: clamp(36px, 9vw, 48px);
+    font-weight: 900;
+    color: var(--gold);
+    text-align: center;
+    text-shadow: 0 0 30px var(--gold-dim);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .modal-desc {
+    font-size: 10px; letter-spacing: 0.15em;
+    color: var(--white-muted);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .mock-payment-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .mpb-label {
+    font-size: 9px; letter-spacing: 0.25em;
+    color: var(--white-muted);
+    margin-bottom: 8px;
+  }
+  .mpb-methods {
+    display: flex; justify-content: center; gap: 12px;
+    flex-wrap: wrap;
+  }
+  .mpb-method {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--white-dim);
+    background: rgba(0,229,255,0.04);
+  }
+
+  .btn-pay {
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, var(--cyan) 0%, rgba(0,200,230,0.8) 100%);
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--bg-void);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 8px 32px rgba(0,229,255,0.25);
+  }
+  .btn-pay:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(0,229,255,0.35);
+  }
+  .btn-pay:active { transform: translateY(0); }
+  .btn-pay.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .btn-modal-close {
+    display: block; width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background: none; border: none;
+    color: var(--white-muted);
+    font-family: inherit;
+    font-size: 10px; letter-spacing: 0.2em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .btn-modal-close:hover { color: var(--white); }
+
+  /* ═══════════════════════════════════════════
+     SUCCESS TOAST
+  ═══════════════════════════════════════════ */
+  .toast {
+    position: fixed;
+    top: calc(var(--nav-h) + 12px);
+    left: 50%; transform: translateX(-50%) translateY(-20px);
+    z-index: 600;
+    background: linear-gradient(135deg, rgba(0,255,136,0.15), rgba(0,255,136,0.08));
+    border: 1px solid rgba(0,255,136,0.4);
+    border-radius: 100px;
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    pointer-events: none;
+    max-width: calc(100vw - 32px);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .toast-text {
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* ═══════════════════════════════════════════
+     STICKY BOTTOM BAR
+  ═══════════════════════════════════════════ */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(3, 5, 15, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 12px clamp(16px, 4vw, 24px);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .bb-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .bb-mode {
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--white-muted);
+    margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .bb-amount {
+    font-size: 18px; font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 12px var(--gold-dim);
+    line-height: 1;
+  }
+  .bb-btn {
+    flex-shrink: 0;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(0,229,255,0.08));
+    border: 1px solid var(--cyan);
+    border-radius: var(--radius-md);
+    color: var(--cyan);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .bb-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: btnShine 2.5s linear infinite;
+  }
+  .bb-btn:hover {
+    background: rgba(0,229,255,0.2);
+    box-shadow: 0 0 20px rgba(0,229,255,0.25);
+  }
+
+  /* ═══════════════════════════════════════════
+     SCROLL REVEAL
+  ═══════════════════════════════════════════ */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ═══════════════════════════════════════════
+     SCROLLBAR
+  ═══════════════════════════════════════════ */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg-void); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ═══════════════════════════════════════════
+     UTILS
+  ═══════════════════════════════════════════ */
+  .mt-4 { margin-top: 4px; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+
+  @media (max-width: 400px) {
+    .mode-grid { gap: 8px; }
+    .mode-card { padding: 16px 12px; }
+    .field-row { grid-template-columns: 1fr; gap: 0; }
+    .layers-grid { gap: 8px; }
+  }
+</style>
 </head>
-
 <body>
-  <div class="boot"><div class="boot-core"></div></div>
 
-  <div class="space"></div>
-  <div class="orb o1"></div>
-  <div class="orb o2"></div>
-  <div class="orb o3"></div>
-  <div class="noise"></div>
+<!-- Intro Screen -->
+<div id="introScreen">
+  <div class="intro-logo">STRATA</div>
+  <div class="intro-bar-wrap"><div class="intro-bar"></div></div>
+  <div class="intro-text">INITIALIZING RESERVATION CONSOLE…</div>
+</div>
 
-  <div class="rain" aria-hidden="true">
-    <span class="ray" style="left:5%;animation-delay:-.3s;animation-duration:6.5s"></span>
-    <span class="ray" style="left:15%;animation-delay:-1.1s;animation-duration:7.4s"></span>
-    <span class="ray" style="left:26%;animation-delay:-2.2s;animation-duration:6.9s"></span>
-    <span class="ray" style="left:37%;animation-delay:-.8s;animation-duration:8.1s"></span>
-    <span class="ray" style="left:49%;animation-delay:-3.2s;animation-duration:7.2s"></span>
-    <span class="ray" style="left:62%;animation-delay:-1.7s;animation-duration:6.8s"></span>
-    <span class="ray" style="left:75%;animation-delay:-2.7s;animation-duration:7.8s"></span>
-    <span class="ray" style="left:88%;animation-delay:-.5s;animation-duration:6.7s"></span>
-    <span class="ray" style="left:53%;animation-delay:-0.9s;animation-duration:5.90s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:70%;animation-delay:-1.0s;animation-duration:6.24s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:87%;animation-delay:-1.1s;animation-duration:6.58s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:4%;animation-delay:-1.2s;animation-duration:6.92s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:21%;animation-delay:-1.3s;animation-duration:7.26s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:38%;animation-delay:-1.4s;animation-duration:7.60s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:55%;animation-delay:-1.5s;animation-duration:7.94s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:72%;animation-delay:-1.6s;animation-duration:8.28s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:89%;animation-delay:-1.7s;animation-duration:8.62s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:6%;animation-delay:-1.8s;animation-duration:5.90s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:23%;animation-delay:-1.9s;animation-duration:6.24s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:40%;animation-delay:-2.0s;animation-duration:6.58s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:57%;animation-delay:-2.1s;animation-duration:6.92s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:74%;animation-delay:-2.2s;animation-duration:7.26s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:91%;animation-delay:-2.3s;animation-duration:7.60s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:8%;animation-delay:-2.4s;animation-duration:7.94s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:25%;animation-delay:-2.5s;animation-duration:8.28s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:42%;animation-delay:-2.6s;animation-duration:8.62s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:59%;animation-delay:-2.7s;animation-duration:5.90s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:76%;animation-delay:-2.8s;animation-duration:6.24s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:93%;animation-delay:-2.9s;animation-duration:6.58s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:10%;animation-delay:-3.0s;animation-duration:6.92s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:27%;animation-delay:-0.0s;animation-duration:7.26s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:44%;animation-delay:-0.1s;animation-duration:7.60s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:61%;animation-delay:-0.2s;animation-duration:7.94s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:78%;animation-delay:-0.3s;animation-duration:8.28s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:95%;animation-delay:-0.4s;animation-duration:8.62s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:12%;animation-delay:-0.5s;animation-duration:5.90s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:29%;animation-delay:-0.6s;animation-duration:6.24s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:46%;animation-delay:-0.7s;animation-duration:6.58s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:63%;animation-delay:-0.8s;animation-duration:6.92s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:80%;animation-delay:-0.9s;animation-duration:7.26s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:97%;animation-delay:-1.0s;animation-duration:7.60s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:14%;animation-delay:-1.1s;animation-duration:7.94s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:31%;animation-delay:-1.2s;animation-duration:8.28s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:48%;animation-delay:-1.3s;animation-duration:8.62s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:65%;animation-delay:-1.4s;animation-duration:5.90s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:82%;animation-delay:-1.5s;animation-duration:6.24s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:99%;animation-delay:-1.6s;animation-duration:6.58s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:16%;animation-delay:-1.7s;animation-duration:6.92s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:33%;animation-delay:-1.8s;animation-duration:7.26s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:50%;animation-delay:-1.9s;animation-duration:7.60s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:67%;animation-delay:-2.0s;animation-duration:7.94s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:84%;animation-delay:-2.1s;animation-duration:8.28s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:1%;animation-delay:-2.2s;animation-duration:8.62s;opacity:0.23;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:18%;animation-delay:-2.3s;animation-duration:5.90s;opacity:0.26;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
-    <span class="ray" style="left:35%;animation-delay:-2.4s;animation-duration:6.24s;opacity:0.12;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:52%;animation-delay:-2.5s;animation-duration:6.58s;opacity:0.15;background:linear-gradient(to bottom,transparent,rgba(85,234,255,.55),transparent)"></span>
-    <span class="ray" style="left:69%;animation-delay:-2.6s;animation-duration:6.92s;opacity:0.19;background:linear-gradient(to bottom,transparent,rgba(124,255,178,.52),transparent)"></span>
+<!-- Cyber Grid Canvas -->
+<canvas id="cyberCanvas"></canvas>
+<div class="aurora"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-logo">STRATA</div>
+  <div class="nav-divider"></div>
+  <div class="nav-title">DEMO RESERVATIONS</div>
+  <div class="signal-bars">
+    <span></span><span></span><span></span><span></span>
   </div>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    LIVE
+  </div>
+</nav>
 
-  <main class="app">
-    <nav class="hud">
-      <div class="hud-card">
-        <div class="brand">
-          <div class="logo">R</div>
-          <div>
-            <small>DEMO</small>
-            <strong>Reserve Console</strong>
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✦</span>
+  <span class="toast-text" id="toastText">RESERVATION CONFIRMED</span>
+</div>
+
+<!-- Page Content -->
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">PREMIUM DINING ACCESS</div>
+    <h1 class="hero-h1">Reserve Your<br>Perfect Experience</h1>
+    <p class="hero-sub">Secure your table, private room, or banquet hall at STRATA. Real-time availability. Instant confirmation.</p>
+
+    <!-- Animated Capsule Ticket -->
+    <div class="capsule-wrap">
+      <div class="capsule">
+        <div class="data-stream"></div>
+        <div class="cap-header">
+          <span class="cap-logo-txt">STRATA</span>
+          <span class="cap-type-badge" id="capBadge">TABLE ACCESS</span>
+        </div>
+        <div class="cap-row">
+          <div class="cap-field">
+            <label>GUEST</label>
+            <span id="capName">—</span>
+          </div>
+          <div class="cap-field">
+            <label>COVERS</label>
+            <span id="capGuests">—</span>
+          </div>
+          <div class="cap-field">
+            <label>DATE</label>
+            <span id="capDate">—</span>
+          </div>
+          <div class="cap-field">
+            <label>TIME</label>
+            <span id="capTime">—</span>
           </div>
         </div>
-        <div class="live"><i></i> ONLINE</div>
+        <div class="cap-divider-perf">
+          <div class="perf-half"></div>
+          <div class="perf-circle"></div>
+          <div class="perf-half"></div>
+        </div>
+        <div class="cap-bottom">
+          <div class="cap-amount-wrap">
+            <label>ADVANCE</label>
+            <div class="cap-amount" id="capAmount">₹299</div>
+          </div>
+          <div class="qr-pulse" id="qrBlock">
+            <!-- 25 cells -->
+            <div class="qr-cell" style="--i:0"></div>
+            <div class="qr-cell" style="--i:1"></div>
+            <div class="qr-cell" style="--i:2"></div>
+            <div class="qr-cell" style="--i:3"></div>
+            <div class="qr-cell" style="--i:4"></div>
+            <div class="qr-cell" style="--i:5"></div>
+            <div class="qr-cell" style="--i:6"></div>
+            <div class="qr-cell" style="--i:7"></div>
+            <div class="qr-cell" style="--i:8"></div>
+            <div class="qr-cell" style="--i:9"></div>
+            <div class="qr-cell" style="--i:10"></div>
+            <div class="qr-cell" style="--i:11"></div>
+            <div class="qr-cell" style="--i:12"></div>
+            <div class="qr-cell" style="--i:13"></div>
+            <div class="qr-cell" style="--i:14"></div>
+            <div class="qr-cell" style="--i:15"></div>
+            <div class="qr-cell" style="--i:16"></div>
+            <div class="qr-cell" style="--i:17"></div>
+            <div class="qr-cell" style="--i:18"></div>
+            <div class="qr-cell" style="--i:19"></div>
+            <div class="qr-cell" style="--i:20"></div>
+            <div class="qr-cell" style="--i:21"></div>
+            <div class="qr-cell" style="--i:22"></div>
+            <div class="qr-cell" style="--i:23"></div>
+            <div class="qr-cell" style="--i:24"></div>
+          </div>
+        </div>
+        <div class="route-line"></div>
       </div>
-    </nav>
-
-    <header class="hero">
-      <section class="panel hero-panel">
-        <div>
-          <div class="chips">
-            <span class="chip cyan">Ticket Scanner UI</span>
-            <span class="chip lime">Reservation Only</span>
-            <span class="chip violet">Mobile Console</span>
-          </div>
-
-          <div class="kicker">New animation system</div>
-
-          <h1 class="headline">
-            Reserve<br />
-            <span class="cyan-text">Your Slot</span><br />
-            <span class="lime-text">Instantly.</span>
-          </h1>
-
-          <p class="copy">
-            Hologram table removed. This version uses animated reservation tickets,
-            QR pulse, route scan, light beams and live signal bars.
-          </p>
-        </div>
-
-        <div class="console">
-          <div class="scanline"></div>
-
-          <div class="ticket-stage">
-            <div class="ticket-shadow"></div>
-
-            <div class="ticket back">
-              <div class="ticket-grid"></div>
-            </div>
-
-            <div class="ticket mid">
-              <div class="ticket-grid"></div>
-            </div>
-
-            <div class="ticket front">
-              <div class="ticket-grid"></div>
-
-              <div class="ticket-content">
-                <div class="ticket-top">
-                  <div>
-                    <div class="ticket-title" id="ticketTitle">Table Access Pass</div>
-                    <div class="ticket-sub" id="ticketSub">Priority reservation queue</div>
-                  </div>
-                  <div class="qr"></div>
-                </div>
-
-                <div class="ticket-route">
-                  <span class="node"></span>
-                  <span class="route-line"></span>
-                  <span class="node"></span>
-                </div>
-
-                <div class="ticket-bottom">
-                  <span id="ticketMode">TABLE</span>
-                  <span id="ticketAmount">₹299</span>
-                </div>
-              </div>
-
-              <div class="wave-bars">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="console-label">
-            <div>
-              <strong id="visualTitle">Reservation Ticket</strong>
-              <span id="visualSub">₹299 advance table request</span>
-            </div>
-            <span class="chip cyan" id="visualChip">Table</span>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="primary" type="button" onclick="jumpToBooking()">Start Reservation →</button>
-        </div>
-      </section>
-    </header>
-
-    <section class="section reveal">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Booking Mode</div>
-          <h2 class="section-title">Choose<br /><span class="cyan-text">Request</span></h2>
-          <p class="section-sub">Ticket animation changes with selected mode.</p>
-        </div>
-      </div>
-
-      <div class="mode-grid">
-        <button class="mode active" id="tableMode" type="button" onclick="setMode('table')">
-          <div class="mode-icon">🎟️</div>
-          <strong>Table Pass</strong>
-          <span>Dinner, family, VIP table request</span>
-        </button>
-
-        <button class="mode" id="hallMode" type="button" onclick="setMode('hall')">
-          <div class="mode-icon">📡</div>
-          <strong>Event Pass</strong>
-          <span>Birthday, function, private event</span>
-        </button>
-      </div>
-    </section>
-
-    <section class="section reveal" id="booking">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Reservation Details</div>
-          <h2 class="section-title" id="bookingTitle">
-            Table<br /><span class="cyan-text">Request</span>
-          </h2>
-          <p class="section-sub">Frontend demo. Backend/payment can connect later.</p>
-        </div>
-      </div>
-
-      <form class="panel booking-panel" onsubmit="submitBooking(event)">
-        <div class="slot-row">
-          <div class="slot active">Guest</div>
-          <div class="slot">Slot</div>
-          <div class="slot">Pay</div>
-        </div>
-
-        <div class="form-grid">
-          <div>
-            <label for="name">Guest Name</label>
-            <input id="name" type="text" required placeholder="Enter guest name" />
-          </div>
-
-          <div>
-            <label for="phone">Mobile Number</label>
-            <input id="phone" type="tel" required placeholder="+91 98765 43210" />
-          </div>
-
-          <div class="two">
-            <div>
-              <label for="date">Date</label>
-              <input id="date" type="date" required />
-            </div>
-
-            <div>
-              <label for="time">Time</label>
-              <input id="time" type="time" required />
-            </div>
-          </div>
-
-          <div>
-            <label for="guests">Guests</label>
-            <input id="guests" type="number" min="1" required placeholder="Number of guests" />
-          </div>
-
-          <div class="hall-only hidden">
-            <label for="eventType">Event Type</label>
-            <select id="eventType">
-              <option value="">Select event type</option>
-              <option>Birthday Party</option>
-              <option>Family Function</option>
-              <option>Corporate Dinner</option>
-              <option>Anniversary Celebration</option>
-              <option>Private Gathering</option>
-            </select>
-          </div>
-
-          <div class="hall-only hidden">
-            <label for="spaceType">Space Type</label>
-            <select id="spaceType">
-              <option value="">Select space type</option>
-              <option>Private Dining Room</option>
-              <option>Banquet Hall</option>
-              <option>Rooftop Setup</option>
-              <option>Premium Lounge</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="note">Special Request</label>
-            <textarea id="note" rows="3" placeholder="Seating, decoration, cake table..."></textarea>
-          </div>
-        </div>
-
-        <div class="amount">
-          <div>
-            <small>Advance</small>
-            <strong id="amountText">₹299</strong>
-          </div>
-          <span class="chip cyan" id="requestChip">Table Request</span>
-        </div>
-
-        <button class="primary" id="payBtn" type="submit">Pay ₹299 & Request Table</button>
-      </form>
-    </section>
-  </main>
-
-  <div class="bottom">
-    <div class="bottom-copy">
-      <strong id="bottomTitle">Table Request</strong>
-      <span id="bottomSub">Advance starts at ₹299</span>
     </div>
-    <button class="bottom-btn" type="button" onclick="jumpToBooking()">Reserve</button>
-  </div>
+  </section>
 
+  <!-- GLASS LAYER PANELS -->
+  <section class="layers-section">
+    <div class="layers-title">SYSTEM LAYERS</div>
+    <div class="layers-grid">
+      <div class="layer-card">
+        <div class="lc-icon">◈</div>
+        <div class="lc-name">LIVE SLOT LAYER</div>
+        <div class="lc-desc">Real-time availability tracking across all dining zones.</div>
+        <div class="lc-status"><span class="lc-indicator"></span>ACTIVE</div>
+      </div>
+      <div class="layer-card">
+        <div class="lc-icon">⬡</div>
+        <div class="lc-name">PAYMENT LAYER</div>
+        <div class="lc-desc">Encrypted advance booking deposit with instant receipt.</div>
+        <div class="lc-status"><span class="lc-indicator"></span>SECURED</div>
+      </div>
+      <div class="layer-card">
+        <div class="lc-icon">⬢</div>
+        <div class="lc-name">RECEPTION SYNC</div>
+        <div class="lc-desc">Host console notified 30 min before your arrival.</div>
+        <div class="lc-status"><span class="lc-indicator"></span>SYNCED</div>
+      </div>
+      <div class="layer-card">
+        <div class="lc-icon">◆</div>
+        <div class="lc-name">VIP REQUEST</div>
+        <div class="lc-desc">Special arrangements routed to the chef and concierge.</div>
+        <div class="lc-status"><span class="lc-indicator"></span>READY</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING MODE -->
+  <section class="mode-section reveal" id="modeSection">
+    <div class="section-label">SELECT MODE</div>
+    <div class="mode-grid">
+      <div class="mode-card active" id="modeTable" onclick="setMode('table')">
+        <span class="mc-check">✓</span>
+        <span class="mc-icon">⊞</span>
+        <span class="mc-name">TABLE</span>
+        <span class="mc-sub">Intimate dining for 1–12 guests</span>
+        <span class="mc-amount">₹299</span>
+      </div>
+      <div class="mode-card" id="modeHall" onclick="setMode('hall')">
+        <span class="mc-check">✓</span>
+        <span class="mc-icon">⊟</span>
+        <span class="mc-name">HALL / ROOM</span>
+        <span class="mc-sub">Private events &amp; banquets</span>
+        <span class="mc-amount">₹1,999</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESERVATION FORM -->
+  <section class="form-section reveal" id="formSection">
+    <div class="section-label">RESERVATION FORM</div>
+    <div class="form-capsule">
+      <div class="field-group">
+        <label>FULL NAME</label>
+        <input type="text" id="fName" placeholder="Enter your name" autocomplete="name">
+      </div>
+      <div class="field-group">
+        <label>PHONE NUMBER</label>
+        <input type="tel" id="fPhone" placeholder="+91 00000 00000" autocomplete="tel">
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>DATE</label>
+          <input type="date" id="fDate">
+        </div>
+        <div class="field-group">
+          <label>TIME</label>
+          <input type="time" id="fTime" value="19:00">
+        </div>
+      </div>
+      <div class="field-group">
+        <label>NUMBER OF GUESTS</label>
+        <input type="number" id="fGuests" placeholder="2" min="1" max="500">
+      </div>
+
+      <!-- Hall-only fields -->
+      <div class="hall-fields" id="hallFields">
+        <div class="field-group">
+          <label>EVENT TYPE</label>
+          <select id="fEvent">
+            <option value="">Select event type</option>
+            <option>Corporate Dinner</option>
+            <option>Birthday Celebration</option>
+            <option>Anniversary</option>
+            <option>Wedding Reception</option>
+            <option>Conference Lunch</option>
+            <option>Product Launch</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>SPACE TYPE</label>
+          <select id="fSpace">
+            <option value="">Select space</option>
+            <option>Private Room (up to 20)</option>
+            <option>Semi-Private Room (up to 40)</option>
+            <option>Banquet Hall A (up to 100)</option>
+            <option>Grand Banquet Hall (up to 300)</option>
+            <option>Rooftop Pavilion (up to 80)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>SPECIAL REQUEST</label>
+        <textarea id="fRequest" placeholder="Dietary requirements, décor, occasion details…"></textarea>
+      </div>
+
+      <div class="form-advance-row">
+        <div>
+          <div class="far-label">ADVANCE DEPOSIT</div>
+          <div style="font-size:9px;letter-spacing:0.1em;color:rgba(240,244,255,0.25);margin-top:2px;">Adjusted on final bill</div>
+        </div>
+        <div class="far-amount" id="formAmount">₹299</div>
+      </div>
+
+      <button class="btn-submit" onclick="handleSubmit()">
+        CONFIRM &amp; PROCEED TO PAYMENT
+      </button>
+    </div>
+  </section>
+
+</div><!-- end page-wrap -->
+
+<!-- Sticky Bottom Bar -->
+<div class="bottom-bar">
+  <div class="bb-info">
+    <div class="bb-mode" id="bbMode">TABLE BOOKING — ADVANCE</div>
+    <div class="bb-amount" id="bbAmount">₹299</div>
+  </div>
+  <button class="bb-btn" onclick="scrollToForm()">BOOK NOW</button>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="modal">
-    <div class="sheet">
-      <div class="pay-core"></div>
-
-      <h2>Payment Preview</h2>
-      <p>Demo animation only. Real Cashfree checkout can be attached later.</p>
-
-      <div class="pay-lines">
-        <div class="pay-line">
-          <span>Mode</span>
-          <strong id="modalMode">Table</strong>
-        </div>
-        <div class="pay-line">
-          <span>Amount</span>
-          <strong id="modalAmount">₹299</strong>
-        </div>
-        <div class="pay-line">
-          <span>Status</span>
-          <strong>Demo</strong>
-        </div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">DEMO PAYMENT PORTAL</div>
+    <div class="modal-amount-big" id="modalAmount">₹299</div>
+    <div class="modal-desc" id="modalDesc">TABLE BOOKING — ADVANCE DEPOSIT</div>
+    <div class="mock-payment-box">
+      <div class="mpb-label">SIMULATED PAYMENT OPTIONS</div>
+      <div class="mpb-methods">
+        <span class="mpb-method">UPI</span>
+        <span class="mpb-method">CARD</span>
+        <span class="mpb-method">NET BANKING</span>
       </div>
-
-      <button class="primary" type="button" onclick="success()">Simulate Success</button>
     </div>
+    <button class="btn-pay" id="btnPay" onclick="simulatePayment()">
+      PAY NOW — <span id="btnPayAmt">₹299</span>
+    </button>
+    <button class="btn-modal-close" onclick="closeModal()">CANCEL</button>
   </div>
+</div>
 
-  <div class="toast" id="toast">Reservation request created.</div>
+<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+<script>
+/* ─── STATE ─── */
+let currentMode = 'table';
+const AMOUNTS = { table: 299, hall: 1999 };
 
-  <script>
-    const state = { mode: "table", amount: 299 };
-    const $ = (id) => document.getElementById(id);
+/* ─── INTRO ─── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('introScreen').classList.add('gone');
+    initScrollReveal();
+    revealLayerCards();
+  }, 2200);
+});
 
-    const ui = {
-      tableMode: $("tableMode"),
-      hallMode: $("hallMode"),
-      visualTitle: $("visualTitle"),
-      visualSub: $("visualSub"),
-      visualChip: $("visualChip"),
-      ticketTitle: $("ticketTitle"),
-      ticketSub: $("ticketSub"),
-      ticketMode: $("ticketMode"),
-      ticketAmount: $("ticketAmount"),
-      bookingTitle: $("bookingTitle"),
-      amountText: $("amountText"),
-      requestChip: $("requestChip"),
-      payBtn: $("payBtn"),
-      bottomTitle: $("bottomTitle"),
-      bottomSub: $("bottomSub"),
-      modal: $("modal"),
-      modalMode: $("modalMode"),
-      modalAmount: $("modalAmount"),
-      toast: $("toast")
-    };
+/* ─── CANVAS GRID ─── */
+(function initCanvas() {
+  const canvas = document.getElementById('cyberCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
 
-    function money(value) {
-      return "₹" + value.toLocaleString("en-IN");
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  const dots = Array.from({length: 40}, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    size: Math.random() * 1.5 + 0.5
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    /* Grid */
+    const gridSize = 52;
+    ctx.strokeStyle = 'rgba(0,229,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
     }
 
-    function setMode(mode) {
-      state.mode = mode;
-      state.amount = mode === "table" ? 299 : 1999;
-
-      ui.tableMode.classList.toggle("active", mode === "table");
-      ui.hallMode.classList.toggle("active", mode === "hall");
-
-      document.querySelectorAll(".hall-only").forEach((item) => {
-        item.classList.toggle("hidden", mode !== "hall");
-      });
-
-      if (mode === "table") {
-        ui.visualTitle.textContent = "Reservation Ticket";
-        ui.visualSub.textContent = "₹299 advance table request";
-        ui.visualChip.textContent = "Table";
-        ui.ticketTitle.textContent = "Table Access Pass";
-        ui.ticketSub.textContent = "Priority reservation queue";
-        ui.ticketMode.textContent = "TABLE";
-        ui.bookingTitle.innerHTML = 'Table<br /><span class="cyan-text">Request</span>';
-        ui.requestChip.textContent = "Table Request";
-        ui.payBtn.textContent = "Pay ₹299 & Request Table";
-        ui.bottomTitle.textContent = "Table Request";
-        ui.bottomSub.textContent = "Advance starts at ₹299";
-        ui.modalMode.textContent = "Table";
-      } else {
-        ui.visualTitle.textContent = "Event Access Ticket";
-        ui.visualSub.textContent = "₹1,999 advance hall request";
-        ui.visualChip.textContent = "Hall";
-        ui.ticketTitle.textContent = "Event Access Pass";
-        ui.ticketSub.textContent = "Private room / banquet queue";
-        ui.ticketMode.textContent = "EVENT";
-        ui.bookingTitle.innerHTML = 'Hall / Room<br /><span class="cyan-text">Request</span>';
-        ui.requestChip.textContent = "Hall Request";
-        ui.payBtn.textContent = "Pay ₹1,999 & Request Hall";
-        ui.bottomTitle.textContent = "Hall / Room Request";
-        ui.bottomSub.textContent = "Advance starts at ₹1,999";
-        ui.modalMode.textContent = "Hall";
-      }
-
-      ui.ticketAmount.textContent = money(state.amount);
-      ui.amountText.textContent = money(state.amount);
-      ui.modalAmount.textContent = money(state.amount);
+    /* Diagonal accent lines */
+    ctx.strokeStyle = 'rgba(0,229,255,0.025)';
+    for (let i = -H; i < W + H; i += 150) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H * 0.5, H); ctx.stroke();
     }
 
-    function jumpToBooking() {
-      $("booking").scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function submitBooking(event) {
-      event.preventDefault();
-      ui.modal.classList.add("show");
-    }
-
-    function success() {
-      ui.modal.classList.remove("show");
-      ui.toast.textContent =
-        state.mode === "table"
-          ? "Demo table reservation request created."
-          : "Demo hall reservation request created.";
-      ui.toast.classList.add("show");
-      setTimeout(() => ui.toast.classList.remove("show"), 2800);
-    }
-
-    ui.modal.addEventListener("click", (event) => {
-      if (event.target === ui.modal) ui.modal.classList.remove("show");
+    /* Moving dots */
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+      if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,229,255,0.35)';
+      ctx.fill();
     });
 
-    window.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") ui.modal.classList.remove("show");
+    /* Subtle scan line */
+    const scanY = (t * 0.5) % (H + 40) - 20;
+    const grad = ctx.createLinearGradient(0, scanY - 60, 0, scanY + 60);
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(0.5, 'rgba(0,229,255,0.04)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, scanY - 60, W, 120);
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── MIN DATE ─── */
+(function setMinDate() {
+  const dateInput = document.getElementById('fDate');
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm   = String(today.getMonth() + 1).padStart(2, '0');
+  const dd   = String(today.getDate()).padStart(2, '0');
+  dateInput.min = `${yyyy}-${mm}-${dd}`;
+  dateInput.value = `${yyyy}-${mm}-${dd}`;
+  updateCapsule();
+})();
+
+/* ─── MODE TOGGLE ─── */
+function setMode(mode) {
+  currentMode = mode;
+
+  document.getElementById('modeTable').classList.toggle('active', mode === 'table');
+  document.getElementById('modeHall').classList.toggle('active', mode === 'hall');
+
+  const hallFields = document.getElementById('hallFields');
+  hallFields.classList.toggle('visible', mode === 'hall');
+
+  const amt = mode === 'table' ? '₹299' : '₹1,999';
+
+  // Update all amount displays
+  document.getElementById('capAmount').textContent  = amt;
+  document.getElementById('formAmount').textContent  = amt;
+  document.getElementById('bbAmount').textContent    = amt;
+  document.getElementById('modalAmount').textContent = amt;
+  document.getElementById('btnPayAmt').textContent   = amt;
+
+  const badge = mode === 'table' ? 'TABLE ACCESS' : 'HALL ACCESS';
+  document.getElementById('capBadge').textContent = badge;
+
+  const bbMode = mode === 'table' ? 'TABLE BOOKING — ADVANCE' : 'HALL BOOKING — ADVANCE';
+  document.getElementById('bbMode').textContent = bbMode;
+
+  const modalDesc = mode === 'table' ? 'TABLE BOOKING — ADVANCE DEPOSIT' : 'HALL / ROOM BOOKING — ADVANCE DEPOSIT';
+  document.getElementById('modalDesc').textContent = modalDesc;
+}
+
+/* ─── LIVE CAPSULE UPDATE ─── */
+function updateCapsule() {
+  const name   = document.getElementById('fName').value.trim();
+  const guests = document.getElementById('fGuests').value.trim();
+  const dateV  = document.getElementById('fDate').value;
+  const timeV  = document.getElementById('fTime').value;
+
+  const capName   = document.getElementById('capName');
+  const capGuests = document.getElementById('capGuests');
+  const capDate   = document.getElementById('capDate');
+  const capTime   = document.getElementById('capTime');
+
+  if (name) {
+    capName.textContent = name.substring(0, 14).toUpperCase();
+    capName.classList.add('filled');
+  } else {
+    capName.textContent = '—'; capName.classList.remove('filled');
+  }
+
+  if (guests) {
+    capGuests.textContent = guests + ' PAX';
+    capGuests.classList.add('filled');
+  } else {
+    capGuests.textContent = '—'; capGuests.classList.remove('filled');
+  }
+
+  if (dateV) {
+    const d = new Date(dateV + 'T00:00:00');
+    const opts = { day:'2-digit', month:'short', year:'numeric' };
+    capDate.textContent = d.toLocaleDateString('en-IN', opts).toUpperCase();
+    capDate.classList.add('filled');
+  } else {
+    capDate.textContent = '—'; capDate.classList.remove('filled');
+  }
+
+  if (timeV) {
+    const [h, m] = timeV.split(':');
+    const hr = parseInt(h);
+    const ampm = hr >= 12 ? 'PM' : 'AM';
+    const hr12 = hr % 12 || 12;
+    capTime.textContent = `${String(hr12).padStart(2,'0')}:${m} ${ampm}`;
+    capTime.classList.add('filled');
+  } else {
+    capTime.textContent = '—'; capTime.classList.remove('filled');
+  }
+}
+
+['fName','fGuests','fDate','fTime'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateCapsule);
+});
+
+/* ─── SCROLL TO FORM ─── */
+function scrollToForm() {
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ─── SUBMIT ─── */
+function handleSubmit() {
+  const name  = document.getElementById('fName').value.trim();
+  const phone = document.getElementById('fPhone').value.trim();
+  const date  = document.getElementById('fDate').value;
+  const time  = document.getElementById('fTime').value;
+  const guests= document.getElementById('fGuests').value.trim();
+
+  if (!name || !phone || !date || !time || !guests) {
+    shakeMissing();
+    return;
+  }
+  if (currentMode === 'hall') {
+    const ev = document.getElementById('fEvent').value;
+    const sp = document.getElementById('fSpace').value;
+    if (!ev || !sp) { shakeMissing(); return; }
+  }
+  openModal();
+}
+
+function shakeMissing() {
+  const form = document.querySelector('.form-capsule');
+  form.style.animation = 'none';
+  form.offsetHeight; // reflow
+  form.style.animation = 'shakeForm 0.4s ease';
+  setTimeout(() => form.style.animation = '', 500);
+}
+
+/* ─── MODAL ─── */
+function openModal() {
+  const amt = currentMode === 'table' ? '₹299' : '₹1,999';
+  document.getElementById('modalAmount').textContent = amt;
+  document.getElementById('btnPayAmt').textContent   = amt;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  const btn = document.getElementById('btnPay');
+  btn.textContent = 'PAY NOW — ' + (currentMode === 'table' ? '₹299' : '₹1,999');
+  btn.classList.remove('loading');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ─── SIMULATE PAYMENT ─── */
+function simulatePayment() {
+  const btn = document.getElementById('btnPay');
+  btn.classList.add('loading');
+  btn.textContent = 'PROCESSING…';
+
+  setTimeout(() => {
+    closeModal();
+    showToast();
+    confettiPulse();
+  }, 1800);
+}
+
+/* ─── TOAST ─── */
+function showToast() {
+  const toast = document.getElementById('toast');
+  const name  = document.getElementById('fName').value.trim() || 'GUEST';
+  document.getElementById('toastText').textContent =
+    'CONFIRMED — ' + name.toUpperCase().substring(0, 10);
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+/* ─── CONFETTI PULSE (brief glow) ─── */
+function confettiPulse() {
+  const cap = document.querySelector('.capsule');
+  cap.style.boxShadow = '0 0 60px rgba(0,229,255,0.4), 0 0 120px rgba(0,229,255,0.2)';
+  setTimeout(() => {
+    cap.style.boxShadow = '';
+  }, 1500);
+}
+
+/* ─── SCROLL REVEAL ─── */
+function initScrollReveal() {
+  const items = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     });
+  }, { threshold: 0.1 });
+  items.forEach(el => io.observe(el));
+}
 
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add("in");
-      }),
-      { threshold: .12 }
-    );
+/* ─── LAYER CARDS STAGGERED REVEAL ─── */
+function revealLayerCards() {
+  const cards = document.querySelectorAll('.layer-card');
+  cards.forEach((c, i) => {
+    setTimeout(() => c.classList.add('revealed'), 400 + i * 120);
+  });
+}
 
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
-
-    const dateInput = $("date");
-    if (dateInput) {
-      const d = new Date();
-      dateInput.min = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+/* ─── SHAKE KEYFRAME (injected) ─── */
+(function injectShake() {
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes shakeForm {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-8px); }
+      40%       { transform: translateX(8px); }
+      60%       { transform: translateX(-5px); }
+      80%       { transform: translateX(5px); }
     }
-  </script>
+  `;
+  document.head.appendChild(s);
+})();
+
+/* ─── INIT ─── */
+updateCapsule();
+</script>
 </body>
 </html>
