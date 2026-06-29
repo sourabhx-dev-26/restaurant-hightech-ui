@@ -1,32 +1,33 @@
-<!DOCTYPE html>
+
+
+html = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#020308" />
-  <title>DEMO Reservations — Ultra Futuristic Booking UI</title>
+  <meta name="theme-color" content="#020207" />
+  <title>DEMO Reservations — Extraordinary Mobile UI</title>
+
   <style>
     :root {
-      --bg: #020308;
-      --bg2: #070a13;
-      --panel: rgba(255,255,255,.065);
-      --panel2: rgba(255,255,255,.105);
-      --line: rgba(255,255,255,.13);
-      --line2: rgba(248,220,143,.28);
+      --bg: #020207;
+      --ink: #fff7df;
+      --muted: rgba(255, 247, 223, .62);
+      --soft: rgba(255, 247, 223, .35);
       --gold: #d6b25e;
-      --gold2: #f8dc8f;
-      --gold3: #fff3c7;
-      --cyan: #49e6ff;
-      --cyan2: #b7f8ff;
-      --green: #52ff9d;
-      --red: #ff547a;
-      --orange: #ffb84d;
-      --txt: #fff8e7;
-      --muted: rgba(255,248,231,.68);
-      --muted2: rgba(255,248,231,.44);
-      --muted3: rgba(255,248,231,.28);
-      --shadow: 0 28px 90px rgba(0,0,0,.55);
-      --safe-bottom: env(safe-area-inset-bottom);
+      --gold2: #ffe9a6;
+      --gold3: #8e6223;
+      --cyan: #54eaff;
+      --cyan2: #b9f8ff;
+      --pink: #ff5f9d;
+      --green: #63ffac;
+      --red: #ff5577;
+      --glass: rgba(255,255,255,.075);
+      --glass2: rgba(255,255,255,.12);
+      --line: rgba(255,255,255,.13);
+      --line2: rgba(248,220,143,.35);
+      --radius: 32px;
+      --safe: env(safe-area-inset-bottom);
     }
 
     * {
@@ -37,19 +38,22 @@
     }
 
     html {
-      scroll-behavior: smooth;
       background: var(--bg);
+      scroll-behavior: smooth;
     }
 
     body {
       min-height: 100vh;
       overflow-x: hidden;
-      color: var(--txt);
+      color: var(--ink);
       background: var(--bg);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    button, input, select, textarea {
+    button,
+    input,
+    textarea,
+    select {
       font: inherit;
     }
 
@@ -58,46 +62,54 @@
       cursor: pointer;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .screen-bg {
+    .cosmos {
       position: fixed;
       inset: 0;
-      z-index: -10;
+      z-index: -20;
       background:
-        radial-gradient(circle at 12% 7%, rgba(214,178,94,.35), transparent 28%),
-        radial-gradient(circle at 94% 16%, rgba(73,230,255,.19), transparent 26%),
-        radial-gradient(circle at 45% 100%, rgba(214,178,94,.13), transparent 36%),
-        linear-gradient(135deg, #010206 0%, #080c17 46%, #020204 100%);
+        radial-gradient(circle at 50% -20%, rgba(255,233,166,.18), transparent 38%),
+        radial-gradient(circle at 16% 14%, rgba(214,178,94,.26), transparent 28%),
+        radial-gradient(circle at 92% 28%, rgba(84,234,255,.16), transparent 31%),
+        radial-gradient(circle at 50% 110%, rgba(255,95,157,.09), transparent 35%),
+        linear-gradient(135deg, #020207 0%, #060815 52%, #010104 100%);
+      overflow: hidden;
     }
 
-    .screen-bg::before {
+    .cosmos::before {
       content: "";
       position: absolute;
       inset: 0;
+      opacity: .48;
       background-image:
-        linear-gradient(rgba(255,255,255,.032) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.032) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 82%);
-      animation: gridFlow 18s linear infinite;
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 82%);
+      animation: gridMove 16s linear infinite;
     }
 
-    .screen-bg::after {
+    .cosmos::after {
       content: "";
       position: absolute;
-      inset: -20%;
-      background: conic-gradient(from 120deg, transparent, rgba(214,178,94,.10), transparent, rgba(73,230,255,.08), transparent);
-      filter: blur(46px);
-      opacity: .95;
-      animation: aurora 32s linear infinite;
+      inset: -35%;
+      opacity: .92;
+      filter: blur(45px);
+      background:
+        conic-gradient(from 110deg at 50% 50%,
+          transparent,
+          rgba(214,178,94,.12),
+          transparent,
+          rgba(84,234,255,.10),
+          transparent,
+          rgba(255,95,157,.08),
+          transparent
+        );
+      animation: aurora 26s linear infinite;
     }
 
-    @keyframes gridFlow {
-      to { transform: translateY(44px); }
+    @keyframes gridMove {
+      from { transform: translateY(0); }
+      to { transform: translateY(42px); }
     }
 
     @keyframes aurora {
@@ -106,149 +118,146 @@
 
     .orb {
       position: fixed;
-      border-radius: 999px;
-      filter: blur(64px);
-      z-index: -9;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: .34;
+      z-index: -18;
       pointer-events: none;
-      opacity: .38;
-      animation: orbFloat 9s ease-in-out infinite alternate;
+      animation: orbFloat 8s ease-in-out infinite alternate;
     }
 
-    .orb.one { width: 310px; height: 310px; background: var(--gold); left: -145px; top: 12%; }
-    .orb.two { width: 280px; height: 280px; background: var(--cyan); right: -145px; top: 38%; animation-delay: -3s; opacity: .27; }
-    .orb.three { width: 240px; height: 240px; background: #9d6f27; left: 30%; bottom: -150px; animation-delay: -6s; opacity: .24; }
+    .orb.one { left: -120px; top: 12%; background: var(--gold); }
+    .orb.two { right: -135px; top: 37%; background: var(--cyan); animation-delay: -3s; }
+    .orb.three { left: 35%; bottom: -160px; background: var(--pink); opacity: .18; animation-delay: -6s; }
 
     @keyframes orbFloat {
       from { transform: translate3d(0,0,0) scale(1); }
-      to { transform: translate3d(28px,-42px,0) scale(1.15); }
+      to { transform: translate3d(24px,-38px,0) scale(1.14); }
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: -17;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 999px;
+      width: 3px;
+      height: 3px;
+      opacity: .18;
+      background: var(--gold2);
+      box-shadow: 0 0 18px rgba(255,233,166,.65);
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .star:nth-child(3n) {
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(84,234,255,.65);
+    }
+
+    .star:nth-child(4n) {
+      background: var(--pink);
+      box-shadow: 0 0 18px rgba(255,95,157,.50);
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: .12; transform: scale(.65); }
+      50% { opacity: .92; transform: scale(1.22); }
     }
 
     .noise {
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: -8;
-      opacity: .12;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.84' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.44'/%3E%3C/svg%3E");
+      z-index: -16;
+      opacity: .1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
     }
 
-    .stars {
+    .intro {
       position: fixed;
       inset: 0;
-      z-index: -7;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .star {
-      position: absolute;
-      border-radius: 999px;
-      background: currentColor;
-      color: rgba(248,220,143,.72);
-      box-shadow: 0 0 16px currentColor;
-      opacity: .2;
-      animation: starPulse 3.7s ease-in-out infinite;
-    }
-
-    @keyframes starPulse {
-      0%,100% { transform: scale(.7); opacity: .16; }
-      50% { transform: scale(1.22); opacity: .95; }
-    }
-
-    .preloader {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
+      z-index: 999;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at 50% 40%, rgba(214,178,94,.18), transparent 32%), #020308;
-      animation: preOut .9s ease 2.0s forwards;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(214,178,94,.22), transparent 34%),
+        #020207;
+      animation: introExit .9s ease 1.75s both;
     }
 
-    @keyframes preOut {
-      to { opacity: 0; visibility: hidden; transform: scale(1.03); }
+    @keyframes introExit {
+      to { opacity: 0; visibility: hidden; transform: scale(1.04); }
     }
 
-    .loader-card {
-      width: min(88vw, 360px);
-      border: 1px solid var(--line);
-      background: linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.035));
-      border-radius: 38px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(24px);
+    .intro-mark {
+      width: 170px;
+      height: 170px;
       position: relative;
-      overflow: hidden;
+      display: grid;
+      place-items: center;
     }
 
-    .loader-ring {
-      width: 118px;
-      height: 118px;
-      margin: 0 auto 22px;
-      border-radius: 999px;
+    .intro-mark::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
       background: conic-gradient(from 0deg, var(--gold2), transparent, var(--cyan), transparent, var(--gold2));
-      display: grid;
-      place-items: center;
-      animation: spin 1.3s linear infinite;
-      box-shadow: 0 0 55px rgba(214,178,94,.26);
+      animation: spin 1.1s linear infinite;
+      filter: drop-shadow(0 0 30px rgba(214,178,94,.35));
     }
 
-    .loader-ring::after {
-      content: "D";
-      width: 82px;
-      height: 82px;
-      border-radius: inherit;
-      background: #070a12;
+    .intro-mark::after {
+      content: "DEMO";
+      position: absolute;
+      inset: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #050711;
       color: var(--gold2);
-      display: grid;
-      place-items: center;
-      font-size: 34px;
       font-weight: 1000;
-      box-shadow: inset 0 0 28px rgba(0,0,0,.55);
+      letter-spacing: .28em;
+      padding-left: .28em;
+      box-shadow: inset 0 0 32px rgba(0,0,0,.7);
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .loader-card h2 {
-      font-size: 20px;
-      letter-spacing: -.04em;
-    }
-
-    .loader-card p {
-      margin-top: 8px;
-      color: var(--muted2);
-      font-size: 13px;
-      line-height: 1.55;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .app {
       width: min(100%, 560px);
       min-height: 100vh;
       margin: 0 auto;
-      padding: 14px 14px calc(110px + var(--safe-bottom));
-      position: relative;
+      padding: 12px 12px calc(112px + var(--safe));
     }
 
     .nav {
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 50;
       padding: 8px 0 12px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
     }
 
-    .nav-box {
+    .nav-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      border: 1px solid rgba(255,255,255,.105);
-      background: rgba(2,3,8,.55);
-      border-radius: 28px;
       padding: 8px;
-      box-shadow: 0 18px 60px rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.11);
+      background: rgba(5,7,15,.68);
+      border-radius: 28px;
+      box-shadow: 0 20px 70px rgba(0,0,0,.36);
     }
 
     .brand {
@@ -259,48 +268,51 @@
     }
 
     .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 19px;
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
-      flex: 0 0 auto;
-      color: #040404;
+      color: #050505;
       font-weight: 1000;
-      background: linear-gradient(135deg, var(--gold3), var(--gold), #8d6427);
-      box-shadow: 0 0 36px rgba(214,178,94,.34);
+      background: linear-gradient(135deg, #fff1ba, var(--gold), var(--gold3));
+      box-shadow: 0 0 35px rgba(214,178,94,.34);
       position: relative;
       overflow: hidden;
+      flex: 0 0 auto;
     }
 
     .logo::after {
       content: "";
       position: absolute;
       inset: -70%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.70), transparent);
-      transform: rotate(35deg) translateX(-82%);
-      animation: logoShine 3.5s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
+      transform: translateX(-88%) rotate(35deg);
+      animation: shine 3.1s ease-in-out infinite;
     }
 
-    @keyframes logoShine {
-      0%, 35% { transform: rotate(35deg) translateX(-82%); }
-      70%, 100% { transform: rotate(35deg) translateX(82%); }
+    @keyframes shine {
+      0%, 36% { transform: translateX(-88%) rotate(35deg); }
+      73%, 100% { transform: translateX(88%) rotate(35deg); }
     }
 
-    .kicker {
+    .brand small {
+      display: block;
       color: var(--gold2);
       font-size: 10px;
-      letter-spacing: .30em;
+      font-weight: 1000;
+      letter-spacing: .28em;
       text-transform: uppercase;
-      opacity: .86;
-      white-space: nowrap;
+      opacity: .84;
     }
 
-    .brand-title {
-      margin-top: 1px;
+    .brand strong {
+      display: block;
+      color: var(--ink);
       font-size: 15px;
-      font-weight: 1000;
+      line-height: 1;
       letter-spacing: -.04em;
+      margin-top: 3px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -310,35 +322,36 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      border: 1px solid rgba(82,255,157,.26);
-      background: rgba(82,255,157,.08);
-      color: #baffd7;
       border-radius: 999px;
-      padding: 11px 12px;
+      border: 1px solid rgba(99,255,172,.24);
+      background: rgba(99,255,172,.08);
+      color: #cbffdf;
+      padding: 10px 11px;
       font-size: 10px;
       font-weight: 1000;
       white-space: nowrap;
     }
 
-    .dot {
+    .live span {
       width: 8px;
       height: 8px;
-      border-radius: 999px;
+      border-radius: 50%;
       background: var(--green);
       box-shadow: 0 0 18px var(--green);
-      animation: dotPulse 1.25s infinite;
+      animation: pulse 1.15s ease-in-out infinite;
     }
 
-    @keyframes dotPulse {
-      0%, 100% { opacity: .46; transform: scale(.85); }
-      50% { opacity: 1; transform: scale(1.25); }
+    @keyframes pulse {
+      0%, 100% { opacity: .45; transform: scale(.82); }
+      50% { opacity: 1; transform: scale(1.28); }
     }
 
     .glass {
-      border: 1px solid var(--line);
-      background: linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.035));
-      border-radius: 34px;
-      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.035));
+      border-radius: var(--radius);
+      box-shadow: 0 28px 95px rgba(0,0,0,.56);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       position: relative;
@@ -351,7 +364,7 @@
       inset: 0;
       border-radius: inherit;
       padding: 1px;
-      background: linear-gradient(135deg, rgba(248,220,143,.58), rgba(73,230,255,.21), transparent 58%);
+      background: linear-gradient(135deg, rgba(255,233,166,.54), rgba(84,234,255,.23), transparent 62%);
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -359,32 +372,28 @@
     }
 
     .hero {
-      padding-top: 12px;
+      padding-top: 16px;
     }
 
     .hero-card {
-      padding: 22px;
-      min-height: 660px;
-      display: grid;
-      align-content: space-between;
-      animation: revealUp .8s ease both;
+      min-height: calc(100svh - 155px);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: rise .75s ease both;
     }
 
-    @keyframes revealUp {
-      from { opacity: 0; transform: translateY(28px) scale(.975); }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(28px) scale(.97); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .hero-main {
-      position: relative;
-      z-index: 1;
-    }
-
-    .chip-row {
+    .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .chip {
@@ -392,795 +401,604 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.055);
       color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 10px;
       font-size: 10px;
       font-weight: 1000;
       white-space: nowrap;
     }
 
-    .chip.gold { color: var(--gold2); border-color: rgba(214,178,94,.30); background: rgba(214,178,94,.095); }
-    .chip.cyan { color: var(--cyan2); border-color: rgba(73,230,255,.26); background: rgba(73,230,255,.08); }
-    .chip.green { color: #baffd7; border-color: rgba(82,255,157,.26); background: rgba(82,255,157,.08); }
-    .chip.red { color: #ffbac9; border-color: rgba(255,84,122,.30); background: rgba(255,84,122,.08); }
-    .chip.orange { color: #ffd39a; border-color: rgba(255,184,77,.30); background: rgba(255,184,77,.08); }
+    .chip.gold {
+      color: var(--gold2);
+      border-color: rgba(214,178,94,.30);
+      background: rgba(214,178,94,.10);
+    }
+
+    .chip.cyan {
+      color: var(--cyan2);
+      border-color: rgba(84,234,255,.24);
+      background: rgba(84,234,255,.08);
+    }
+
+    .chip.green {
+      color: #caffdf;
+      border-color: rgba(99,255,172,.25);
+      background: rgba(99,255,172,.08);
+    }
+
+    .kicker {
+      color: var(--gold2);
+      font-size: 10px;
+      font-weight: 1000;
+      letter-spacing: .30em;
+      text-transform: uppercase;
+      opacity: .86;
+    }
 
     .hero-title {
-      margin-top: 14px;
-      font-size: clamp(52px, 14vw, 78px);
-      line-height: .80;
+      margin-top: 12px;
+      font-size: clamp(46px, 14vw, 76px);
+      line-height: .81;
       letter-spacing: -.105em;
       font-weight: 1000;
     }
 
-    .gold-text {
+    .gold {
       color: var(--gold);
-      text-shadow: 0 0 36px rgba(214,178,94,.38), 0 0 90px rgba(214,178,94,.18);
+      text-shadow: 0 0 36px rgba(214,178,94,.40);
     }
 
-    .cyan-text {
+    .cyan {
       color: var(--cyan);
-      text-shadow: 0 0 36px rgba(73,230,255,.24);
+      text-shadow: 0 0 34px rgba(84,234,255,.26);
     }
 
     .hero-copy {
-      max-width: 95%;
-      margin-top: 18px;
+      margin-top: 16px;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.72;
+      max-width: 96%;
     }
 
-    .hero-visual {
-      height: 280px;
-      margin: 24px 0;
+    .capsule {
+      margin: 20px 0 12px;
+      height: 270px;
       border-radius: 34px;
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.11);
       background:
-        radial-gradient(circle at 50% 40%, rgba(248,220,143,.18), transparent 33%),
-        radial-gradient(circle at 72% 22%, rgba(73,230,255,.13), transparent 28%),
-        linear-gradient(145deg, rgba(255,255,255,.060), rgba(255,255,255,.020));
+        radial-gradient(circle at 50% 48%, rgba(255,233,166,.18), transparent 34%),
+        radial-gradient(circle at 78% 22%, rgba(84,234,255,.13), transparent 30%),
+        linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
       position: relative;
       overflow: hidden;
       display: grid;
       place-items: center;
-      perspective: 900px;
+      transform-style: preserve-3d;
     }
 
-    .hero-visual::before {
+    .capsule::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(180deg, rgba(255,255,255,.045) 0 1px, transparent 1px 10px);
-      opacity: .25;
-      animation: scanLines 4.5s linear infinite;
+      background:
+        repeating-linear-gradient(180deg,
+          rgba(255,255,255,.060) 0,
+          rgba(255,255,255,.060) 1px,
+          transparent 1px,
+          transparent 10px);
+      opacity: .18;
+      animation: scanLines 3.2s linear infinite;
     }
 
     @keyframes scanLines {
-      from { transform: translateY(-18px); }
-      to { transform: translateY(18px); }
+      from { transform: translateY(-24px); }
+      to { transform: translateY(24px); }
     }
 
-    .dining-orbit {
-      width: 210px;
-      height: 210px;
+    .light-beam {
+      position: absolute;
+      width: 70%;
+      height: 150%;
+      top: -25%;
+      left: 15%;
+      background: linear-gradient(90deg, transparent, rgba(84,234,255,.12), rgba(255,233,166,.14), transparent);
+      transform: rotate(21deg);
+      animation: beam 4s ease-in-out infinite;
+      filter: blur(4px);
+    }
+
+    @keyframes beam {
+      0%,100% { opacity: .16; transform: translateX(-25%) rotate(21deg); }
+      50% { opacity: .72; transform: translateX(25%) rotate(21deg); }
+    }
+
+    .reservation-disc {
+      width: 190px;
+      height: 190px;
       border-radius: 999px;
       position: relative;
-      transform: rotateX(58deg) rotateZ(0deg);
-      transform-style: preserve-3d;
-      animation: orbitSpin 11s linear infinite;
+      background:
+        radial-gradient(circle, rgba(255,233,166,.23), transparent 43%),
+        conic-gradient(from 90deg, rgba(214,178,94,.22), rgba(84,234,255,.22), rgba(255,95,157,.10), rgba(214,178,94,.22));
+      border: 1px solid rgba(255,233,166,.28);
+      box-shadow: 0 0 90px rgba(214,178,94,.22);
+      animation: discSpin 12s linear infinite;
+      z-index: 2;
     }
 
-    @keyframes orbitSpin {
-      to { transform: rotateX(58deg) rotateZ(360deg); }
+    @keyframes discSpin {
+      to { transform: rotate(360deg); }
     }
 
-    .orbit-ring {
+    .reservation-disc::before {
+      content: "";
       position: absolute;
-      inset: 0;
+      inset: 44px;
       border-radius: inherit;
-      border: 1px solid rgba(248,220,143,.30);
-      background: conic-gradient(from 90deg, rgba(214,178,94,.18), rgba(73,230,255,.20), rgba(214,178,94,.18));
-      box-shadow: 0 0 60px rgba(214,178,94,.20);
+      background: rgba(255,255,255,.065);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 0 32px rgba(0,0,0,.55);
     }
 
-    .orbit-ring:nth-child(2) { inset: 30px; opacity: .74; animation: reverseSpin 6s linear infinite; }
-    .orbit-ring:nth-child(3) { inset: 65px; opacity: .62; animation: reverseSpin 8s linear infinite; }
-
-    @keyframes reverseSpin {
-      to { transform: rotate(-360deg); }
-    }
-
-    .orbit-table {
+    .seat {
       position: absolute;
-      inset: 72px;
+      width: 23px;
+      height: 23px;
       border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.16);
-      box-shadow: inset 0 0 34px rgba(0,0,0,.42);
+      background: linear-gradient(135deg, #fff3be, var(--gold));
+      box-shadow: 0 0 24px rgba(255,233,166,.70);
+      animation: seatGlow 1.5s ease-in-out infinite;
     }
 
-    .orbit-seat {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
+    .seat:nth-child(1) { top: 5px; left: 83px; }
+    .seat:nth-child(2) { top: 46px; right: 14px; animation-delay: .12s; }
+    .seat:nth-child(3) { bottom: 46px; right: 14px; animation-delay: .24s; }
+    .seat:nth-child(4) { bottom: 5px; left: 83px; animation-delay: .36s; }
+    .seat:nth-child(5) { bottom: 46px; left: 14px; animation-delay: .48s; }
+    .seat:nth-child(6) { top: 46px; left: 14px; animation-delay: .60s; }
+
+    @keyframes seatGlow {
+      0%, 100% { opacity: .62; transform: scale(.86); }
+      50% { opacity: 1; transform: scale(1.18); }
+    }
+
+    .hall-model {
+      display: none;
+      width: 214px;
+      height: 160px;
+      border-radius: 34px;
+      z-index: 2;
+      position: relative;
+      border: 1px solid rgba(84,234,255,.26);
+      background:
+        radial-gradient(circle at 22% 35%, rgba(255,233,166,.24), transparent 9%),
+        radial-gradient(circle at 50% 35%, rgba(255,233,166,.24), transparent 9%),
+        radial-gradient(circle at 78% 35%, rgba(255,233,166,.24), transparent 9%),
+        radial-gradient(circle at 34% 70%, rgba(84,234,255,.22), transparent 10%),
+        radial-gradient(circle at 66% 70%, rgba(84,234,255,.22), transparent 10%),
+        linear-gradient(135deg, rgba(84,234,255,.13), rgba(214,178,94,.10));
+      box-shadow: 0 0 85px rgba(84,234,255,.16);
+      animation: hallFloat 3.4s ease-in-out infinite alternate;
+    }
+
+    .hall-model.active {
+      display: block;
+    }
+
+    .reservation-disc.hide {
+      display: none;
+    }
+
+    @keyframes hallFloat {
+      from { transform: perspective(520px) rotateX(0deg) translateY(0); }
+      to { transform: perspective(520px) rotateX(9deg) translateY(-8px); }
+    }
+
+    .visual-label {
       position: absolute;
-      left: 94px;
-      top: 94px;
-      margin: -11px;
-      background: linear-gradient(135deg, var(--gold3), var(--gold));
-      box-shadow: 0 0 24px rgba(248,220,143,.62);
-      animation: seatPulse 1.6s ease-in-out infinite;
-    }
-
-    .orbit-seat:nth-child(5) { transform: rotate(0deg) translateX(94px); }
-    .orbit-seat:nth-child(6) { transform: rotate(60deg) translateX(94px); animation-delay: .1s; }
-    .orbit-seat:nth-child(7) { transform: rotate(120deg) translateX(94px); animation-delay: .2s; }
-    .orbit-seat:nth-child(8) { transform: rotate(180deg) translateX(94px); animation-delay: .3s; }
-    .orbit-seat:nth-child(9) { transform: rotate(240deg) translateX(94px); animation-delay: .4s; }
-    .orbit-seat:nth-child(10) { transform: rotate(300deg) translateX(94px); animation-delay: .5s; }
-
-    @keyframes seatPulse {
-      0%,100% { opacity: .72; filter: brightness(.9); }
-      50% { opacity: 1; filter: brightness(1.2); }
-    }
-
-    .hero-actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .btn {
-      min-height: 58px;
-      border-radius: 23px;
-      display: inline-flex;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 4;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.32);
+      backdrop-filter: blur(16px);
+      padding: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
       align-items: center;
-      justify-content: center;
+    }
+
+    .visual-label strong {
+      font-size: 13px;
+      letter-spacing: -.03em;
+    }
+
+    .visual-label span {
+      display: block;
+      color: var(--soft);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .hero-bottom {
+      display: grid;
       gap: 10px;
-      padding: 15px 18px;
-      color: #050505;
-      background: linear-gradient(135deg, var(--gold3), var(--gold), #8f6426);
-      box-shadow: 0 18px 70px rgba(214,178,94,.24);
-      font-weight: 1000;
-      letter-spacing: -.01em;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      min-height: 84px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.052);
+      padding: 14px;
       position: relative;
       overflow: hidden;
+    }
+
+    .stat::after {
+      content: "";
+      position: absolute;
+      left: -40%;
+      right: -40%;
+      bottom: -62%;
+      height: 82px;
+      background: radial-gradient(circle, rgba(214,178,94,.18), transparent 66%);
+      animation: glowUp 3.6s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowUp {
+      to { transform: translateY(-12px); opacity: .94; }
+    }
+
+    .stat strong {
+      position: relative;
+      z-index: 1;
+      display: block;
+      color: var(--gold2);
+      font-size: 23px;
+      font-weight: 1000;
+      letter-spacing: -.05em;
+    }
+
+    .stat span {
+      position: relative;
+      z-index: 1;
+      display: block;
+      margin-top: 6px;
+      color: var(--soft);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .primary,
+    .secondary {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 22px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      font-weight: 1000;
+      font-size: 14px;
       transition: transform .22s ease, filter .22s ease;
     }
 
-    .btn::after {
+    .primary {
+      color: #050505;
+      background: linear-gradient(135deg, #fff2bf, var(--gold), var(--gold3));
+      box-shadow: 0 20px 70px rgba(214,178,94,.28);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary::after {
       content: "";
       position: absolute;
       inset: -90% -40%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
-      transform: translateX(-80%) rotate(25deg);
-      transition: transform .7s ease;
+      transform: translateX(-85%) rotate(25deg);
+      animation: buttonLight 3.2s ease-in-out infinite;
     }
 
-    .btn:active { transform: scale(.98); filter: brightness(1.05); }
-    .btn:hover::after { transform: translateX(80%) rotate(25deg); }
-    .btn.secondary { color: var(--txt); background: rgba(255,255,255,.060); border: 1px solid rgba(255,255,255,.12); box-shadow: none; }
-    .btn.small { min-height: 46px; border-radius: 18px; font-size: 13px; padding: 12px 14px; }
+    @keyframes buttonLight {
+      0%, 38% { transform: translateX(-85%) rotate(25deg); }
+      72%, 100% { transform: translateX(85%) rotate(25deg); }
+    }
+
+    .secondary {
+      color: var(--ink);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.060);
+    }
+
+    .primary:active,
+    .secondary:active {
+      transform: scale(.98);
+      filter: brightness(1.08);
+    }
 
     .section {
-      margin-top: 18px;
+      margin-top: 16px;
+      animation: rise .75s ease both;
     }
 
     .section-head {
+      padding: 0 4px;
+      margin: 24px 0 12px;
       display: flex;
-      justify-content: space-between;
       align-items: end;
+      justify-content: space-between;
       gap: 12px;
-      margin: 28px 0 12px;
     }
 
     .section-title {
-      margin-top: 6px;
-      font-size: 30px;
+      font-size: 28px;
       line-height: .92;
-      letter-spacing: -.065em;
+      letter-spacing: -.06em;
       font-weight: 1000;
+      margin-top: 6px;
     }
 
     .section-sub {
-      margin-top: 7px;
-      color: var(--muted3);
+      color: var(--soft);
       font-size: 12px;
       line-height: 1.45;
+      margin-top: 6px;
     }
 
-    .experience-switch {
+    .mode-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      padding: 8px;
-      border-radius: 30px;
-    }
-
-    .mode-btn {
-      min-height: 66px;
-      border-radius: 23px;
-      background: transparent;
-      color: var(--muted2);
-      font-weight: 1000;
-      transition: .25s ease;
-      display: grid;
-      place-items: center;
-      gap: 3px;
-    }
-
-    .mode-btn span {
-      color: inherit;
-      font-size: 10px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      opacity: .74;
-    }
-
-    .mode-btn.active {
-      color: #050505;
-      background: linear-gradient(135deg, var(--gold3), var(--gold), #8f6426);
-      box-shadow: 0 0 34px rgba(214,178,94,.24);
-    }
-
-    .cinematic-tabs {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .experience-card {
-      padding: 18px;
-      min-height: 160px;
-    }
-
-    .experience-card h3 {
-      margin-top: 11px;
-      font-size: 22px;
-      letter-spacing: -.055em;
-    }
-
-    .experience-card p {
-      margin-top: 8px;
-      color: var(--muted2);
-      font-size: 12px;
-      line-height: 1.58;
-    }
-
-    .experience-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .floor-lab {
-      padding: 18px;
-    }
-
-    .floor-map {
-      height: 390px;
-      border-radius: 32px;
+    .mode-card {
+      min-height: 142px;
+      border-radius: 28px;
+      color: var(--ink);
+      background: rgba(255,255,255,.055);
       border: 1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(248,220,143,.18), transparent 36%),
-        linear-gradient(145deg, rgba(255,255,255,.060), rgba(255,255,255,.020));
+      padding: 16px;
+      text-align: left;
       position: relative;
       overflow: hidden;
-      perspective: 980px;
+      transition: transform .22s ease, background .22s ease, border-color .22s ease;
     }
 
-    .floor-map::before {
-      content: "";
-      position: absolute;
-      left: -15%;
-      right: -15%;
-      bottom: 8%;
-      height: 72%;
-      background-image:
-        linear-gradient(rgba(248,220,143,.105) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(73,230,255,.09) 1px, transparent 1px);
-      background-size: 40px 40px;
-      transform: rotateX(63deg);
-      transform-origin: bottom;
-      animation: floorMove 6s linear infinite;
-      opacity: .75;
+    .mode-card.active {
+      border-color: rgba(255,233,166,.42);
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255,233,166,.19), transparent 42%),
+        rgba(214,178,94,.105);
+      box-shadow: 0 0 40px rgba(214,178,94,.14);
     }
 
-    @keyframes floorMove {
-      to { background-position: 0 40px, 40px 0; }
+    .mode-card:active {
+      transform: scale(.98);
     }
 
-    .floor-core {
-      position: absolute;
-      inset: 50px 22px 24px;
-      border-radius: 32px;
-      transform: rotateX(50deg);
-      transform-origin: bottom;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.035);
-      box-shadow: inset 0 0 50px rgba(0,0,0,.35), 0 0 80px rgba(73,230,255,.10);
-    }
-
-    .table-node {
-      position: absolute;
-      width: 54px;
-      height: 54px;
-      border-radius: 22px;
+    .mode-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 17px;
       display: grid;
       place-items: center;
-      color: var(--txt);
-      font-size: 12px;
-      font-weight: 1000;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.075);
-      box-shadow: 0 12px 34px rgba(0,0,0,.34), 0 0 26px rgba(214,178,94,.12);
-      animation: nodeFloat 2.8s ease-in-out infinite alternate;
-      transition: .22s ease;
+      background: rgba(214,178,94,.12);
+      border: 1px solid rgba(214,178,94,.18);
+      font-size: 22px;
+      margin-bottom: 14px;
     }
 
-    .table-node::after {
-      content: "";
-      position: absolute;
-      inset: -8px;
-      border-radius: 27px;
-      border: 1px solid rgba(248,220,143,.16);
-      animation: nodeRing 2s ease-in-out infinite;
-    }
-
-    .table-node.available { color: #baffd7; background: rgba(82,255,157,.08); border-color: rgba(82,255,157,.25); }
-    .table-node.vip { color: var(--gold2); background: rgba(214,178,94,.10); border-color: rgba(214,178,94,.31); }
-    .table-node.booked { color: #ffbac9; background: rgba(255,84,122,.08); border-color: rgba(255,84,122,.28); }
-    .table-node.selected { transform: scale(1.13); border-color: rgba(248,220,143,.66); box-shadow: 0 0 42px rgba(214,178,94,.34); }
-
-    @keyframes nodeFloat {
-      from { translate: 0 0; }
-      to { translate: 0 -8px; }
-    }
-
-    @keyframes nodeRing {
-      0%,100% { opacity: .12; transform: scale(.86); }
-      50% { opacity: .65; transform: scale(1.10); }
-    }
-
-    .map-hud {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      top: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      z-index: 3;
-    }
-
-    .selected-table-info {
-      margin-top: 12px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.045);
-      border-radius: 24px;
-      padding: 14px;
-    }
-
-    .selected-table-info strong {
+    .mode-card strong {
       display: block;
       font-size: 16px;
-      letter-spacing: -.035em;
+      letter-spacing: -.03em;
     }
 
-    .selected-table-info span {
+    .mode-card span {
       display: block;
-      color: var(--muted3);
+      color: var(--soft);
       font-size: 11px;
-      margin-top: 4px;
+      line-height: 1.35;
+      margin-top: 6px;
     }
 
-    .booking-system {
-      padding: 18px;
+    .booking-card {
+      padding: 16px;
     }
 
     .stepper {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .step-dot {
-      height: 38px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.11);
-      background: rgba(255,255,255,.045);
-      color: var(--muted2);
+    .step {
+      min-height: 42px;
       display: grid;
       place-items: center;
-      font-size: 11px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.045);
+      color: var(--soft);
+      font-size: 10px;
       font-weight: 1000;
-      transition: .25s ease;
+      text-transform: uppercase;
+      letter-spacing: .08em;
     }
 
-    .step-dot.active {
+    .step.active {
       color: #050505;
-      background: linear-gradient(135deg, var(--gold3), var(--gold));
-      box-shadow: 0 0 30px rgba(214,178,94,.24);
+      background: linear-gradient(135deg, #fff2bf, var(--gold));
+      border-color: transparent;
     }
 
-    .form-step {
-      display: none;
-      animation: stepIn .32s ease both;
-    }
-
-    .form-step.active {
+    .form-grid {
       display: grid;
       gap: 12px;
     }
 
-    @keyframes stepIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .field {
-      display: grid;
-      gap: 7px;
-    }
-
-    .label {
-      color: var(--muted3);
+    label {
+      display: block;
+      color: var(--soft);
       font-size: 10px;
       font-weight: 1000;
       letter-spacing: .15em;
       text-transform: uppercase;
-      padding-left: 3px;
+      margin: 0 0 7px 4px;
     }
 
-    input, select, textarea {
+    input,
+    select,
+    textarea {
       width: 100%;
-      min-height: 56px;
-      color: var(--txt);
-      border-radius: 21px;
-      border: 1px solid rgba(255,255,255,.12);
+      min-height: 55px;
+      color: var(--ink);
       background: rgba(255,255,255,.060);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
       outline: none;
       padding: 15px 16px;
-      transition: border-color .22s ease, background .22s ease, transform .22s ease;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
     }
 
-    input:focus, select:focus, textarea:focus {
-      border-color: rgba(248,220,143,.52);
-      background: rgba(255,255,255,.085);
+    input:focus,
+    select:focus,
+    textarea:focus {
       transform: translateY(-1px);
+      border-color: rgba(255,233,166,.50);
+      background: rgba(255,255,255,.085);
     }
 
-    input::placeholder, textarea::placeholder { color: rgba(255,255,255,.35); }
-    select option { color: white; background: #080a12; }
-    textarea { resize: none; line-height: 1.55; }
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255,255,255,.34);
+    }
 
-    .field-row {
+    select option {
+      background: #080b15;
+      color: #fff;
+    }
+
+    textarea {
+      resize: none;
+      line-height: 1.5;
+    }
+
+    .two {
       display: grid;
       grid-template-columns: 1fr 120px;
       gap: 10px;
     }
 
-    .preference-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    .hall-only.hidden {
+      display: none;
     }
 
-    .pref-card {
-      min-height: 92px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,.105);
-      background: rgba(255,255,255,.045);
-      padding: 13px;
-      display: grid;
-      align-content: space-between;
-      color: var(--muted);
-      transition: .22s ease;
-    }
-
-    .pref-card.active {
-      border-color: rgba(248,220,143,.42);
-      background: rgba(214,178,94,.095);
-      color: var(--gold2);
-    }
-
-    .pref-card b {
-      display: block;
-      font-size: 13px;
-      line-height: 1.25;
-    }
-
-    .pref-card span {
-      font-size: 10px;
-      color: var(--muted3);
-    }
-
-    .amount-panel {
+    .amount-box {
       margin-top: 14px;
-      padding: 16px;
-      border-radius: 28px;
-      border: 1px solid rgba(214,178,94,.24);
-      background: radial-gradient(circle at 15% 20%, rgba(248,220,143,.16), transparent 35%), rgba(214,178,94,.085);
-      display: grid;
-      gap: 12px;
-    }
-
-    .amount-top {
+      border: 1px solid rgba(214,178,94,.25);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,233,166,.16), transparent 40%),
+        rgba(214,178,94,.085);
+      border-radius: 26px;
+      padding: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .amount-top span {
+    .amount-box small {
       display: block;
-      color: var(--muted3);
+      color: var(--soft);
       font-size: 10px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
       font-weight: 1000;
+      letter-spacing: .15em;
+      text-transform: uppercase;
     }
 
-    .amount-top strong {
+    .amount-box strong {
       display: block;
       color: var(--gold2);
-      font-size: 32px;
-      letter-spacing: -.065em;
-      margin-top: 2px;
+      font-size: 30px;
+      line-height: 1;
+      letter-spacing: -.06em;
+      margin-top: 5px;
     }
 
-    .summary-list {
-      display: grid;
-      gap: 8px;
-    }
-
-    .summary-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted2);
-      font-size: 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      padding-top: 8px;
-    }
-
-    .summary-line b { color: var(--txt); }
-
-    .step-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .step-actions.single { grid-template-columns: 1fr; }
-
-    .hidden { display: none !important; }
-
-    .ai-concierge {
-      padding: 18px;
-    }
-
-    .chat-window {
-      margin-top: 14px;
+    .flow-grid {
       display: grid;
       gap: 10px;
     }
 
-    .message {
-      max-width: 86%;
-      padding: 13px 14px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.050);
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .message.ai {
-      border-color: rgba(73,230,255,.18);
-      background: rgba(73,230,255,.07);
-    }
-
-    .message.user {
-      margin-left: auto;
-      border-color: rgba(214,178,94,.22);
-      background: rgba(214,178,94,.09);
-      color: var(--gold2);
-    }
-
-    .live-prediction {
-      margin-top: 14px;
+    .flow-card {
+      padding: 14px;
+      border-radius: 26px;
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 13px;
-      align-items: center;
-      padding: 14px;
-      border: 1px solid rgba(73,230,255,.16);
-      background: rgba(73,230,255,.055);
-      border-radius: 24px;
+      gap: 12px;
+      align-items: start;
     }
 
-    .ring {
-      width: 70px;
-      height: 70px;
-      border-radius: 999px;
+    .flow-num {
+      width: 39px;
+      height: 39px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      background: conic-gradient(var(--cyan) 0 76%, rgba(255,255,255,.08) 76% 100%);
-      box-shadow: 0 0 34px rgba(73,230,255,.16);
-    }
-
-    .ring::after {
-      content: "76%";
-      width: 52px;
-      height: 52px;
-      border-radius: inherit;
-      background: #070a12;
-      color: var(--cyan2);
-      display: grid;
-      place-items: center;
-      font-size: 12px;
+      color: #050505;
+      background: linear-gradient(135deg, #fff2bf, var(--gold));
       font-weight: 1000;
+      box-shadow: 0 0 28px rgba(214,178,94,.20);
     }
 
-    .packages {
-      display: grid;
-      gap: 12px;
+    .flow-card strong {
+      display: block;
+      font-size: 15px;
+      letter-spacing: -.03em;
     }
 
-    .package {
-      padding: 18px;
-      min-height: 184px;
-    }
-
-    .package-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .package h3 {
-      margin-top: 6px;
-      font-size: 21px;
-      letter-spacing: -.055em;
-    }
-
-    .package p {
-      margin-top: 10px;
-      color: var(--muted2);
+    .flow-card span {
+      display: block;
+      color: var(--soft);
       font-size: 12px;
-      line-height: 1.58;
-    }
-
-    .feature-list {
-      display: grid;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .feature-list li {
-      list-style: none;
-      display: flex;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .feature-list li::before { content: "✦"; color: var(--gold2); }
-
-    .gallery {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
-
-    .gallery::-webkit-scrollbar { display: none; }
-
-    .gallery-card {
-      flex: 0 0 230px;
-      height: 172px;
-      border-radius: 32px;
-      border: 1px solid rgba(255,255,255,.105);
-      background: radial-gradient(circle at 20% 20%, rgba(248,220,143,.20), transparent 28%), radial-gradient(circle at 78% 28%, rgba(73,230,255,.16), transparent 26%), linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025));
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gallery-card::before {
-      content: "";
-      position: absolute;
-      inset: auto 14px 14px;
-      height: 60px;
-      border-radius: 23px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.26);
-    }
-
-    .gallery-card::after {
-      content: attr(data-label);
-      position: absolute;
-      left: 28px;
-      bottom: 34px;
-      font-size: 14px;
-      font-weight: 1000;
-      letter-spacing: -.035em;
-    }
-
-    .gallery-ring {
-      position: absolute;
-      width: 96px;
-      height: 96px;
-      border-radius: 999px;
-      border: 1px solid rgba(248,220,143,.20);
-      right: -22px;
-      top: -22px;
-      animation: spin 10s linear infinite;
-    }
-
-    .faq {
-      display: grid;
-      gap: 10px;
-    }
-
-    .faq-item {
-      padding: 16px;
-    }
-
-    .faq-q {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      font-weight: 1000;
-      letter-spacing: -.025em;
-    }
-
-    .faq-a {
-      color: var(--muted2);
-      font-size: 12px;
-      line-height: 1.58;
-      margin-top: 10px;
-    }
-
-    .footer {
-      text-align: center;
-      color: var(--muted3);
-      font-size: 11px;
-      line-height: 1.6;
-      padding: 30px 8px 18px;
+      line-height: 1.45;
+      margin-top: 4px;
     }
 
     .bottom-bar {
       position: fixed;
       left: 50%;
-      bottom: calc(12px + var(--safe-bottom));
+      bottom: calc(12px + var(--safe));
       transform: translateX(-50%);
-      z-index: 120;
       width: min(calc(100% - 24px), 536px);
+      z-index: 80;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(5,7,13,.78);
+      box-shadow: 0 24px 80px rgba(0,0,0,.52);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-radius: 30px;
-      box-shadow: 0 22px 70px rgba(0,0,0,.50);
+      border-radius: 28px;
       padding: 8px;
       display: grid;
       grid-template-columns: 1fr auto;
@@ -1188,90 +1006,95 @@
       gap: 8px;
     }
 
-    .bottom-copy {
+    .bar-copy {
       min-width: 0;
       padding-left: 8px;
     }
 
-    .bottom-copy strong {
+    .bar-copy strong {
       display: block;
       font-size: 13px;
-      letter-spacing: -.035em;
+      letter-spacing: -.03em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .bottom-copy span {
+    .bar-copy span {
       display: block;
-      color: var(--muted3);
+      color: var(--soft);
       font-size: 10px;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-top: 2px;
     }
 
-    .bottom-btn {
-      min-height: 50px;
-      border-radius: 22px;
+    .bar-btn {
+      min-height: 48px;
       padding: 0 16px;
+      border-radius: 20px;
       color: #050505;
+      background: linear-gradient(135deg, #fff2bf, var(--gold));
       font-weight: 1000;
-      background: linear-gradient(135deg, var(--gold3), var(--gold));
-      box-shadow: 0 12px 42px rgba(214,178,94,.22);
+      font-size: 13px;
+      box-shadow: 0 12px 40px rgba(214,178,94,.20);
     }
 
     .modal {
       position: fixed;
       inset: 0;
-      z-index: 500;
+      z-index: 200;
       display: none;
       place-items: end center;
+      background: rgba(0,0,0,.68);
       padding: 14px;
-      background: rgba(0,0,0,.64);
       backdrop-filter: blur(14px);
     }
 
-    .modal.show { display: grid; }
+    .modal.show {
+      display: grid;
+    }
 
     .sheet {
       width: min(100%, 540px);
-      border-radius: 38px;
-      border: 1px solid var(--line);
-      background: radial-gradient(circle at 50% 0%, rgba(214,178,94,.19), transparent 34%), rgba(5,7,13,.95);
-      box-shadow: 0 34px 120px rgba(0,0,0,.72);
-      backdrop-filter: blur(24px);
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,.13);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(214,178,94,.17), transparent 34%),
+        rgba(5,7,13,.95);
       padding: 20px;
-      animation: sheetUp .36s ease both;
+      box-shadow: 0 30px 110px rgba(0,0,0,.75);
+      animation: sheetIn .35s ease both;
     }
 
-    @keyframes sheetUp {
-      from { opacity: 0; transform: translateY(42px) scale(.97); }
+    @keyframes sheetIn {
+      from { opacity: 0; transform: translateY(44px) scale(.96); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .payment-ring {
-      width: 120px;
-      height: 120px;
-      margin: 10px auto 18px;
-      border-radius: 999px;
-      background: conic-gradient(from 0deg, var(--gold2), var(--cyan), var(--gold2));
+    .pay-core {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      margin: 6px auto 18px;
       display: grid;
       place-items: center;
-      animation: spin 1.25s linear infinite;
-      box-shadow: 0 0 60px rgba(214,178,94,.22);
+      background:
+        radial-gradient(circle, rgba(84,234,255,.16), transparent 48%),
+        conic-gradient(from 0deg, var(--gold2), var(--cyan), var(--pink), var(--gold2));
+      animation: spin 1.12s linear infinite;
     }
 
-    .payment-ring::after {
+    .pay-core::after {
       content: "₹";
-      width: 84px;
-      height: 84px;
+      width: 82px;
+      height: 82px;
       border-radius: inherit;
       display: grid;
       place-items: center;
-      color: var(--gold2);
       background: #070a12;
+      color: var(--gold2);
       font-size: 38px;
       font-weight: 1000;
       box-shadow: inset 0 0 30px rgba(0,0,0,.55);
@@ -1279,68 +1102,74 @@
 
     .sheet h2 {
       text-align: center;
-      font-size: 28px;
+      font-size: 26px;
       line-height: .95;
-      letter-spacing: -.065em;
+      letter-spacing: -.06em;
     }
 
     .sheet p {
-      margin: 9px auto 0;
-      max-width: 90%;
+      color: var(--muted);
       text-align: center;
-      color: var(--muted2);
       font-size: 13px;
       line-height: 1.55;
+      margin-top: 8px;
     }
 
-    .status-lines {
+    .pay-lines {
       display: grid;
       gap: 9px;
-      margin: 18px 0 4px;
+      margin-top: 18px;
     }
 
-    .status-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 12px;
+    .pay-line {
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.045);
-      color: var(--muted2);
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
       font-size: 12px;
       font-weight: 800;
     }
 
-    .status-line b { color: var(--txt); }
-
     .toast {
       position: fixed;
       left: 50%;
-      bottom: calc(96px + var(--safe-bottom));
+      bottom: calc(94px + var(--safe));
       transform: translateX(-50%) translateY(150%);
-      z-index: 600;
+      z-index: 260;
       width: min(calc(100% - 24px), 520px);
       border-radius: 24px;
-      border: 1px solid rgba(82,255,157,.25);
+      border: 1px solid rgba(99,255,172,.25);
       background: rgba(5,18,13,.88);
-      color: #caffde;
+      color: #caffdf;
       padding: 16px;
       font-size: 13px;
       font-weight: 900;
       line-height: 1.45;
       backdrop-filter: blur(20px);
-      box-shadow: 0 24px 80px rgba(0,0,0,.48);
-      transition: transform .34s ease;
+      transition: transform .36s ease;
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
     }
 
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .footer {
+      color: var(--soft);
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.55;
+      padding: 24px 8px 0;
+    }
 
     .reveal {
       opacity: 0;
-      transform: translateY(20px);
-      transition: .7s ease;
+      transform: translateY(18px);
+      transition: .72s ease;
     }
 
     .reveal.in {
@@ -1348,21 +1177,24 @@
       transform: translateY(0);
     }
 
-    @media (min-width: 500px) {
-      .hero-actions { grid-template-columns: 1fr 1fr; }
-      .cinematic-tabs { grid-template-columns: 1fr 1fr; }
-      .packages { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 370px) {
-      .field-row, .preference-grid, .hero-actions, .bottom-bar, .step-actions {
+    @media (max-width: 360px) {
+      .mini-stats,
+      .mode-grid,
+      .two {
         grid-template-columns: 1fr;
       }
-      .bottom-copy { display: none; }
-      .hero-title { font-size: 47px; }
-      .hero-card { padding: 18px; min-height: 620px; }
-      .floor-map { height: 350px; }
-      .experience-switch { grid-template-columns: 1fr; }
+
+      .hero-title {
+        font-size: 44px;
+      }
+
+      .bottom-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-copy {
+        display: none;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1373,335 +1205,108 @@
         scroll-behavior: auto !important;
       }
     }
-
-    .star:nth-child(1) { left: 37%; top: 61%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.1s; animation-duration: 3.02s; }
-    .star:nth-child(2) { left: 74%; top: 22%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.2s; animation-duration: 3.44s; }
-    .star:nth-child(3) { left: 11%; top: 83%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.3s; animation-duration: 3.86s; }
-    .star:nth-child(4) { left: 48%; top: 44%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.4s; animation-duration: 4.28s; }
-    .star:nth-child(5) { left: 85%; top: 5%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.5s; animation-duration: 4.70s; }
-    .star:nth-child(6) { left: 22%; top: 66%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.6s; animation-duration: 5.12s; }
-    .star:nth-child(7) { left: 59%; top: 27%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.7s; animation-duration: 5.54s; }
-    .star:nth-child(8) { left: 96%; top: 88%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.8s; animation-duration: 5.96s; }
-    .star:nth-child(9) { left: 33%; top: 49%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.9s; animation-duration: 2.60s; }
-    .star:nth-child(10) { left: 70%; top: 10%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.0s; animation-duration: 3.02s; }
-    .star:nth-child(11) { left: 7%; top: 71%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.1s; animation-duration: 3.44s; }
-    .star:nth-child(12) { left: 44%; top: 32%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.2s; animation-duration: 3.86s; }
-    .star:nth-child(13) { left: 81%; top: 93%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.3s; animation-duration: 4.28s; }
-    .star:nth-child(14) { left: 18%; top: 54%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.4s; animation-duration: 4.70s; }
-    .star:nth-child(15) { left: 55%; top: 15%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.5s; animation-duration: 5.12s; }
-    .star:nth-child(16) { left: 92%; top: 76%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.6s; animation-duration: 5.54s; }
-    .star:nth-child(17) { left: 29%; top: 37%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.7s; animation-duration: 5.96s; }
-    .star:nth-child(18) { left: 66%; top: 98%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.8s; animation-duration: 2.60s; }
-    .star:nth-child(19) { left: 3%; top: 59%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.0s; animation-duration: 3.02s; }
-    .star:nth-child(20) { left: 40%; top: 20%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.1s; animation-duration: 3.44s; }
-    .star:nth-child(21) { left: 77%; top: 81%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.2s; animation-duration: 3.86s; }
-    .star:nth-child(22) { left: 14%; top: 42%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.3s; animation-duration: 4.28s; }
-    .star:nth-child(23) { left: 51%; top: 3%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.4s; animation-duration: 4.70s; }
-    .star:nth-child(24) { left: 88%; top: 64%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.5s; animation-duration: 5.12s; }
-    .star:nth-child(25) { left: 25%; top: 25%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.6s; animation-duration: 5.54s; }
-    .star:nth-child(26) { left: 62%; top: 86%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.7s; animation-duration: 5.96s; }
-    .star:nth-child(27) { left: 99%; top: 47%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.8s; animation-duration: 2.60s; }
-    .star:nth-child(28) { left: 36%; top: 8%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.9s; animation-duration: 3.02s; }
-    .star:nth-child(29) { left: 73%; top: 69%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.0s; animation-duration: 3.44s; }
-    .star:nth-child(30) { left: 10%; top: 30%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.1s; animation-duration: 3.86s; }
-    .star:nth-child(31) { left: 47%; top: 91%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.2s; animation-duration: 4.28s; }
-    .star:nth-child(32) { left: 84%; top: 52%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.3s; animation-duration: 4.70s; }
-    .star:nth-child(33) { left: 21%; top: 13%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.4s; animation-duration: 5.12s; }
-    .star:nth-child(34) { left: 58%; top: 74%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.5s; animation-duration: 5.54s; }
-    .star:nth-child(35) { left: 95%; top: 35%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.6s; animation-duration: 5.96s; }
-    .star:nth-child(36) { left: 32%; top: 96%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.7s; animation-duration: 2.60s; }
-    .star:nth-child(37) { left: 69%; top: 57%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.8s; animation-duration: 3.02s; }
-    .star:nth-child(38) { left: 6%; top: 18%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.0s; animation-duration: 3.44s; }
-    .star:nth-child(39) { left: 43%; top: 79%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.1s; animation-duration: 3.86s; }
-    .star:nth-child(40) { left: 80%; top: 40%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.2s; animation-duration: 4.28s; }
-    .star:nth-child(41) { left: 17%; top: 1%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.3s; animation-duration: 4.70s; }
-    .star:nth-child(42) { left: 54%; top: 62%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.4s; animation-duration: 5.12s; }
-    .star:nth-child(43) { left: 91%; top: 23%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.5s; animation-duration: 5.54s; }
-    .star:nth-child(44) { left: 28%; top: 84%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.6s; animation-duration: 5.96s; }
-    .star:nth-child(45) { left: 65%; top: 45%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.7s; animation-duration: 2.60s; }
-    .star:nth-child(46) { left: 2%; top: 6%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.8s; animation-duration: 3.02s; }
-    .star:nth-child(47) { left: 39%; top: 67%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.9s; animation-duration: 3.44s; }
-    .star:nth-child(48) { left: 76%; top: 28%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.0s; animation-duration: 3.86s; }
-    .star:nth-child(49) { left: 13%; top: 89%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.1s; animation-duration: 4.28s; }
-    .star:nth-child(50) { left: 50%; top: 50%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.2s; animation-duration: 4.70s; }
-    .star:nth-child(51) { left: 87%; top: 11%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.3s; animation-duration: 5.12s; }
-    .star:nth-child(52) { left: 24%; top: 72%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.4s; animation-duration: 5.54s; }
-    .star:nth-child(53) { left: 61%; top: 33%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.5s; animation-duration: 5.96s; }
-    .star:nth-child(54) { left: 98%; top: 94%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.6s; animation-duration: 2.60s; }
-    .star:nth-child(55) { left: 35%; top: 55%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.7s; animation-duration: 3.02s; }
-    .star:nth-child(56) { left: 72%; top: 16%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.8s; animation-duration: 3.44s; }
-    .star:nth-child(57) { left: 9%; top: 77%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.0s; animation-duration: 3.86s; }
-    .star:nth-child(58) { left: 46%; top: 38%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.1s; animation-duration: 4.28s; }
-    .star:nth-child(59) { left: 83%; top: 99%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.2s; animation-duration: 4.70s; }
-    .star:nth-child(60) { left: 20%; top: 60%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.3s; animation-duration: 5.12s; }
-    .star:nth-child(61) { left: 57%; top: 21%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.4s; animation-duration: 5.54s; }
-    .star:nth-child(62) { left: 94%; top: 82%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.5s; animation-duration: 5.96s; }
-    .star:nth-child(63) { left: 31%; top: 43%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.6s; animation-duration: 2.60s; }
-    .star:nth-child(64) { left: 68%; top: 4%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.7s; animation-duration: 3.02s; }
-    .star:nth-child(65) { left: 5%; top: 65%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.8s; animation-duration: 3.44s; }
-    .star:nth-child(66) { left: 42%; top: 26%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.9s; animation-duration: 3.86s; }
-    .star:nth-child(67) { left: 79%; top: 87%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.0s; animation-duration: 4.28s; }
-    .star:nth-child(68) { left: 16%; top: 48%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.1s; animation-duration: 4.70s; }
-    .star:nth-child(69) { left: 53%; top: 9%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.2s; animation-duration: 5.12s; }
-    .star:nth-child(70) { left: 90%; top: 70%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.3s; animation-duration: 5.54s; }
-    .star:nth-child(71) { left: 27%; top: 31%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.4s; animation-duration: 5.96s; }
-    .star:nth-child(72) { left: 64%; top: 92%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.5s; animation-duration: 2.60s; }
-    .star:nth-child(73) { left: 1%; top: 53%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.6s; animation-duration: 3.02s; }
-    .star:nth-child(74) { left: 38%; top: 14%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.7s; animation-duration: 3.44s; }
-    .star:nth-child(75) { left: 75%; top: 75%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.8s; animation-duration: 3.86s; }
-    .star:nth-child(76) { left: 12%; top: 36%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.0s; animation-duration: 4.28s; }
-    .star:nth-child(77) { left: 49%; top: 97%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.1s; animation-duration: 4.70s; }
-    .star:nth-child(78) { left: 86%; top: 58%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.2s; animation-duration: 5.12s; }
-    .star:nth-child(79) { left: 23%; top: 19%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.3s; animation-duration: 5.54s; }
-    .star:nth-child(80) { left: 60%; top: 80%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.4s; animation-duration: 5.96s; }
-    .star:nth-child(81) { left: 97%; top: 41%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.5s; animation-duration: 2.60s; }
-    .star:nth-child(82) { left: 34%; top: 2%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.6s; animation-duration: 3.02s; }
-    .star:nth-child(83) { left: 71%; top: 63%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.7s; animation-duration: 3.44s; }
-    .star:nth-child(84) { left: 8%; top: 24%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.8s; animation-duration: 3.86s; }
-    .star:nth-child(85) { left: 45%; top: 85%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.9s; animation-duration: 4.28s; }
-    .star:nth-child(86) { left: 82%; top: 46%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.0s; animation-duration: 4.70s; }
-    .star:nth-child(87) { left: 19%; top: 7%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.1s; animation-duration: 5.12s; }
-    .star:nth-child(88) { left: 56%; top: 68%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.2s; animation-duration: 5.54s; }
-    .star:nth-child(89) { left: 93%; top: 29%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.3s; animation-duration: 5.96s; }
-    .star:nth-child(90) { left: 30%; top: 90%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.4s; animation-duration: 2.60s; }
-    .star:nth-child(91) { left: 67%; top: 51%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.5s; animation-duration: 3.02s; }
-    .star:nth-child(92) { left: 4%; top: 12%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.6s; animation-duration: 3.44s; }
-    .star:nth-child(93) { left: 41%; top: 73%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.7s; animation-duration: 3.86s; }
-    .star:nth-child(94) { left: 78%; top: 34%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.8s; animation-duration: 4.28s; }
-    .star:nth-child(95) { left: 15%; top: 95%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.0s; animation-duration: 4.70s; }
-    .star:nth-child(96) { left: 52%; top: 56%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.1s; animation-duration: 5.12s; }
-    .star:nth-child(97) { left: 89%; top: 17%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.2s; animation-duration: 5.54s; }
-    .star:nth-child(98) { left: 26%; top: 78%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.3s; animation-duration: 5.96s; }
-    .star:nth-child(99) { left: 63%; top: 39%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.4s; animation-duration: 2.60s; }
-    .star:nth-child(100) { left: 0%; top: 0%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.5s; animation-duration: 3.02s; }
-    .star:nth-child(101) { left: 37%; top: 61%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.6s; animation-duration: 3.44s; }
-    .star:nth-child(102) { left: 74%; top: 22%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.7s; animation-duration: 3.86s; }
-    .star:nth-child(103) { left: 11%; top: 83%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.8s; animation-duration: 4.28s; }
-    .star:nth-child(104) { left: 48%; top: 44%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.9s; animation-duration: 4.70s; }
-    .star:nth-child(105) { left: 85%; top: 5%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.0s; animation-duration: 5.12s; }
-    .star:nth-child(106) { left: 22%; top: 66%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.1s; animation-duration: 5.54s; }
-    .star:nth-child(107) { left: 59%; top: 27%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.2s; animation-duration: 5.96s; }
-    .star:nth-child(108) { left: 96%; top: 88%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.3s; animation-duration: 2.60s; }
-    .star:nth-child(109) { left: 33%; top: 49%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.4s; animation-duration: 3.02s; }
-    .star:nth-child(110) { left: 70%; top: 10%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.5s; animation-duration: 3.44s; }
-    .star:nth-child(111) { left: 7%; top: 71%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -1.6s; animation-duration: 3.86s; }
-    .star:nth-child(112) { left: 44%; top: 32%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -1.7s; animation-duration: 4.28s; }
-    .star:nth-child(113) { left: 81%; top: 93%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -1.8s; animation-duration: 4.70s; }
-    .star:nth-child(114) { left: 18%; top: 54%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.0s; animation-duration: 5.12s; }
-    .star:nth-child(115) { left: 55%; top: 15%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.1s; animation-duration: 5.54s; }
-    .star:nth-child(116) { left: 92%; top: 76%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.2s; animation-duration: 5.96s; }
-    .star:nth-child(117) { left: 29%; top: 37%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.3s; animation-duration: 2.60s; }
-    .star:nth-child(118) { left: 66%; top: 98%; width: 2px; height: 2px; color: rgba(248,220,143,.72); animation-delay: -0.4s; animation-duration: 3.02s; }
-    .star:nth-child(119) { left: 3%; top: 59%; width: 3px; height: 3px; color: rgba(248,220,143,.72); animation-delay: -0.5s; animation-duration: 3.44s; }
-    .star:nth-child(120) { left: 40%; top: 20%; width: 1px; height: 1px; color: rgba(73,230,255,.62); animation-delay: -0.6s; animation-duration: 3.86s; }
-    .table-node:nth-child(1) { left: 18%; top: 22%; animation-delay: -0.25s; }
-    .table-node:nth-child(2) { left: 42%; top: 18%; animation-delay: -0.50s; }
-    .table-node:nth-child(3) { left: 66%; top: 22%; animation-delay: -0.75s; }
-    .table-node:nth-child(4) { left: 23%; top: 39%; animation-delay: -1.00s; }
-    .table-node:nth-child(5) { left: 52%; top: 40%; animation-delay: -1.25s; }
-    .table-node:nth-child(6) { left: 76%; top: 40%; animation-delay: -0.00s; }
-    .table-node:nth-child(7) { left: 17%; top: 58%; animation-delay: -0.25s; }
-    .table-node:nth-child(8) { left: 43%; top: 58%; animation-delay: -0.50s; }
-    .table-node:nth-child(9) { left: 69%; top: 59%; animation-delay: -0.75s; }
-    .table-node:nth-child(10) { left: 28%; top: 76%; animation-delay: -1.00s; }
-    .table-node:nth-child(11) { left: 57%; top: 76%; animation-delay: -1.25s; }
-    .table-node:nth-child(12) { left: 80%; top: 75%; animation-delay: -0.00s; }
-    .table-node:nth-child(13) { left: 12%; top: 32%; animation-delay: -0.25s; }
-    .table-node:nth-child(14) { left: 85%; top: 29%; animation-delay: -0.50s; }
-    .table-node:nth-child(15) { left: 11%; top: 71%; animation-delay: -0.75s; }
-    .table-node:nth-child(16) { left: 88%; top: 66%; animation-delay: -1.00s; }
   </style>
 </head>
+
 <body>
-  <div class="screen-bg"></div>
+  <div class="intro"><div class="intro-mark"></div></div>
+
+  <div class="cosmos"></div>
   <div class="orb one"></div>
   <div class="orb two"></div>
   <div class="orb three"></div>
   <div class="noise"></div>
-  <div class="stars" aria-hidden="true">
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-    <span class="star"></span>
-  </div>
 
-  <div class="preloader">
-    <div class="loader-card">
-      <div class="loader-ring"></div>
-      <h2>Launching Luxury Reservation OS</h2>
-      <p>Activating high-tech table, hall and private room booking interface.</p>
-    </div>
+  <div class="stars" aria-hidden="true">
+    <span class="star" style="left:8%;top:18%;animation-delay:-.4s"></span>
+    <span class="star" style="left:18%;top:68%;animation-delay:-1.4s"></span>
+    <span class="star" style="left:29%;top:31%;animation-delay:-.8s"></span>
+    <span class="star" style="left:38%;top:82%;animation-delay:-2.1s"></span>
+    <span class="star" style="left:49%;top:16%;animation-delay:-1.1s"></span>
+    <span class="star" style="left:62%;top:74%;animation-delay:-.7s"></span>
+    <span class="star" style="left:75%;top:23%;animation-delay:-2.7s"></span>
+    <span class="star" style="left:86%;top:61%;animation-delay:-1.9s"></span>
+    <span class="star" style="left:92%;top:36%;animation-delay:-.2s"></span>
+    <span class="star" style="left:12%;top:44%;animation-delay:-3s"></span>
+    <span class="star" style="left:56%;top:48%;animation-delay:-2.3s"></span>
+    <span class="star" style="left:70%;top:88%;animation-delay:-.9s"></span>
   </div>
 
   <main class="app">
     <nav class="nav">
-      <div class="nav-box">
-        <a href="#top" class="brand">
+      <div class="nav-card">
+        <div class="brand">
           <div class="logo">D</div>
           <div>
-            <div class="kicker">DEMO</div>
-            <div class="brand-title">Reservations</div>
+            <small>DEMO</small>
+            <strong>Reservations</strong>
           </div>
-        </a>
-        <div class="live"><span class="dot"></span> LIVE UI</div>
+        </div>
+        <div class="live"><span></span> LIVE</div>
       </div>
     </nav>
 
-    <header class="hero" id="top">
+    <header class="hero">
       <section class="glass hero-card">
-        <div class="hero-main">
-          <div class="chip-row">
-            <span class="chip gold">AI Powered Booking</span>
-            <span class="chip cyan">Mobile Luxury</span>
-            <span class="chip green">Frontend Prototype</span>
+        <div>
+          <div class="chips">
+            <span class="chip gold">Cinematic Booking</span>
+            <span class="chip cyan">Mobile First</span>
           </div>
-          <div class="kicker">Luxury Restaurant Reservation Console</div>
+
+          <div class="kicker">Luxury Reservation Console</div>
+
           <h1 class="hero-title">
             Reserve<br />
-            <span class="gold-text">Beyond Dining.</span>
+            <span class="gold">The Night</span><br />
+            <span class="cyan">Beautifully.</span>
           </h1>
+
           <p class="hero-copy">
-            A cinematic high-tech reservation website for premium table bookings,
-            private rooms, banquet halls and VIP dining requests.
+            A dramatic mobile booking experience for premium tables,
+            private rooms and banquet requests.
           </p>
-        </div>
 
-        <div class="hero-visual" aria-label="Animated dining table hologram">
-          <div class="dining-orbit">
-            <div class="orbit-ring"></div>
-            <div class="orbit-ring"></div>
-            <div class="orbit-ring"></div>
-            <div class="orbit-table"></div>
-            <div class="orbit-seat"></div>
-            <div class="orbit-seat"></div>
-            <div class="orbit-seat"></div>
-            <div class="orbit-seat"></div>
-            <div class="orbit-seat"></div>
-            <div class="orbit-seat"></div>
+          <div class="capsule">
+            <div class="light-beam"></div>
+
+            <div class="reservation-disc" id="disc">
+              <span class="seat"></span>
+              <span class="seat"></span>
+              <span class="seat"></span>
+              <span class="seat"></span>
+              <span class="seat"></span>
+              <span class="seat"></span>
+            </div>
+
+            <div class="hall-model" id="hallModel"></div>
+
+            <div class="visual-label">
+              <div>
+                <strong id="visualTitle">Royal Table Map</strong>
+                <span id="visualSub">Smart seating preview</span>
+              </div>
+              <span class="chip gold" id="visualChip">₹299</span>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="hero-actions">
-            <button class="btn" type="button" onclick="scrollToBooking()">Start Reservation →</button>
-            <button class="btn secondary" type="button" onclick="openPaymentPreview()">Preview Payment</button>
+        <div class="hero-bottom">
+          <div class="mini-stats">
+            <div class="stat">
+              <strong id="heroAmount">₹299</strong>
+              <span>Advance Amount</span>
+            </div>
+            <div class="stat">
+              <strong id="heroMode">Table</strong>
+              <span>Selected Mode</span>
+            </div>
           </div>
+
+          <button class="primary" type="button" onclick="jumpToBooking()">
+            Start Booking
+            <span>→</span>
+          </button>
         </div>
       </section>
     </header>
@@ -1709,495 +1314,324 @@
     <section class="section reveal">
       <div class="section-head">
         <div>
-          <div class="kicker">Choose Booking Mode</div>
-          <h2 class="section-title">Select Your<br /><span class="gold-text">Experience</span></h2>
-          <p class="section-sub">This changes the whole reservation flow, amount and form fields.</p>
+          <div class="kicker">Choose Flow</div>
+          <h2 class="section-title">Table or<br /><span class="gold">Event Space</span></h2>
+          <p class="section-sub">No unnecessary sections. Just the booking experience.</p>
         </div>
-        <span class="chip cyan" id="modeChip">Table Mode</span>
       </div>
 
-      <div class="glass experience-switch">
-        <button id="tableMode" class="mode-btn active" onclick="setMode('table')" type="button">
-          Table
-          <span>Dining</span>
+      <div class="mode-grid">
+        <button class="mode-card active" id="tableMode" type="button" onclick="setMode('table')">
+          <div class="mode-icon">🍽️</div>
+          <strong>Table</strong>
+          <span>Dining, family dinner, VIP seating</span>
         </button>
-        <button id="hallMode" class="mode-btn" onclick="setMode('hall')" type="button">
-          Hall / Room
-          <span>Events</span>
+
+        <button class="mode-card" id="hallMode" type="button" onclick="setMode('hall')">
+          <div class="mode-icon">🏛️</div>
+          <strong>Hall / Room</strong>
+          <span>Birthday, function, private event</span>
         </button>
-      </div>
-
-      <div class="cinematic-tabs">
-        <article class="glass experience-card">
-          <div class="experience-meta">
-            <span class="chip gold">₹299</span>
-            <span class="chip green">Priority</span>
-          </div>
-          <h3>Royal Table</h3>
-          <p>Premium dining reservation for couples, families, VIP guests and evening seating.</p>
-        </article>
-        <article class="glass experience-card">
-          <div class="experience-meta">
-            <span class="chip cyan">₹1,999</span>
-            <span class="chip gold">Event</span>
-          </div>
-          <h3>Grand Hall</h3>
-          <p>Private room, banquet hall, rooftop lounge and celebration booking experience.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Interactive Floor Scanner</div>
-          <h2 class="section-title">Pick A<br /><span class="gold-text">Smart Table</span></h2>
-          <p class="section-sub">Tap a glowing table node to change the selected table preview.</p>
-        </div>
-        <span class="chip gold" id="selectedTableChip">T08</span>
-      </div>
-
-      <div class="glass floor-lab">
-        <div class="floor-map">
-          <div class="map-hud">
-            <span class="chip cyan">Live Floor Map</span>
-            <span class="chip green">16 Tables</span>
-          </div>
-          <div class="floor-core"></div>
-          <button class="table-node available" onclick="selectTable('T01','Available','Window Side')">T01</button>
-          <button class="table-node vip" onclick="selectTable('T02','VIP','Royal Booth')">T02</button>
-          <button class="table-node available" onclick="selectTable('T03','Available','Family Zone')">T03</button>
-          <button class="table-node booked" onclick="selectTable('T04','Booked','Center Floor')">T04</button>
-          <button class="table-node available" onclick="selectTable('T05','Available','Garden View')">T05</button>
-          <button class="table-node vip" onclick="selectTable('T06','VIP','Premium Sofa')">T06</button>
-          <button class="table-node available" onclick="selectTable('T07','Available','Quiet Corner')">T07</button>
-          <button class="table-node vip selected" onclick="selectTable('T08','VIP','Royal Center')">T08</button>
-          <button class="table-node booked" onclick="selectTable('T09','Booked','Chef View')">T09</button>
-          <button class="table-node available" onclick="selectTable('T10','Available','Family Wing')">T10</button>
-          <button class="table-node available" onclick="selectTable('T11','Available','Couple Seat')">T11</button>
-          <button class="table-node vip" onclick="selectTable('T12','VIP','Private Booth')">T12</button>
-          <button class="table-node available" onclick="selectTable('T13','Available','Entry Side')">T13</button>
-          <button class="table-node booked" onclick="selectTable('T14','Booked','Bar Side')">T14</button>
-          <button class="table-node available" onclick="selectTable('T15','Available','Balcony Side')">T15</button>
-          <button class="table-node vip" onclick="selectTable('T16','VIP','Luxury Suite')">T16</button>
-        </div>
-        <div class="selected-table-info">
-          <div>
-            <strong id="selectedTableTitle">T08 · Royal Center</strong>
-            <span id="selectedTableSub">VIP table selected for premium dining request</span>
-          </div>
-          <span class="chip gold" id="selectedStatus">VIP</span>
-        </div>
       </div>
     </section>
 
     <section class="section reveal" id="booking">
       <div class="section-head">
         <div>
-          <div class="kicker">Neural Booking Capsule</div>
-          <h2 class="section-title" id="bookingTitle">Royal Table<br /><span class="gold-text">Reservation</span></h2>
-          <p class="section-sub">Four-step animated booking form with demo payment preview.</p>
+          <div class="kicker">Booking Details</div>
+          <h2 class="section-title" id="bookingTitle">
+            Royal Table<br /><span class="gold">Reservation</span>
+          </h2>
+          <p class="section-sub">Frontend-only preview. Payment/backend can connect later.</p>
         </div>
       </div>
 
-      <form class="glass booking-system" onsubmit="submitReservation(event)">
+      <form class="glass booking-card" onsubmit="submitBooking(event)">
         <div class="stepper">
-          <button type="button" class="step-dot active" data-step="0" onclick="goStep(0)">01</button>
-          <button type="button" class="step-dot" data-step="1" onclick="goStep(1)">02</button>
-          <button type="button" class="step-dot" data-step="2" onclick="goStep(2)">03</button>
-          <button type="button" class="step-dot" data-step="3" onclick="goStep(3)">04</button>
+          <div class="step active">Details</div>
+          <div class="step">Payment</div>
+          <div class="step">Confirm</div>
         </div>
 
-        <div class="form-step active" data-panel="0">
-          <div class="field">
-            <label class="label" for="name">Customer Name</label>
-            <input id="name" required placeholder="Enter guest name" />
+        <div class="form-grid">
+          <div>
+            <label for="name">Customer Name</label>
+            <input id="name" type="text" required placeholder="Enter customer name" />
           </div>
-          <div class="field">
-            <label class="label" for="phone">Phone Number</label>
-            <input id="phone" required type="tel" placeholder="+91 98765 43210" />
-          </div>
-          <div class="step-actions single">
-            <button type="button" class="btn" onclick="nextStep()">Continue →</button>
-          </div>
-        </div>
 
-        <div class="form-step" data-panel="1">
-          <div class="field-row">
-            <div class="field">
-              <label class="label" for="date">Date</label>
-              <input id="date" required type="date" />
+          <div>
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" required placeholder="+91 98765 43210" />
+          </div>
+
+          <div class="two">
+            <div>
+              <label for="date">Date</label>
+              <input id="date" type="date" required />
             </div>
-            <div class="field">
-              <label class="label" for="time">Time</label>
-              <input id="time" required type="time" />
+
+            <div>
+              <label for="time">Time</label>
+              <input id="time" type="time" required />
             </div>
           </div>
-          <div class="field">
-            <label class="label" for="guests">Guests</label>
-            <input id="guests" required type="number" min="1" placeholder="Number of guests" />
-          </div>
-          <div class="step-actions">
-            <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-            <button type="button" class="btn" onclick="nextStep()">Continue</button>
-          </div>
-        </div>
 
-        <div class="form-step" data-panel="2">
-          <div class="preference-grid">
-            <button type="button" class="pref-card active" onclick="togglePref(this)"><b>Window View</b><span>Premium seating</span></button>
-            <button type="button" class="pref-card" onclick="togglePref(this)"><b>Quiet Corner</b><span>Soft privacy</span></button>
-            <button type="button" class="pref-card" onclick="togglePref(this)"><b>Birthday Setup</b><span>Decoration note</span></button>
-            <button type="button" class="pref-card" onclick="togglePref(this)"><b>Chef Special</b><span>Curated menu</span></button>
+          <div>
+            <label for="guests">Guests</label>
+            <input id="guests" type="number" min="1" required placeholder="Number of guests" />
           </div>
-          <div class="field hall-fields hidden">
-            <label class="label" for="eventType">Event Type</label>
+
+          <div class="hall-only hidden">
+            <label for="eventType">Event Type</label>
             <select id="eventType">
               <option value="">Select event type</option>
               <option>Birthday Party</option>
               <option>Family Function</option>
               <option>Corporate Dinner</option>
-              <option>Engagement / Ring Ceremony</option>
               <option>Anniversary Celebration</option>
               <option>Private Gathering</option>
             </select>
           </div>
-          <div class="field hall-fields hidden">
-            <label class="label" for="spaceType">Space Type</label>
+
+          <div class="hall-only hidden">
+            <label for="spaceType">Space Type</label>
             <select id="spaceType">
               <option value="">Select space type</option>
               <option>Private Dining Room</option>
               <option>Banquet Hall</option>
               <option>Rooftop Setup</option>
               <option>Premium Lounge</option>
-              <option>Full Restaurant Booking</option>
             </select>
           </div>
-          <div class="field">
-            <label class="label" for="notes">Special Requirements</label>
-            <textarea id="notes" rows="3" placeholder="Decoration, seating, cake table, music, buffet, projector..."></textarea>
-          </div>
-          <div class="step-actions">
-            <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-            <button type="button" class="btn" onclick="nextStep()">Review</button>
+
+          <div>
+            <label for="note">Special Request</label>
+            <textarea id="note" rows="3" placeholder="Decoration, seating preference, cake table..."></textarea>
           </div>
         </div>
 
-        <div class="form-step" data-panel="3">
-          <div class="amount-panel">
-            <div class="amount-top">
-              <div>
-                <span>Advance Amount</span>
-                <strong id="amountText">₹299</strong>
-              </div>
-              <span class="chip gold" id="requestChip">Table Request</span>
-            </div>
-            <div class="summary-list">
-              <div class="summary-line"><span>Mode</span><b id="summaryMode">Table Booking</b></div>
-              <div class="summary-line"><span>Selected Table</span><b id="summaryTable">T08</b></div>
-              <div class="summary-line"><span>Payment</span><b>Demo Preview</b></div>
-            </div>
+        <div class="amount-box">
+          <div>
+            <small>Advance</small>
+            <strong id="amountText">₹299</strong>
           </div>
-          <div class="step-actions">
-            <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-            <button type="submit" class="btn" id="payButton">Pay ₹299 & Request Table</button>
-          </div>
+          <span class="chip gold" id="requestChip">Table Request</span>
         </div>
+
+        <button class="primary" id="payBtn" type="submit">
+          Pay ₹299 & Request Table
+        </button>
       </form>
     </section>
 
     <section class="section reveal">
       <div class="section-head">
         <div>
-          <div class="kicker">Smart Concierge</div>
-          <h2 class="section-title">AI Style<br /><span class="gold-text">Guidance</span></h2>
-          <p class="section-sub">A premium assistant feel for the reservation website.</p>
+          <div class="kicker">Clean Flow</div>
+          <h2 class="section-title">How It<br /><span class="gold">Works</span></h2>
         </div>
-        <span class="chip cyan">Live Mock</span>
       </div>
-      <div class="glass ai-concierge">
-        <div class="chip-row">
-          <span class="chip gold">Dinner Rush</span>
-          <span class="chip green">Available Slots</span>
-          <span class="chip cyan">VIP Ready</span>
-        </div>
-        <div class="chat-window">
-          <div class="message ai">Welcome. I can help you choose the best table or private space based on guests, time and occasion.</div>
-          <div class="message user">I need something premium for tonight.</div>
-          <div class="message ai">Royal Center and Private Booth are recommended. Advance payment keeps your request in priority queue.</div>
-        </div>
-        <div class="live-prediction">
-          <div class="ring"></div>
+
+      <div class="flow-grid">
+        <div class="glass flow-card">
+          <div class="flow-num">1</div>
           <div>
-            <div class="kicker">Availability Prediction</div>
-            <p style="color:var(--muted2);font-size:12px;line-height:1.5;margin-top:5px;">Best booking window is between 7:30 PM and 8:45 PM for premium seating.</p>
+            <strong>Select booking mode</strong>
+            <span>Choose table or hall/private room.</span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section class="section reveal">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Premium Packages</div>
-          <h2 class="section-title">Choose<br /><span class="gold-text">Luxury</span></h2>
-          <p class="section-sub">Different reservation options for customer-facing website.</p>
-        </div>
-      </div>
-      <div class="packages">
-        <article class="glass package">
-          <div class="package-top">
-            <div><div class="kicker">Table</div><h3>Royal Dining</h3></div>
-            <span class="chip gold">₹299</span>
+        <div class="glass flow-card">
+          <div class="flow-num">2</div>
+          <div>
+            <strong>Enter details</strong>
+            <span>Date, time, phone, guests and request notes.</span>
           </div>
-          <p>Best for family dinner, couples, VIP seating and premium table requests.</p>
-          <ul class="feature-list">
-            <li>Priority table request</li>
-            <li>Special seating note</li>
-            <li>Reception confirmation</li>
-          </ul>
-        </article>
-        <article class="glass package">
-          <div class="package-top">
-            <div><div class="kicker">Hall</div><h3>Grand Event</h3></div>
-            <span class="chip cyan">₹1,999</span>
+        </div>
+
+        <div class="glass flow-card">
+          <div class="flow-num">3</div>
+          <div>
+            <strong>Payment preview</strong>
+            <span>Animated demo payment, ready for real gateway later.</span>
           </div>
-          <p>Best for birthdays, corporate dinner, private room, banquet and events.</p>
-          <ul class="feature-list">
-            <li>Event type selection</li>
-            <li>Banquet / private room</li>
-            <li>Requirement capture</li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-head">
-        <div>
-          <div class="kicker">Atmosphere Preview</div>
-          <h2 class="section-title">Cinematic<br /><span class="gold-text">Spaces</span></h2>
-          <p class="section-sub">Animated cards to make the landing page feel premium.</p>
         </div>
-      </div>
-      <div class="gallery">
-        <div class="gallery-card" data-label="Royal Table"><span class="gallery-ring"></span></div>
-        <div class="gallery-card" data-label="Private Suite"><span class="gallery-ring"></span></div>
-        <div class="gallery-card" data-label="Banquet Hall"><span class="gallery-ring"></span></div>
-        <div class="gallery-card" data-label="Rooftop Lounge"><span class="gallery-ring"></span></div>
-      </div>
-    </section>
-
-    <section class="section reveal">
-      <div class="section-head">
-        <div>
-          <div class="kicker">FAQ</div>
-          <h2 class="section-title">Booking<br /><span class="gold-text">Questions</span></h2>
-          <p class="section-sub">Frontend-only answers for prototype testing.</p>
-        </div>
-      </div>
-      <div class="faq">
-        <article class="glass faq-item">
-          <div class="faq-q"><span>Is payment real?</span><span class="chip gold">Demo</span></div>
-          <div class="faq-a">No. This is a static GitHub Pages UI prototype. Real Cashfree flow can be attached later.</div>
-        </article>
-        <article class="glass faq-item">
-          <div class="faq-q"><span>Does it support hall booking?</span><span class="chip cyan">Yes</span></div>
-          <div class="faq-a">Switch to Hall / Room mode to show event fields and ₹1,999 advance amount.</div>
-        </article>
-        <article class="glass faq-item">
-          <div class="faq-q"><span>Can it connect to reception dashboard?</span><span class="chip green">Later</span></div>
-          <div class="faq-a">Yes, after approval this UI can be converted into the current Next.js reservation website and connected to Firestore.</div>
-        </article>
       </div>
     </section>
 
     <footer class="footer">
-      DEMO Reservations · Futuristic static UI prototype<br />
-      Designed for mobile GitHub Pages preview
+      DEMO Reservations · Extraordinary mobile reservation prototype · Frontend only
     </footer>
   </main>
 
   <div class="bottom-bar">
-    <div class="bottom-copy">
-      <strong id="bottomTitle">Royal Table Reservation</strong>
-      <span id="bottomSub">Advance starts at ₹299</span>
+    <div class="bar-copy">
+      <strong id="barTitle">Royal Table Reservation</strong>
+      <span id="barSub">Advance starts at ₹299</span>
     </div>
-    <button class="bottom-btn" type="button" onclick="scrollToBooking()">Reserve Now</button>
+    <button class="bar-btn" type="button" onclick="jumpToBooking()">Reserve</button>
   </div>
 
-  <div class="modal" id="paymentModal" aria-hidden="true">
+  <div class="modal" id="modal">
     <div class="sheet">
-      <div class="payment-ring"></div>
+      <div class="pay-core"></div>
       <h2>Secure Payment Preview</h2>
-      <p>This is a demo animation. Real payment gateway and reception sync will be connected later.</p>
-      <div class="status-lines">
-        <div class="status-line"><span>Booking Mode</span><b id="modalMode">Table</b></div>
-        <div class="status-line"><span>Selected Table</span><b id="modalTable">T08</b></div>
-        <div class="status-line"><span>Advance</span><b id="modalAmount">₹299</b></div>
-        <div class="status-line"><span>Status</span><b>Frontend Demo</b></div>
+      <p>This is a demo animation. Real Cashfree payment can be connected later.</p>
+
+      <div class="pay-lines">
+        <div class="pay-line">
+          <span>Mode</span>
+          <strong id="modalMode">Table</strong>
+        </div>
+        <div class="pay-line">
+          <span>Amount</span>
+          <strong id="modalAmount">₹299</strong>
+        </div>
+        <div class="pay-line">
+          <span>Status</span>
+          <strong>Demo Only</strong>
+        </div>
       </div>
-      <button class="btn" type="button" onclick="simulatePayment()">Simulate Success</button>
-      <button class="btn secondary" type="button" onclick="closePaymentPreview()">Close</button>
+
+      <button class="primary" type="button" onclick="success()">Simulate Success</button>
+      <button class="secondary" type="button" onclick="closeModal()">Close</button>
     </div>
   </div>
 
-  <div class="toast" id="toast">Demo reservation created successfully.</div>
+  <div class="toast" id="toast">Demo request created.</div>
 
   <script>
-    const state = {
-      mode: 'table',
-      step: 0,
-      selectedTable: 'T08',
-      selectedLabel: 'Royal Center',
-      selectedStatus: 'VIP',
-      amount: 299
-    };
+    const state = { mode: "table", amount: 299 };
 
-    const $ = (selector) => document.querySelector(selector);
-    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+    const $ = (id) => document.getElementById(id);
 
-    const els = {
-      tableMode: $('#tableMode'),
-      hallMode: $('#hallMode'),
-      modeChip: $('#modeChip'),
-      bookingTitle: $('#bookingTitle'),
-      amountText: $('#amountText'),
-      requestChip: $('#requestChip'),
-      summaryMode: $('#summaryMode'),
-      summaryTable: $('#summaryTable'),
-      payButton: $('#payButton'),
-      bottomTitle: $('#bottomTitle'),
-      bottomSub: $('#bottomSub'),
-      selectedTableChip: $('#selectedTableChip'),
-      selectedTableTitle: $('#selectedTableTitle'),
-      selectedTableSub: $('#selectedTableSub'),
-      selectedStatus: $('#selectedStatus'),
-      paymentModal: $('#paymentModal'),
-      modalMode: $('#modalMode'),
-      modalTable: $('#modalTable'),
-      modalAmount: $('#modalAmount'),
-      toast: $('#toast')
+    const ui = {
+      tableMode: $("tableMode"),
+      hallMode: $("hallMode"),
+      disc: $("disc"),
+      hallModel: $("hallModel"),
+      visualTitle: $("visualTitle"),
+      visualSub: $("visualSub"),
+      visualChip: $("visualChip"),
+      heroAmount: $("heroAmount"),
+      heroMode: $("heroMode"),
+      bookingTitle: $("bookingTitle"),
+      amountText: $("amountText"),
+      requestChip: $("requestChip"),
+      payBtn: $("payBtn"),
+      barTitle: $("barTitle"),
+      barSub: $("barSub"),
+      modal: $("modal"),
+      modalMode: $("modalMode"),
+      modalAmount: $("modalAmount"),
+      toast: $("toast")
     };
 
     function money(value) {
-      return '₹' + value.toLocaleString('en-IN');
+      return "₹" + value.toLocaleString("en-IN");
     }
 
     function setMode(mode) {
       state.mode = mode;
-      state.amount = mode === 'table' ? 299 : 1999;
+      state.amount = mode === "table" ? 299 : 1999;
 
-      els.tableMode.classList.toggle('active', mode === 'table');
-      els.hallMode.classList.toggle('active', mode === 'hall');
-      $$('.hall-fields').forEach((field) => field.classList.toggle('hidden', mode !== 'hall'));
+      ui.tableMode.classList.toggle("active", mode === "table");
+      ui.hallMode.classList.toggle("active", mode === "hall");
+      ui.disc.classList.toggle("hide", mode !== "table");
+      ui.hallModel.classList.toggle("active", mode === "hall");
 
-      if (mode === 'table') {
-        els.modeChip.textContent = 'Table Mode';
-        els.bookingTitle.innerHTML = 'Royal Table<br /><span class="gold-text">Reservation</span>';
-        els.requestChip.textContent = 'Table Request';
-        els.summaryMode.textContent = 'Table Booking';
-        els.payButton.textContent = 'Pay ₹299 & Request Table';
-        els.bottomTitle.textContent = 'Royal Table Reservation';
-        els.bottomSub.textContent = 'Advance starts at ₹299';
+      document.querySelectorAll(".hall-only").forEach((item) => {
+        item.classList.toggle("hidden", mode !== "hall");
+      });
+
+      if (mode === "table") {
+        ui.visualTitle.textContent = "Royal Table Map";
+        ui.visualSub.textContent = "Smart seating preview";
+        ui.visualChip.textContent = "₹299";
+        ui.heroMode.textContent = "Table";
+        ui.bookingTitle.innerHTML = 'Royal Table<br /><span class="gold">Reservation</span>';
+        ui.requestChip.textContent = "Table Request";
+        ui.payBtn.textContent = "Pay ₹299 & Request Table";
+        ui.barTitle.textContent = "Royal Table Reservation";
+        ui.barSub.textContent = "Advance starts at ₹299";
+        ui.modalMode.textContent = "Table";
       } else {
-        els.modeChip.textContent = 'Hall Mode';
-        els.bookingTitle.innerHTML = 'Grand Event<br /><span class="gold-text">Reservation</span>';
-        els.requestChip.textContent = 'Hall Request';
-        els.summaryMode.textContent = 'Hall / Room Booking';
-        els.payButton.textContent = 'Pay ₹1,999 & Request Hall';
-        els.bottomTitle.textContent = 'Grand Hall Reservation';
-        els.bottomSub.textContent = 'Advance starts at ₹1,999';
+        ui.visualTitle.textContent = "Private Event Space";
+        ui.visualSub.textContent = "Hall / room preview";
+        ui.visualChip.textContent = "₹1,999";
+        ui.heroMode.textContent = "Hall";
+        ui.bookingTitle.innerHTML = 'Grand Event<br /><span class="gold">Reservation</span>';
+        ui.requestChip.textContent = "Hall Request";
+        ui.payBtn.textContent = "Pay ₹1,999 & Request Hall";
+        ui.barTitle.textContent = "Grand Hall Reservation";
+        ui.barSub.textContent = "Advance starts at ₹1,999";
+        ui.modalMode.textContent = "Hall";
       }
 
-      els.amountText.textContent = money(state.amount);
-      els.modalAmount.textContent = money(state.amount);
-      els.modalMode.textContent = mode === 'table' ? 'Table' : 'Hall / Room';
+      ui.heroAmount.textContent = money(state.amount);
+      ui.amountText.textContent = money(state.amount);
+      ui.modalAmount.textContent = money(state.amount);
     }
 
-    function selectTable(id, status, label) {
-      state.selectedTable = id;
-      state.selectedLabel = label;
-      state.selectedStatus = status;
-      $$('.table-node').forEach((node) => node.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
-      els.selectedTableChip.textContent = id;
-      els.selectedTableTitle.textContent = `${id} · ${label}`;
-      els.selectedTableSub.textContent = `${status} table selected for premium reservation request`;
-      els.selectedStatus.textContent = status;
-      els.summaryTable.textContent = id;
-      els.modalTable.textContent = id;
+    function jumpToBooking() {
+      $("booking").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function goStep(step) {
-      state.step = Math.max(0, Math.min(3, step));
-      $$('.step-dot').forEach((dot) => dot.classList.toggle('active', Number(dot.dataset.step) === state.step));
-      $$('.form-step').forEach((panel) => panel.classList.toggle('active', Number(panel.dataset.panel) === state.step));
-    }
-
-    function nextStep() { goStep(state.step + 1); }
-    function prevStep() { goStep(state.step - 1); }
-
-    function togglePref(button) {
-      button.classList.toggle('active');
-    }
-
-    function scrollToBooking() {
-      $('#booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function openPaymentPreview() {
-      els.modalMode.textContent = state.mode === 'table' ? 'Table' : 'Hall / Room';
-      els.modalTable.textContent = state.selectedTable;
-      els.modalAmount.textContent = money(state.amount);
-      els.paymentModal.classList.add('show');
-      els.paymentModal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closePaymentPreview() {
-      els.paymentModal.classList.remove('show');
-      els.paymentModal.setAttribute('aria-hidden', 'true');
-    }
-
-    function submitReservation(event) {
+    function submitBooking(event) {
       event.preventDefault();
-      openPaymentPreview();
+      ui.modal.classList.add("show");
     }
 
-    function simulatePayment() {
-      closePaymentPreview();
-      const msg = state.mode === 'table'
-        ? `Demo table request created for ${state.selectedTable}. Reception sync can be connected later.`
-        : 'Demo hall booking request created. Payment and reception sync can be connected later.';
-      showToast(msg);
+    function closeModal() {
+      ui.modal.classList.remove("show");
     }
 
-    function showToast(message) {
-      els.toast.textContent = message;
-      els.toast.classList.add('show');
-      setTimeout(() => els.toast.classList.remove('show'), 3300);
+    function success() {
+      closeModal();
+      ui.toast.textContent =
+        state.mode === "table"
+          ? "Demo table request created. Backend can connect later."
+          : "Demo hall request created. Backend can connect later.";
+
+      ui.toast.classList.add("show");
+      setTimeout(() => ui.toast.classList.remove("show"), 3000);
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add('in');
-      });
-    }, { threshold: .12 });
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("in");
+      }),
+      { threshold: .12 }
+    );
 
-    $$('.reveal').forEach((item) => observer.observe(item));
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-    const today = new Date();
-    const dateInput = $('#date');
+    const dateInput = $("date");
     if (dateInput) {
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      dateInput.min = `${yyyy}-${mm}-${dd}`;
+      const d = new Date();
+      dateInput.min = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
     }
 
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closePaymentPreview();
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
     });
   </script>
 </body>
 </html>
+'''
+
+# Add more stars, still useful visual detail, not visible clutter.
+extra_stars = []
+for i in range(13, 85):
+    left = (i * 19) % 100
+    top = (i * 37) % 100
+    delay = (i % 31) / 10
+    extra_stars.append(f'    <span class="star" style="left:{left}%;top:{top}%;animation-delay:-{delay:.1f}s"></span>')
+html = html.replace('  </div>\n\n  <main class="app">', "\n".join(extra_stars) + '\n  </div>\n\n  <main class="app">')
+
+path = Path("/mnt/data/reservation_extraordinary_mobile.html")
+path.write_text(html, encoding="utf-8")
+
+print("Created:", path)
+print("Size:", round(path.stat().st_size / 1024, 1), "KB")
+print("Lines:", html.count("\n") + 1)
