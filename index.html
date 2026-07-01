@@ -3,158 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luxury Concierge Reservation</title>
+  <title>Neon Noir Reservation UI</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-mode="table">
-  <canvas id="goldDust"></canvas>
-
-  <div class="curtain curtain-left"></div>
-  <div class="curtain curtain-right"></div>
-  <div class="intro-title">DEMO RESERVATIONS</div>
-
-  <div class="ambient"></div>
-  <div class="silk-light"></div>
+<body>
+  <div class="bg-glow"></div>
   <div class="noise"></div>
 
-  <main class="page">
+  <main class="app">
     <nav class="navbar">
       <div class="brand">
-        <div class="brand-icon">D</div>
+        <div class="brand-mark">✦</div>
         <div>
-          <span>PRIVATE DINING</span>
-          <strong>Demo Concierge</strong>
+          <span>DEMO</span>
+          <h1>Reserve OS</h1>
         </div>
       </div>
 
-      <button class="nav-reserve" id="navReserve">Reserve Now</button>
+      <button class="nav-btn">Book Now</button>
     </nav>
 
     <section class="hero">
-      <div class="editorial">
-        <div class="eyebrow">A PRIVATE RESERVATION EXPERIENCE</div>
+      <div class="hero-content">
+        <div class="eyebrow">NEON NOIR LUXURY DINING</div>
 
-        <h1>
-          Dining,
-          <span>arranged beautifully.</span>
-        </h1>
+        <h2>
+          Reserve your
+          <span>premium table</span>
+          like never before.
+        </h2>
 
         <p>
-          A classy concierge-style reservation website for table booking,
-          private rooms, banquet halls, advance payment preview and reception
-          confirmation.
+          A futuristic reservation experience for tables, private rooms,
+          banquet halls, advance payments, and reception confirmation.
         </p>
 
-        <div class="story-card">
-          <span>TONIGHT’S SERVICE</span>
-          <p>
-            “Tell us your occasion. Our reception team prepares the perfect
-            table, room or celebration space.”
-          </p>
+        <div class="hero-actions">
+          <button class="primary-btn">Start Reservation</button>
+          <button class="ghost-btn">View Spaces</button>
         </div>
 
-        <div class="metrics">
+        <div class="stats">
           <div>
             <strong>₹299</strong>
-            <span>Table</span>
+            <small>Table Advance</small>
           </div>
           <div>
             <strong>₹999</strong>
-            <span>Private Room</span>
+            <small>Private Room</small>
           </div>
           <div>
             <strong>₹1999</strong>
-            <span>Banquet</span>
+            <small>Banquet Hall</small>
           </div>
         </div>
       </div>
 
-      <section class="concierge-card" id="conciergeCard">
-        <div class="card-shine"></div>
+      <div class="reservation-card">
+        <div class="card-light"></div>
 
-        <div class="concierge-head">
-          <div class="avatar">
-            <span>✦</span>
-          </div>
-
+        <div class="card-head">
           <div>
-            <span>LIVE CONCIERGE</span>
-            <h2>Good evening</h2>
+            <span>LIVE CONSOLE</span>
+            <h3>Reservation Request</h3>
           </div>
-
-          <div class="online">
-            <i></i>
-            Online
-          </div>
+          <div class="live-dot">Live</div>
         </div>
 
-        <div class="chat-window" id="chatWindow"></div>
-
-        <div class="choice-row">
-          <button class="choice active" data-mode="table">
-            <span>🍽️</span>
-            Table
-          </button>
-
-          <button class="choice" data-mode="private">
-            <span>🥂</span>
-            Private
-          </button>
-
-          <button class="choice" data-mode="banquet">
-            <span>🏛️</span>
-            Banquet
-          </button>
+        <div class="mode-tabs">
+          <button class="active" data-price="₹299">Table</button>
+          <button data-price="₹999">Private</button>
+          <button data-price="₹1999">Banquet</button>
         </div>
 
-        <div class="booking-panel">
-          <div class="panel-top">
+        <form>
+          <input type="text" placeholder="Guest name" />
+          <input type="tel" placeholder="+91 Mobile number" />
+
+          <div class="two-grid">
+            <input type="date" />
+            <input type="time" />
+          </div>
+
+          <input type="text" placeholder="Number of guests" />
+          <textarea placeholder="Special request"></textarea>
+
+          <div class="price-box">
             <div>
-              <span>SELECTED EXPERIENCE</span>
-              <strong id="selectedTitle">Premium Table</strong>
+              <small>ADVANCE PREVIEW</small>
+              <strong id="price">₹299</strong>
             </div>
-
-            <div class="price-pill" id="selectedPrice">₹299</div>
+            <span>Pending</span>
           </div>
 
-          <form id="reservationForm">
-            <input type="text" placeholder="Guest name" required />
-            <input type="tel" placeholder="+91 mobile number" required />
-
-            <div class="form-grid">
-              <input type="date" required />
-              <input type="time" required />
-            </div>
-
-            <input type="number" placeholder="Number of guests" required />
-
-            <textarea placeholder="Occasion / special request"></textarea>
-
-            <button type="submit" class="submit-btn">
-              Send Reservation Request
-            </button>
-          </form>
-        </div>
-      </section>
-    </section>
-
-    <section class="bottom-dock">
-      <button class="dock-option active" data-mode="table">
-        <small>Experience</small>
-        <strong>Premium Table</strong>
-      </button>
-
-      <button class="dock-option" data-mode="private">
-        <small>Experience</small>
-        <strong>Private Room</strong>
-      </button>
-
-      <button class="dock-option" data-mode="banquet">
-        <small>Experience</small>
-        <strong>Banquet Hall</strong>
-      </button>
-
-      <button class="dock-main" id="dockReserve">Continue</button>
+          <button class="submit-btn" type="button">
+            Continue Reservation
+          </button>
+        </form>
+      </div>
     </section>
   </main>
 
