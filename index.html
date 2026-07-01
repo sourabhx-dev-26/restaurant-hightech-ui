@@ -3,106 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neon Noir Reservation UI</title>
+  <title>Reservation Passport UI</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg-glow"></div>
-  <div class="noise"></div>
+  <div class="ambient"></div>
+  <div class="grain"></div>
 
-  <main class="app">
+  <main class="page">
     <nav class="navbar">
-      <div class="brand">
-        <div class="brand-mark">✦</div>
+      <div class="logo">
+        <div class="logo-mark">R</div>
         <div>
           <span>DEMO</span>
-          <h1>Reserve OS</h1>
+          <strong>Reservation Atelier</strong>
         </div>
       </div>
 
-      <button class="nav-btn">Book Now</button>
+      <div class="nav-links">
+        <a>Experiences</a>
+        <a>Menus</a>
+        <a>Private Events</a>
+        <a>Contact</a>
+      </div>
+
+      <button class="nav-btn">Reserve</button>
     </nav>
 
-    <section class="hero">
-      <div class="hero-content">
-        <div class="eyebrow">NEON NOIR LUXURY DINING</div>
+    <section class="book-scene">
+      <aside class="side-social">
+        <span>Instagram</span>
+        <i></i>
+        <span>Facebook</span>
+        <i></i>
+        <span>Reserve</span>
+      </aside>
 
-        <h2>
-          Reserve your
-          <span>premium table</span>
-          like never before.
-        </h2>
+      <section class="book">
+        <div class="cover-page">
+          <div class="cover-overlay"></div>
 
-        <p>
-          A futuristic reservation experience for tables, private rooms,
-          banquet halls, advance payments, and reception confirmation.
-        </p>
+          <div class="cover-content">
+            <div class="crest">R</div>
+            <p>A reservation experience curated for you.</p>
+          </div>
 
-        <div class="hero-actions">
-          <button class="primary-btn">Start Reservation</button>
-          <button class="ghost-btn">View Spaces</button>
+          <div class="cover-photo"></div>
         </div>
 
-        <div class="stats">
-          <div>
-            <strong>₹299</strong>
-            <small>Table Advance</small>
-          </div>
-          <div>
-            <strong>₹999</strong>
-            <small>Private Room</small>
-          </div>
-          <div>
-            <strong>₹1999</strong>
-            <small>Banquet Hall</small>
-          </div>
-        </div>
-      </div>
+        <div class="paper-page intro-page">
+          <div class="small-crest">✦</div>
 
-      <div class="reservation-card">
-        <div class="card-light"></div>
+          <span class="page-label">WELCOME TO DEMO</span>
 
-        <div class="card-head">
-          <div>
-            <span>LIVE CONSOLE</span>
-            <h3>Reservation Request</h3>
-          </div>
-          <div class="live-dot">Live</div>
+          <h1>
+            Where Every
+            <br />
+            Reservation is
+            <br />
+            a Celebration
+          </h1>
+
+          <p>
+            An elevated dining experience awaits. Reserve your table,
+            private room, or banquet hall for unforgettable moments
+            of taste and togetherness.
+          </p>
+
+          <div class="signature">Atelier de Dining</div>
         </div>
 
-        <div class="mode-tabs">
-          <button class="active" data-price="₹299">Table</button>
-          <button data-price="₹999">Private</button>
-          <button data-price="₹1999">Banquet</button>
-        </div>
-
-        <form>
-          <input type="text" placeholder="Guest name" />
-          <input type="tel" placeholder="+91 Mobile number" />
-
-          <div class="two-grid">
-            <input type="date" />
-            <input type="time" />
-          </div>
-
-          <input type="text" placeholder="Number of guests" />
-          <textarea placeholder="Special request"></textarea>
-
-          <div class="price-box">
+        <div class="paper-page options-page">
+          <button class="experience active" data-mode="table">
+            <div class="icon">🍽️</div>
             <div>
-              <small>ADVANCE PREVIEW</small>
-              <strong id="price">₹299</strong>
+              <h3>Table</h3>
+              <p>For intimate dining and everyday celebrations.</p>
             </div>
-            <span>Pending</span>
-          </div>
-
-          <button class="submit-btn" type="button">
-            Continue Reservation
+            <span>₹299</span>
           </button>
-        </form>
-      </div>
+
+          <button class="experience" data-mode="private">
+            <div class="icon">🥂</div>
+            <div>
+              <h3>Private Room</h3>
+              <p>For special gatherings in an exclusive setting.</p>
+            </div>
+            <span>₹999</span>
+          </button>
+
+          <button class="experience" data-mode="banquet">
+            <div class="icon">🏛️</div>
+            <div>
+              <h3>Banquet Hall</h3>
+              <p>For grand events and unforgettable occasions.</p>
+            </div>
+            <span>₹1999</span>
+          </button>
+        </div>
+
+        <div class="tabs">
+          <button class="active" data-mode="table">Table</button>
+          <button data-mode="private">Private Room</button>
+          <button data-mode="banquet">Banquet Hall</button>
+        </div>
+      </section>
+
+      <section class="reservation-strip">
+        <div class="strip-left">
+          <span>Your Reservation</span>
+          <p>Every detail, beautifully prepared.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">📅</div>
+          <span>Date & Time</span>
+          <strong>Sat, 24 May · 7:00 PM</strong>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">👥</div>
+          <span>Guests</span>
+          <strong>2 Guests</strong>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">📍</div>
+          <span>Experience</span>
+          <strong id="stripMode">Table Dining</strong>
+        </div>
+
+        <div class="step">
+          <div class="step-icon">✓</div>
+          <span>Status</span>
+          <strong>Awaiting Confirmation</strong>
+        </div>
+
+        <button class="seal-btn" id="confirmBtn">
+          <span>Confirm</span>
+          <strong>Reservation</strong>
+        </button>
+      </section>
     </section>
   </main>
+
+  <div class="toast" id="toast">
+    Reservation request prepared for reception.
+  </div>
 
   <script src="script.js"></script>
 </body>
