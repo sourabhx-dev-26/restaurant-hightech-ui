@@ -3,211 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Reservation Chamber</title>
+  <title>Luxury Concierge Reservation</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <canvas id="particles"></canvas>
+<body data-mode="table">
+  <canvas id="goldDust"></canvas>
 
-  <div class="cursor-glow"></div>
-  <div class="bg-aurora"></div>
-  <div class="bg-grid"></div>
+  <div class="curtain curtain-left"></div>
+  <div class="curtain curtain-right"></div>
+  <div class="intro-title">DEMO RESERVATIONS</div>
+
+  <div class="ambient"></div>
+  <div class="silk-light"></div>
   <div class="noise"></div>
 
   <main class="page">
-    <nav class="nav">
+    <nav class="navbar">
       <div class="brand">
-        <div class="brand-mark">✦</div>
+        <div class="brand-icon">D</div>
         <div>
-          <span>DEMO</span>
-          <strong>Reservation Chamber</strong>
+          <span>PRIVATE DINING</span>
+          <strong>Demo Concierge</strong>
         </div>
       </div>
 
-      <div class="nav-pill">
-        <span class="pulse-dot"></span>
-        Reception Sync Online
-      </div>
+      <button class="nav-reserve" id="navReserve">Reserve Now</button>
     </nav>
 
     <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow">
-          FUTURISTIC LUXURY DINING SYSTEM
-        </div>
+      <div class="editorial">
+        <div class="eyebrow">A PRIVATE RESERVATION EXPERIENCE</div>
 
         <h1>
-          Choose your
-          <span>perfect space.</span>
+          Dining,
+          <span>arranged beautifully.</span>
         </h1>
 
         <p>
-          A cinematic reservation experience for premium tables, private rooms,
-          banquet halls, advance payments and reception confirmation.
+          A classy concierge-style reservation website for table booking,
+          private rooms, banquet halls, advance payment preview and reception
+          confirmation.
         </p>
 
-        <div class="hero-actions">
-          <button class="primary-btn open-booking">Start Reservation</button>
-          <button class="ghost-btn" id="focusMap">Explore Spaces</button>
+        <div class="story-card">
+          <span>TONIGHT’S SERVICE</span>
+          <p>
+            “Tell us your occasion. Our reception team prepares the perfect
+            table, room or celebration space.”
+          </p>
         </div>
 
-        <div class="mini-stats">
+        <div class="metrics">
           <div>
-            <strong>12</strong>
-            <span>Tables Free</span>
-          </div>
-          <div>
-            <strong>03</strong>
-            <span>Private Rooms</span>
-          </div>
-          <div>
-            <strong>01</strong>
-            <span>Hall Available</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="chamber-wrap">
-        <div class="chamber-glow"></div>
-
-        <div class="chamber">
-          <div class="ring ring-one"></div>
-          <div class="ring ring-two"></div>
-          <div class="ring ring-three"></div>
-
-          <div class="center-core">
-            <span>LIVE</span>
-            <strong id="coreTitle">TABLE</strong>
-          </div>
-
-          <button class="space-node node-table active" data-mode="table">
+            <strong>₹299</strong>
             <span>Table</span>
-          </button>
-
-          <button class="space-node node-private" data-mode="private">
-            <span>Private</span>
-          </button>
-
-          <button class="space-node node-banquet" data-mode="banquet">
+          </div>
+          <div>
+            <strong>₹999</strong>
+            <span>Private Room</span>
+          </div>
+          <div>
+            <strong>₹1999</strong>
             <span>Banquet</span>
-          </button>
-
-          <button class="table-dot dot-1 active" data-seat="A1"></button>
-          <button class="table-dot dot-2" data-seat="A2"></button>
-          <button class="table-dot dot-3" data-seat="B1"></button>
-          <button class="table-dot dot-4" data-seat="VIP"></button>
-          <button class="table-dot dot-5" data-seat="HALL"></button>
-
-          <div class="scan-beam"></div>
-        </div>
-
-        <div class="selected-chip">
-          Selected: <strong id="selectedSeat">A1 Premium Table</strong>
+          </div>
         </div>
       </div>
 
-      <aside class="console">
-        <div class="console-light"></div>
+      <section class="concierge-card" id="conciergeCard">
+        <div class="card-shine"></div>
 
-        <div class="console-head">
-          <div>
-            <span>RESERVATION OS</span>
-            <h2 id="consoleTitle">Premium Table</h2>
+        <div class="concierge-head">
+          <div class="avatar">
+            <span>✦</span>
           </div>
-          <div class="status-chip">Pending</div>
+
+          <div>
+            <span>LIVE CONCIERGE</span>
+            <h2>Good evening</h2>
+          </div>
+
+          <div class="online">
+            <i></i>
+            Online
+          </div>
         </div>
 
-        <p id="consoleText">
-          Best for lunch, dinner, family dining and VIP table experiences.
-        </p>
+        <div class="chat-window" id="chatWindow"></div>
 
-        <div class="mode-list">
-          <button class="mode-card active" data-mode="table">
+        <div class="choice-row">
+          <button class="choice active" data-mode="table">
             <span>🍽️</span>
-            <div>
-              <strong>Table</strong>
-              <small>₹299 advance</small>
-            </div>
+            Table
           </button>
 
-          <button class="mode-card" data-mode="private">
+          <button class="choice" data-mode="private">
             <span>🥂</span>
-            <div>
-              <strong>Private Room</strong>
-              <small>₹999 advance</small>
-            </div>
+            Private
           </button>
 
-          <button class="mode-card" data-mode="banquet">
+          <button class="choice" data-mode="banquet">
             <span>🏛️</span>
-            <div>
-              <strong>Banquet Hall</strong>
-              <small>₹1999 advance</small>
-            </div>
+            Banquet
           </button>
         </div>
 
-        <div class="price-panel">
-          <small>ADVANCE PREVIEW</small>
-          <strong id="price">₹299</strong>
-        </div>
+        <div class="booking-panel">
+          <div class="panel-top">
+            <div>
+              <span>SELECTED EXPERIENCE</span>
+              <strong id="selectedTitle">Premium Table</strong>
+            </div>
 
-        <button class="submit-glow open-booking">Continue Booking</button>
-      </aside>
+            <div class="price-pill" id="selectedPrice">₹299</div>
+          </div>
+
+          <form id="reservationForm">
+            <input type="text" placeholder="Guest name" required />
+            <input type="tel" placeholder="+91 mobile number" required />
+
+            <div class="form-grid">
+              <input type="date" required />
+              <input type="time" required />
+            </div>
+
+            <input type="number" placeholder="Number of guests" required />
+
+            <textarea placeholder="Occasion / special request"></textarea>
+
+            <button type="submit" class="submit-btn">
+              Send Reservation Request
+            </button>
+          </form>
+        </div>
+      </section>
     </section>
 
-    <section class="dock">
-      <div class="dock-item">
-        <span>Date</span>
-        <strong>Today Available</strong>
-      </div>
+    <section class="bottom-dock">
+      <button class="dock-option active" data-mode="table">
+        <small>Experience</small>
+        <strong>Premium Table</strong>
+      </button>
 
-      <div class="dock-item">
-        <span>Experience</span>
-        <strong id="dockMode">Premium Table</strong>
-      </div>
+      <button class="dock-option" data-mode="private">
+        <small>Experience</small>
+        <strong>Private Room</strong>
+      </button>
 
-      <div class="dock-item">
-        <span>Advance</span>
-        <strong id="dockPrice">₹299</strong>
-      </div>
+      <button class="dock-option" data-mode="banquet">
+        <small>Experience</small>
+        <strong>Banquet Hall</strong>
+      </button>
 
-      <button class="dock-btn open-booking">Reserve Now</button>
+      <button class="dock-main" id="dockReserve">Continue</button>
     </section>
   </main>
-
-  <div class="modal" id="bookingModal">
-    <div class="modal-card">
-      <button class="close-btn" id="closeModal">×</button>
-
-      <div class="modal-head">
-        <span>FINAL RESERVATION REQUEST</span>
-        <h2 id="modalTitle">Premium Table Booking</h2>
-        <p>Fill details. Payment and reception confirmation can be connected later.</p>
-      </div>
-
-      <form id="bookingForm">
-        <input type="text" placeholder="Guest name" required />
-        <input type="tel" placeholder="+91 Mobile number" required />
-
-        <div class="form-grid">
-          <input type="date" required />
-          <input type="time" required />
-        </div>
-
-        <input type="number" placeholder="Number of guests" required />
-
-        <textarea placeholder="Special request: birthday, decoration, private setup..."></textarea>
-
-        <div class="modal-price">
-          <span>Advance Amount</span>
-          <strong id="modalPrice">₹299</strong>
-        </div>
-
-        <button type="submit" class="submit-glow">Create Reservation Request</button>
-      </form>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>
