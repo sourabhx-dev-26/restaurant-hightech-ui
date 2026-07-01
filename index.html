@@ -1,1260 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Maison Noir — Reserve Your Evening</title>
-<style>
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
-
-:root {
-  --void: #050408;
-  --deep: #0A080E;
-  --surface: #110F16;
-  --raised: #1A1722;
-  --hover: #221F2E;
-  --gold: #C9A84C;
-  --gold-lt: #E2C47A;
-  --gold-pale: #F0DFA8;
-  --crimson: #8B1A2E;
-  --crimson-lt: #B02240;
-  --violet: #4A1060;
-  --violet-lt: #6B1E8A;
-  --rose: #E8B4C8;
-  --pearl: #F5EEE8;
-  --text: #EDE6DC;
-  --text-mid: #A89880;
-  --text-dim: #5C5048;
-  --border: rgba(201,168,76,0.12);
-  --border-warm: rgba(201,168,76,0.28);
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
-body{
-  background:var(--void);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  font-size:15px;
-  line-height:1.6;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
-
-/* ── CANVAS BACKGROUND ── */
-#bg-canvas{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-}
-
-/* ── NOISE OVERLAY ── */
-.noise{
-  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.035;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size:128px 128px;
-}
-
-/* ── PAGE ── */
-.page{position:relative;z-index:2}
-
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 26px;
-  background:rgba(5,4,8,0.6);
-  backdrop-filter:blur(40px) saturate(200%);
-  border-bottom:1px solid rgba(201,168,76,0.06);
-  animation:navSlide 1s var(--ease) both;
-}
-@keyframes navSlide{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
-
-.nav-brand{display:flex;flex-direction:column;gap:1px}
-.nav-logo{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:600;letter-spacing:0.12em;
-  color:var(--pearl);line-height:1;
-}
-.nav-logo span{color:var(--gold)}
-.nav-tagline{font-size:9px;color:var(--text-dim);letter-spacing:0.25em;text-transform:uppercase;margin-top:1px}
-
-.nav-pill{
-  display:flex;align-items:center;gap:8px;
-  padding:7px 14px;border-radius:100px;
-  background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.04));
-  border:1px solid rgba(201,168,76,0.2);
-  font-size:11px;font-weight:500;color:var(--gold-lt);letter-spacing:0.06em;
-}
-.pulse{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--gold);
-  box-shadow:0 0 0 0 rgba(201,168,76,0.6);
-  animation:pulse 2s ease infinite;
-}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(201,168,76,0.6)}
-  70%{box-shadow:0 0 0 8px rgba(201,168,76,0)}
-  100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}
-}
-
-/* ── HERO ── */
-#hero{
-  min-height:100svh;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:110px 28px 90px;
-  text-align:center;
-  position:relative;overflow:hidden;
-}
-
-.hero-orbit{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  pointer-events:none;
-}
-.orbit-ring{
-  position:absolute;border-radius:50%;border:1px solid transparent;
-  left:50%;top:50%;transform:translate(-50%,-50%);
-}
-.orbit-ring-1{
-  width:340px;height:340px;
-  border-color:rgba(201,168,76,0.06);
-  animation:orbitSpin 30s linear infinite;
-}
-.orbit-ring-2{
-  width:260px;height:260px;
-  border-color:rgba(201,168,76,0.09);
-  animation:orbitSpin 20s linear infinite reverse;
-}
-.orbit-ring-3{
-  width:180px;height:180px;
-  border-color:rgba(201,168,76,0.14);
-  animation:orbitSpin 12s linear infinite;
-}
-@keyframes orbitSpin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-/* Dots on rings */
-.orbit-dot{
-  position:absolute;width:5px;height:5px;border-radius:50%;
-  background:var(--gold);
-  box-shadow:0 0 10px var(--gold),0 0 20px rgba(201,168,76,0.5);
-  top:0;left:50%;transform:translate(-50%,-50%);
-}
-.orbit-dot-2{background:var(--rose);box-shadow:0 0 10px var(--rose)}
-.orbit-dot-3{background:var(--violet-lt);box-shadow:0 0 10px var(--violet-lt)}
-
-/* Central flame orb */
-.flame-orb{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:90px;height:90px;
-}
-.flame-core{
-  position:absolute;inset:0;border-radius:50%;
-  background:radial-gradient(circle at 50% 60%,
-    rgba(255,240,180,0.9) 0%,
-    rgba(201,168,76,0.7) 25%,
-    rgba(139,26,46,0.4) 60%,
-    transparent 80%
-  );
-  filter:blur(2px);
-  animation:flameBreath 2.2s ease-in-out infinite alternate;
-}
-.flame-outer{
-  position:absolute;inset:-20px;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,168,76,0.15) 0%,transparent 70%);
-  filter:blur(8px);
-  animation:flameBreath 2.2s 0.4s ease-in-out infinite alternate;
-}
-.flame-tip{
-  position:absolute;left:50%;bottom:52%;
-  transform:translateX(-50%);
-  width:18px;height:32px;
-  background:radial-gradient(ellipse at 50% 80%,
-    rgba(255,255,220,1) 0%,
-    rgba(201,168,76,0.8) 40%,
-    transparent 100%
-  );
-  border-radius:50% 50% 30% 30%;
-  filter:blur(1px);
-  animation:flameTip 1.6s ease-in-out infinite alternate;
-}
-@keyframes flameBreath{
-  0%{transform:scale(0.92);opacity:0.85}
-  100%{transform:scale(1.08);opacity:1}
-}
-@keyframes flameTip{
-  0%{transform:translateX(-52%) scaleX(0.85) scaleY(1) skewX(-3deg)}
-  33%{transform:translateX(-48%) scaleX(1.1) scaleY(0.95) skewX(2deg)}
-  66%{transform:translateX(-51%) scaleX(0.9) scaleY(1.06) skewX(-1deg)}
-  100%{transform:translateX(-50%) scaleX(1.05) scaleY(1.08) skewX(1deg)}
-}
-
-/* Table glow ellipses */
-.table-ellipse{
-  position:absolute;left:50%;
-  border-radius:50%;border:1px solid rgba(201,168,76,0.2);
-  transform:translateX(-50%) rotateX(75deg);
-  animation:tableBreath 3s ease-in-out infinite alternate;
-}
-.te1{bottom:28%;width:200px;height:60px;animation-delay:0s}
-.te2{bottom:26%;width:150px;height:44px;border-color:rgba(201,168,76,0.3);animation-delay:0.3s}
-.te3{bottom:24%;width:100px;height:30px;border-color:rgba(201,168,76,0.4);animation-delay:0.6s}
-@keyframes tableBreath{0%{opacity:0.5}100%{opacity:1}}
-
-.hero-kicker{
-  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
-  color:var(--gold);font-weight:500;
-  margin-bottom:24px;
-  opacity:0;animation:heroReveal 0.8s 0.6s var(--ease) forwards;
-}
-.hero-headline{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(40px,11vw,62px);
-  font-weight:300;line-height:1.1;letter-spacing:-0.01em;
-  color:var(--pearl);
-  margin-bottom:8px;
-  opacity:0;animation:heroReveal 1s 0.8s var(--ease) forwards;
-}
-.hero-headline em{
-  font-style:italic;font-weight:300;
-  background:linear-gradient(130deg,var(--gold-pale),var(--gold),var(--rose));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hero-sub{
-  font-size:13px;color:var(--text-mid);
-  max-width:270px;margin:0 auto;line-height:1.8;
-  letter-spacing:0.01em;
-  margin-bottom:52px;
-  opacity:0;animation:heroReveal 0.8s 1s var(--ease) forwards;
-}
-
-.flame-scene{
-  width:200px;height:200px;position:relative;
-  margin:0 auto 52px;
-  opacity:0;animation:heroReveal 1.2s 1.1s var(--ease) forwards;
-}
-
-.hero-actions{
-  display:flex;flex-direction:column;align-items:center;gap:14px;
-  opacity:0;animation:heroReveal 0.8s 1.3s var(--ease) forwards;
-}
-.hero-cta{
-  position:relative;overflow:hidden;
-  display:inline-flex;align-items:center;gap:12px;
-  padding:18px 44px;border-radius:100px;
-  background:linear-gradient(135deg,var(--crimson) 0%,var(--crimson-lt) 50%,var(--violet) 100%);
-  color:var(--pearl);font-size:15px;font-weight:500;letter-spacing:0.06em;
-  border:none;cursor:pointer;
-  box-shadow:
-    0 0 0 1px rgba(201,168,76,0.2),
-    0 8px 40px rgba(139,26,46,0.5),
-    0 2px 8px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  transition:transform 0.3s var(--ease),box-shadow 0.3s var(--ease);
-  text-transform:uppercase;
-}
-.hero-cta:hover{
-  transform:translateY(-3px) scale(1.02);
-  box-shadow:
-    0 0 0 1px rgba(201,168,76,0.4),
-    0 16px 56px rgba(139,26,46,0.6),
-    0 4px 16px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-}
-.hero-cta:active{transform:scale(0.97)}
-.cta-shimmer{
-  position:absolute;inset:0;left:-100%;width:50%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);
-  animation:shimmer 4s 2s ease-in-out infinite;
-}
-@keyframes shimmer{0%,55%{left:-100%}100%{left:200%}}
-.cta-arrow{
-  width:20px;height:20px;border-radius:50%;
-  background:rgba(255,255,255,0.12);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;
-  transition:transform 0.3s var(--ease);
-}
-.hero-cta:hover .cta-arrow{transform:translateY(3px)}
-
-.hero-scroll-hint{
-  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-dim);display:flex;align-items:center;gap:8px;
-}
-.scroll-line{
-  width:30px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--text-dim));
-}
-
-@keyframes heroReveal{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── SECTION WRAPPER ── */
-.section-wrap{padding:60px 22px 0}
-
-.section-eyebrow{
-  font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
-  color:var(--gold);font-weight:500;text-align:center;
-  margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:12px;
-}
-.section-eyebrow::before,.section-eyebrow::after{
-  content:'';width:24px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold));
-}
-.section-eyebrow::after{transform:scaleX(-1)}
-
-.section-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(28px,7vw,40px);font-weight:300;line-height:1.15;
-  text-align:center;color:var(--pearl);letter-spacing:-0.01em;
-  margin-bottom:36px;
-}
-.section-title em{font-style:italic;color:var(--gold-lt)}
-
-/* ── BOOKING CARDS ── */
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0}
-
-.mode-card{
-  position:relative;border-radius:24px;padding:28px 20px 24px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  cursor:pointer;overflow:hidden;user-select:none;
-  transition:border-color 0.4s var(--ease),transform 0.3s var(--ease),box-shadow 0.4s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.mode-card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(201,168,76,0.22);
-  box-shadow:0 20px 60px rgba(0,0,0,0.4);
-}
-.mode-card.active{
-  border-color:rgba(201,168,76,0.45);
-  box-shadow:
-    0 0 0 1px rgba(201,168,76,0.15),
-    0 20px 60px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(201,168,76,0.08);
-}
-
-.card-glow{
-  position:absolute;inset:0;opacity:0;border-radius:inherit;
-  transition:opacity 0.5s var(--ease);pointer-events:none;
-}
-.mode-card.active .card-glow{opacity:1}
-.card-glow-table{
-  background:radial-gradient(ellipse at 30% -10%,rgba(201,168,76,0.14),transparent 65%);
-}
-.card-glow-hall{
-  background:radial-gradient(ellipse at 70% -10%,rgba(139,26,46,0.16),transparent 65%);
-}
-
-.card-check{
-  position:absolute;top:14px;right:14px;
-  width:24px;height:24px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;color:var(--void);font-weight:700;
-  opacity:0;transform:scale(0.4) rotate(-45deg);
-  transition:opacity 0.35s var(--ease),transform 0.45s var(--ease-back);
-  box-shadow:0 4px 12px rgba(201,168,76,0.5);
-}
-.mode-card.active .card-check{opacity:1;transform:scale(1) rotate(0)}
-
-.card-icon-wrap{
-  width:52px;height:52px;border-radius:16px;
-  background:var(--raised);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;margin-bottom:18px;
-  transition:transform 0.4s var(--ease),box-shadow 0.4s var(--ease),border-color 0.4s;
-}
-.mode-card.active .card-icon-wrap{
-  transform:scale(1.08);
-  border-color:rgba(201,168,76,0.3);
-  box-shadow:0 8px 24px rgba(0,0,0,0.3);
-}
-.card-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:18px;font-weight:600;color:var(--pearl);margin-bottom:6px;
-}
-.card-desc{font-size:12px;color:var(--text-dim);line-height:1.6}
-.card-price{
-  margin-top:16px;padding-top:14px;
-  border-top:1px solid var(--border);
-  display:flex;align-items:baseline;gap:5px;
-}
-.price-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:600;color:var(--gold-lt);
-}
-.price-label{font-size:10px;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase}
-
-/* ── FORM ── */
-#reservation{padding:32px 22px 160px}
-
-.glass-card{
-  background:linear-gradient(160deg,rgba(26,23,34,0.95),rgba(17,15,22,0.98));
-  border:1px solid var(--border);border-radius:32px;
-  padding:32px 24px 30px;
-  box-shadow:
-    0 40px 100px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(201,168,76,0.04),
-    inset 0 1px 0 rgba(201,168,76,0.06);
-  position:relative;overflow:hidden;
-}
-.glass-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3),transparent);
-}
-
-.form-hdr{margin-bottom:30px}
-.form-eyebrow{
-  font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
-  color:var(--gold);font-weight:500;margin-bottom:8px;
-}
-.form-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:26px;font-weight:300;color:var(--pearl);line-height:1.2;
-}
-
-.form-body{display:flex;flex-direction:column;gap:20px}
-.field{display:flex;flex-direction:column;gap:7px}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-
-.field label{
-  font-size:10px;font-weight:500;letter-spacing:0.15em;
-  text-transform:uppercase;color:var(--text-dim);
-}
-.field label span{color:var(--crimson-lt)}
-
-.input-wrap{position:relative}
-.input-icon{
-  position:absolute;left:16px;top:50%;transform:translateY(-50%);
-  font-size:15px;opacity:0.5;pointer-events:none;
-}
-.has-icon input,.has-icon select{padding-left:42px}
-
-input,select,textarea{
-  width:100%;
-  background:rgba(10,8,14,0.6);
-  border:1px solid rgba(201,168,76,0.1);
-  border-radius:16px;
-  color:var(--text);font-family:'Inter',sans-serif;
-  font-size:14px;padding:15px 16px;
-  outline:none;appearance:none;-webkit-appearance:none;
-  transition:border-color 0.3s,box-shadow 0.3s,background 0.3s;
-  -webkit-tap-highlight-color:transparent;
-}
-input:focus,select:focus,textarea:focus{
-  border-color:rgba(201,168,76,0.4);
-  background:rgba(10,8,14,0.8);
-  box-shadow:0 0 0 3px rgba(201,168,76,0.08),0 0 20px rgba(201,168,76,0.04);
-}
-input::placeholder,textarea::placeholder{color:var(--text-dim)}
-select option{background:#1A1722;color:var(--text)}
-textarea{resize:none;height:90px;line-height:1.6}
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator{
-  filter:invert(0.5) sepia(0.4);cursor:pointer;opacity:0.6;
-}
-
-/* Hall fields slide */
-.hall-fields{
-  display:flex;flex-direction:column;gap:20px;
-  overflow:hidden;max-height:0;opacity:0;
-  transition:max-height 0.6s var(--ease),opacity 0.45s var(--ease);
-}
-.hall-fields.open{max-height:400px;opacity:1}
-
-.divider{
-  display:flex;align-items:center;gap:12px;margin:2px 0;
-}
-.divider::before,.divider::after{
-  content:'';flex:1;height:1px;
-  background:linear-gradient(90deg,transparent,var(--border),transparent);
-}
-.divider span{
-  font-size:9px;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;
-  white-space:nowrap;
-}
-
-/* Advance pill */
-.advance-row{
-  display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(135deg,rgba(201,168,76,0.05),rgba(201,168,76,0.03));
-  border:1px solid rgba(201,168,76,0.18);
-  border-radius:18px;padding:18px 20px;
-  position:relative;overflow:hidden;
-}
-.advance-row::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.25),transparent);
-}
-.adv-left{}
-.adv-label{
-  font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
-  color:var(--text-dim);font-weight:500;margin-bottom:3px;
-}
-.adv-desc{font-size:12px;color:var(--text-mid)}
-.adv-amount{
-  font-family:'Cormorant Garamond',serif;
-  font-size:32px;font-weight:600;letter-spacing:-0.02em;
-  color:var(--gold-lt);
-  text-shadow:0 0 30px rgba(201,168,76,0.3);
-}
-
-/* Submit */
-.submit-btn{
-  width:100%;position:relative;overflow:hidden;
-  padding:19px 28px;border-radius:100px;
-  background:linear-gradient(135deg,
-    var(--crimson) 0%,
-    var(--crimson-lt) 40%,
-    var(--violet) 100%
-  );
-  color:var(--pearl);font-family:'Inter',sans-serif;
-  font-size:14px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
-  border:none;cursor:pointer;
-  box-shadow:
-    0 0 0 1px rgba(201,168,76,0.15),
-    0 12px 40px rgba(139,26,46,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.1);
-  transition:transform 0.3s var(--ease),box-shadow 0.3s var(--ease);
-  margin-top:6px;
-}
-.submit-btn:hover{
-  transform:translateY(-3px);
-  box-shadow:
-    0 0 0 1px rgba(201,168,76,0.3),
-    0 20px 60px rgba(139,26,46,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.14);
-}
-.submit-btn:active{transform:scale(0.98)}
-.submit-shine{
-  position:absolute;inset:0;left:-100%;width:60%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
-  animation:shimmer 5s 3s ease-in-out infinite;
-}
-
-/* ── BOTTOM BAR ── */
-.bottom-bar{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;gap:16px;
-  padding:14px 22px calc(14px + env(safe-area-inset-bottom));
-  background:rgba(5,4,8,0.85);
-  backdrop-filter:blur(40px) saturate(200%);
-  border-top:1px solid rgba(201,168,76,0.08);
-  box-shadow:0 -20px 60px rgba(0,0,0,0.5);
-  animation:barUp 0.8s 1.5s var(--ease) both;
-}
-@keyframes barUp{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
-
-.bar-info{flex:1;min-width:0}
-.bar-mode{
-  font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
-  color:var(--text-dim);margin-bottom:2px;
-}
-.bar-price{
-  font-family:'Cormorant Garamond',serif;
-  font-size:24px;font-weight:600;color:var(--gold-lt);
-}
-.bar-btn{
-  flex-shrink:0;padding:14px 28px;border-radius:100px;
-  background:linear-gradient(135deg,var(--crimson),var(--crimson-lt));
-  color:var(--pearl);font-family:'Inter',sans-serif;
-  font-size:13px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
-  border:none;cursor:pointer;
-  box-shadow:0 6px 24px rgba(139,26,46,0.45),0 0 0 1px rgba(201,168,76,0.12);
-  transition:transform 0.25s,box-shadow 0.25s;
-  -webkit-tap-highlight-color:transparent;white-space:nowrap;
-}
-.bar-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(139,26,46,0.55),0 0 0 1px rgba(201,168,76,0.2)}
-.bar-btn:active{transform:scale(0.97)}
-
-/* ── MODAL ── */
-.modal-overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(3,2,6,0.88);backdrop-filter:blur(12px) saturate(150%);
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity 0.4s var(--ease);
-}
-.modal-overlay.open{opacity:1;pointer-events:auto}
-
-.modal-sheet{
-  width:100%;max-width:480px;
-  background:linear-gradient(180deg,var(--surface) 0%,var(--deep) 100%);
-  border:1px solid var(--border-warm);
-  border-radius:36px 36px 0 0;
-  padding:10px 28px calc(48px + env(safe-area-inset-bottom));
-  transform:translateY(100%);
-  transition:transform 0.55s var(--ease);
-  position:relative;overflow:hidden;
-}
-.modal-sheet::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent);
-}
-.modal-overlay.open .modal-sheet{transform:translateY(0)}
-
-.modal-handle{
-  width:40px;height:4px;border-radius:2px;
-  background:rgba(201,168,76,0.2);margin:18px auto 32px;
-}
-
-/* Gem/orb in modal */
-.modal-gem-wrap{
-  width:80px;height:80px;position:relative;margin:0 auto 28px;
-}
-.gem-ring{
-  position:absolute;inset:0;border-radius:50%;
-  border:1px solid rgba(201,168,76,0.22);
-  animation:gemPulse 2.8s ease-in-out infinite alternate;
-}
-.gem-ring-inner{
-  inset:12px;border-color:rgba(201,168,76,0.4);
-  animation:gemPulse 2.8s 0.5s ease-in-out infinite alternate;
-}
-@keyframes gemPulse{0%{opacity:0.5;transform:scale(0.94)}100%{opacity:1;transform:scale(1.06)}}
-
-.gem-core{
-  position:absolute;inset:22px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,
-    rgba(255,240,180,0.95),
-    rgba(201,168,76,0.6) 40%,
-    rgba(139,26,46,0.5) 75%,
-    rgba(74,16,96,0.3)
-  );
-  animation:gemGlow 2s ease-in-out infinite alternate;
-  box-shadow:0 0 20px rgba(201,168,76,0.4),inset 0 1px 0 rgba(255,255,255,0.3);
-}
-@keyframes gemGlow{0%{box-shadow:0 0 20px rgba(201,168,76,0.3)}100%{box-shadow:0 0 40px rgba(201,168,76,0.6)}}
-
-/* snuffing */
-.modal-gem-wrap.snuffing .gem-core{
-  animation:snuffGem 0.6s var(--ease) forwards;
-}
-.modal-gem-wrap.snuffing .gem-ring{
-  animation:snuffRing 0.6s var(--ease) forwards;
-}
-@keyframes snuffGem{
-  0%{opacity:1;filter:blur(0)}
-  60%{opacity:0.5;filter:blur(1px)}
-  100%{opacity:0.2;filter:blur(4px) grayscale(1)}
-}
-@keyframes snuffRing{
-  0%{opacity:1}100%{opacity:0;transform:scale(1.5)}
-}
-
-.modal-tag-row{display:flex;justify-content:center;margin-bottom:10px}
-.modal-tag{
-  padding:5px 16px;border-radius:100px;
-  background:rgba(201,168,76,0.08);
-  border:1px solid rgba(201,168,76,0.25);
-  font-size:10px;font-weight:500;letter-spacing:0.12em;
-  color:var(--gold-lt);text-transform:uppercase;
-}
-.modal-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:28px;font-weight:300;text-align:center;color:var(--pearl);
-  margin-bottom:8px;
-}
-.modal-desc{
-  font-size:13px;color:var(--text-mid);text-align:center;
-  margin-bottom:30px;line-height:1.7;
-}
-
-.amount-card{
-  background:linear-gradient(135deg,rgba(201,168,76,0.06),rgba(201,168,76,0.03));
-  border:1px solid rgba(201,168,76,0.2);
-  border-radius:22px;padding:24px;
-  text-align:center;margin-bottom:24px;position:relative;overflow:hidden;
-}
-.amount-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);
-}
-.amount-label{
-  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-dim);font-weight:500;margin-bottom:10px;
-}
-.amount-value{
-  font-family:'Cormorant Garamond',serif;
-  font-size:52px;font-weight:300;letter-spacing:-0.03em;
-  color:var(--gold-lt);line-height:1;
-  text-shadow:0 0 40px rgba(201,168,76,0.4);
-}
-.amount-note{
-  font-size:11px;color:var(--text-dim);margin-top:8px;line-height:1.5;
-}
-
-.pay-btn{
-  width:100%;padding:19px;border-radius:100px;
-  background:linear-gradient(135deg,#1A6B38,#238B4A,#1A6B38);
-  background-size:200% 100%;
-  color:#fff;font-family:'Inter',sans-serif;
-  font-size:14px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;
-  border:none;cursor:pointer;position:relative;overflow:hidden;
-  box-shadow:0 10px 36px rgba(26,107,56,0.45),0 0 0 1px rgba(255,255,255,0.06);
-  transition:transform 0.25s var(--ease),box-shadow 0.25s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.pay-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 16px 48px rgba(26,107,56,0.55),0 0 0 1px rgba(255,255,255,0.1);
-}
-.pay-btn:active{transform:scale(0.98)}
-.pay-btn-shine{
-  position:absolute;inset:0;left:-100%;width:60%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
-  animation:shimmer 4s ease-in-out infinite;
-}
-
-.cancel-btn{
-  width:100%;padding:17px;border-radius:100px;margin-top:10px;
-  background:transparent;
-  color:var(--text-mid);font-family:'Inter',sans-serif;
-  font-size:13px;font-weight:400;letter-spacing:0.08em;
-  border:1px solid var(--border-warm);cursor:pointer;
-  transition:all 0.3s var(--ease);
-  -webkit-tap-highlight-color:transparent;
-}
-.cancel-btn:hover{
-  color:var(--rose);
-  border-color:rgba(232,180,200,0.35);
-  background:rgba(232,180,200,0.04);
-}
-.cancel-btn:active{transform:scale(0.98)}
-
-.modal-legal{
-  font-size:10px;color:var(--text-dim);text-align:center;
-  margin-top:18px;line-height:1.7;
-}
-
-/* ── TOAST ── */
-.toast{
-  position:fixed;top:86px;left:50%;
-  transform:translateX(-50%) translateY(-140px);
-  z-index:300;width:calc(100% - 48px);max-width:340px;
-  background:rgba(17,15,22,0.97);
-  border:1px solid rgba(201,168,76,0.3);
-  backdrop-filter:blur(30px);border-radius:22px;
-  padding:18px 20px;
-  display:flex;align-items:center;gap:14px;
-  opacity:0;pointer-events:none;
-  transition:transform 0.6s var(--ease),opacity 0.5s;
-  box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 1px rgba(201,168,76,0.06);
-}
-.toast::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent);
-}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.toast-gem{
-  width:42px;height:42px;flex-shrink:0;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,rgba(45,180,90,0.9),rgba(26,107,56,0.6));
-  border:1px solid rgba(45,180,90,0.4);
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-  box-shadow:0 0 20px rgba(45,180,90,0.3);
-}
-.toast-title{
-  font-family:'Cormorant Garamond',serif;
-  font-size:16px;font-weight:600;color:var(--pearl);margin-bottom:2px;
-}
-.toast-body{font-size:11px;color:var(--text-mid);line-height:1.5}
-
-/* ── REVEAL ── */
-.reveal{opacity:0;transform:translateY(32px)}
-.reveal.in{
-  opacity:1;transform:translateY(0);
-  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease);
-}
-
-/* ── RESPONSIVE ── */
-@media(max-width:380px){
-  .hero-headline{font-size:36px}
-  .flame-scene{width:160px;height:160px}
-  .orbit-ring-1{width:280px;height:280px}
-  .orbit-ring-2{width:210px;height:210px}
-  .orbit-ring-3{width:150px;height:150px}
-}
-
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Reservation UI Concepts</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background:#020204;
+      color:white;
+      overflow-x:hidden;
+    }
+    section {
+      min-height:100vh;
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .gold { color:#d6b25e; }
+    .glass {
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(25px);
+      box-shadow:0 40px 120px rgba(0,0,0,.6);
+    }
+    .btn {
+      border:none;
+      padding:18px 28px;
+      border-radius:999px;
+      background:linear-gradient(90deg,#ffe9aa,#d6b25e,#946820);
+      color:#050505;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 0 50px rgba(214,178,94,.25);
+    }
+    .grid-bg {
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size:50px 50px;
+      mask-image:radial-gradient(circle,black,transparent 72%);
+      opacity:.6;
+    }
+    .orb {
+      position:absolute;
+      width:420px;
+      height:420px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.8),rgba(214,178,94,.18) 35%,rgba(255,255,255,.04) 65%,transparent);
+      filter:blur(.2px);
+      animation:float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform:translateY(0) scale(1); }
+      50% { transform:translateY(-28px) scale(1.04); }
+    }
+    @keyframes scan {
+      0% { transform:translateY(-100%); opacity:0; }
+      50% { opacity:1; }
+      100% { transform:translateY(100vh); opacity:0; }
+    }
+    .concept {
+      width:min(1200px,100%);
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:40px;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+    h1 {
+      font-size:clamp(48px,9vw,118px);
+      line-height:.85;
+      letter-spacing:-.08em;
+    }
+    p { color:rgba(255,255,255,.58); line-height:1.7; font-size:18px; }
+    .card {
+      border-radius:38px;
+      padding:28px;
+    }
+    input, select, textarea {
+      width:100%;
+      margin-top:14px;
+      padding:17px 18px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.07);
+      color:white;
+      outline:none;
+    }
+    textarea { min-height:100px; }
+    .chips {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:28px 0;
+    }
+    .chip {
+      padding:10px 15px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:rgba(255,255,255,.62);
+    }
+    .scanline {
+      position:absolute;
+      left:0;
+      right:0;
+      height:2px;
+      background:linear-gradient(90deg,transparent,#d6b25e,transparent);
+      animation:scan 4s infinite;
+    }
+    .nav {
+      position:fixed;
+      top:15px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:50;
+      padding:10px;
+      border-radius:999px;
+      display:flex;
+      gap:8px;
+    }
+    .nav a {
+      color:white;
+      text-decoration:none;
+      font-size:12px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+    }
+    @media(max-width:850px){
+      .concept{grid-template-columns:1fr;}
+      section{padding:90px 18px 30px;}
+      h1{font-size:56px;}
+      .nav{width:94%; overflow:auto; justify-content:flex-start;}
+    }
+  </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-<div class="noise"></div>
-
-<div class="page">
-
-<!-- NAV -->
-<nav>
-  <div class="nav-brand">
-    <div class="nav-logo">M<span>·</span>AISON</div>
-    <div class="nav-tagline">Fine Dining &amp; Private Events</div>
-  </div>
-  <div class="nav-pill">
-    <div class="pulse"></div>
-    Accepting Reservations
-  </div>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-orbit">
-    <div class="orbit-ring orbit-ring-1"><div class="orbit-dot"></div></div>
-    <div class="orbit-ring orbit-ring-2"><div class="orbit-dot orbit-dot-2"></div></div>
-    <div class="orbit-ring orbit-ring-3"><div class="orbit-dot orbit-dot-3"></div></div>
-    <div class="flame-orb">
-      <div class="flame-outer"></div>
-      <div class="flame-core"></div>
-      <div class="flame-tip"></div>
-    </div>
-    <div class="table-ellipse te1"></div>
-    <div class="table-ellipse te2"></div>
-    <div class="table-ellipse te3"></div>
+  <div class="nav glass">
+    <a href="#lobby">Lobby</a>
+    <a href="#hologram">Hologram</a>
+    <a href="#magazine">Magazine</a>
+    <a href="#orb">Orb</a>
+    <a href="#tesla">Minimal</a>
   </div>
 
-  <div class="hero-kicker">Est. MMXVIII &nbsp;·&nbsp; New Delhi</div>
-  <h1 class="hero-headline">Where Every<br><em>Evening Becomes</em><br>a Memory</h1>
-  <p class="hero-sub">Handcrafted tasting menus. Intimate candlelit spaces. An experience designed entirely around you.</p>
-
-  <div class="hero-actions">
-    <button class="hero-cta" onclick="scrollToReservation()">
-      <div class="cta-shimmer"></div>
-      Reserve a Table
-      <div class="cta-arrow">↓</div>
-    </button>
-    <div class="hero-scroll-hint">
-      <div class="scroll-line"></div>
-      Scroll to Reserve
-      <div class="scroll-line" style="transform:scaleX(-1)"></div>
-    </div>
-  </div>
-</section>
-
-<!-- BOOKING TYPE -->
-<section class="section-wrap" id="booking-type">
-  <div class="reveal">
-    <div class="section-eyebrow">Your Experience</div>
-    <h2 class="section-title">How shall we<br><em>receive you?</em></h2>
-  </div>
-  <div class="mode-grid reveal">
-    <div class="mode-card active" id="card-table" onclick="setMode('table')">
-      <div class="card-glow card-glow-table"></div>
-      <div class="card-check">✓</div>
-      <div class="card-icon-wrap">🍽️</div>
-      <div class="card-name">Table Dining</div>
-      <div class="card-desc">Intimate dining for 1–12 guests in our curated spaces</div>
-      <div class="card-price">
-        <div class="price-num">₹299</div>
-        <div class="price-label">advance</div>
+  <!-- 1 DIGITAL LOBBY -->
+  <section id="lobby">
+    <div class="grid-bg"></div>
+    <div class="orb" style="right:-120px;top:80px;"></div>
+    <div class="concept">
+      <div>
+        <div class="chip">DIGITAL LOBBY EXPERIENCE</div>
+        <h1>Enter the <span class="gold">reservation lounge.</span></h1>
+        <p style="margin-top:28px;">A cinematic luxury welcome page that feels like entering a premium hotel lobby before booking a table, room or banquet.</p>
+        <div class="chips">
+          <span class="chip">Golden particles</span>
+          <span class="chip">Glass reception</span>
+          <span class="chip">Premium entry</span>
+        </div>
+        <button class="btn">Enter Reservation Lounge</button>
+      </div>
+      <div class="card glass">
+        <div class="scanline"></div>
+        <h2>Reception Console</h2>
+        <input placeholder="Guest name">
+        <input placeholder="Mobile number">
+        <input type="date">
+        <select>
+          <option>Table Booking</option>
+          <option>Private Room</option>
+          <option>Banquet Hall</option>
+        </select>
+        <button class="btn" style="width:100%;margin-top:18px;">Request Reservation</button>
       </div>
     </div>
-    <div class="mode-card" id="card-hall" onclick="setMode('hall')">
-      <div class="card-glow card-glow-hall"></div>
-      <div class="card-check">✓</div>
-      <div class="card-icon-wrap">🏛️</div>
-      <div class="card-name">Private Hall</div>
-      <div class="card-desc">Exclusive events &amp; banquets for larger gatherings</div>
-      <div class="card-price">
-        <div class="price-num">₹1,999</div>
-        <div class="price-label">advance</div>
+  </section>
+
+  <!-- 2 HOLOGRAM -->
+  <section id="hologram" style="background:radial-gradient(circle at center,rgba(214,178,94,.13),#020204 55%);">
+    <div class="grid-bg"></div>
+    <div class="concept">
+      <div>
+        <div class="chip">HOLOGRAPHIC RESTAURANT MAP</div>
+        <h1>Select your <span class="gold">space.</span></h1>
+        <p style="margin-top:28px;">A futuristic interface where guests select dining zones like a holographic restaurant map.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- RESERVATION FORM -->
-<section id="reservation">
-  <div class="glass-card reveal">
-    <div class="form-hdr">
-      <div class="form-eyebrow">Your Details</div>
-      <div class="form-title" id="form-title">Table Reservation</div>
-    </div>
-
-    <form class="form-body" id="res-form" onsubmit="openModal(event)">
-
-      <div class="field has-icon">
-        <label for="f-name">Guest Name <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon">👤</span>
-          <input type="text" id="f-name" placeholder="Your full name" required autocomplete="name">
-        </div>
-      </div>
-
-      <div class="field has-icon">
-        <label for="f-phone">Phone Number <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon">📞</span>
-          <input type="tel" id="f-phone" placeholder="+91 98765 43210" required autocomplete="tel">
-        </div>
-      </div>
-
-      <div class="row-2">
-        <div class="field">
-          <label for="f-date">Date <span>*</span></label>
-          <input type="date" id="f-date" required>
-        </div>
-        <div class="field">
-          <label for="f-time">Time <span>*</span></label>
-          <input type="time" id="f-time" required>
-        </div>
-      </div>
-
-      <div class="field has-icon">
-        <label for="f-guests">Guests <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon">👥</span>
-          <select id="f-guests" required>
-            <option value="" disabled selected>Select party size</option>
-            <option>1 guest</option>
-            <option>2 guests</option>
-            <option>3 guests</option>
-            <option>4 guests</option>
-            <option>5 guests</option>
-            <option>6 guests</option>
-            <option>8 guests</option>
-            <option>10 guests</option>
-            <option>12 guests</option>
-            <option>15+ guests</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="hall-fields" id="hall-fields">
-        <div class="divider"><span>Event Details</span></div>
-        <div class="field has-icon">
-          <label for="f-event">Event Type <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🎉</span>
-            <select id="f-event">
-              <option value="" disabled selected>Select occasion</option>
-              <option>Birthday Celebration</option>
-              <option>Anniversary Dinner</option>
-              <option>Wedding Reception</option>
-              <option>Corporate Gathering</option>
-              <option>Private Party</option>
-              <option>Product Launch</option>
-              <option>Other Occasion</option>
-            </select>
+      <div class="card glass" style="text-align:center;">
+        <div style="height:350px;border-radius:34px;border:1px solid rgba(214,178,94,.28);display:grid;place-items:center;background:radial-gradient(circle,rgba(214,178,94,.22),transparent 60%);">
+          <div style="width:210px;height:210px;border-radius:50%;border:1px solid #d6b25e;display:grid;place-items:center;box-shadow:0 0 80px rgba(214,178,94,.25);animation:float 5s infinite;">
+            <b class="gold">3D VENUE</b>
           </div>
         </div>
-        <div class="field has-icon">
-          <label for="f-space">Preferred Space <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🏛️</span>
-            <select id="f-space">
-              <option value="" disabled selected>Select space</option>
-              <option>Rose Hall — up to 50</option>
-              <option>Oak Terrace — up to 80</option>
-              <option>Ivory Suite — up to 20</option>
-              <option>Grand Ballroom — up to 200</option>
-              <option>Library Room — up to 14</option>
-            </select>
-          </div>
+        <div class="chips">
+          <span class="chip">Dining Area</span>
+          <span class="chip">Rooftop</span>
+          <span class="chip">Private Room</span>
+          <span class="chip">Banquet</span>
         </div>
+        <button class="btn">Book Selected Space</button>
       </div>
+    </div>
+  </section>
 
-      <div class="field">
-        <label for="f-special">Special Request</label>
-        <textarea id="f-special" placeholder="Dietary needs, occasion notes, seating preferences…"></textarea>
+  <!-- 3 MAGAZINE -->
+  <section id="magazine" style="background:linear-gradient(120deg,#030305,#101014);">
+    <div class="concept">
+      <div>
+        <div class="chip">LUXURY EDITORIAL STYLE</div>
+        <h1>Dining as an <span class="gold">occasion.</span></h1>
+        <p style="margin-top:28px;">Clean, classy, minimal, high-fashion layout. Less UI, more emotion. Best for premium restaurant branding.</p>
+        <button class="btn" style="margin-top:28px;">Reserve Now</button>
       </div>
+      <div class="card glass">
+        <h2 style="font-size:42px;">Tonight’s Signature</h2>
+        <p style="margin:20px 0;">Private dinners, candlelight tables, celebration halls and premium guest handling.</p>
+        <input placeholder="Your name">
+        <input placeholder="Guests">
+        <button class="btn" style="width:100%;margin-top:18px;">Open Booking</button>
+      </div>
+    </div>
+  </section>
 
-      <div class="advance-row">
-        <div class="adv-left">
-          <div class="adv-label">Advance to Confirm</div>
-          <div class="adv-desc" id="advance-desc">Table booking deposit</div>
+  <!-- 4 ORB -->
+  <section id="orb">
+    <div class="orb" style="left:50%;top:50%;transform:translate(-50%,-50%);"></div>
+    <div class="concept">
+      <div>
+        <div class="chip">GLASS ORB INTERFACE</div>
+        <h1>One orb. <span class="gold">All bookings.</span></h1>
+        <p style="margin-top:28px;">A unique premium UI with a floating glass orb showing live reservation status and booking energy.</p>
+      </div>
+      <div class="card glass">
+        <h2>Live Availability</h2>
+        <div class="chips">
+          <span class="chip">12 Tables Free</span>
+          <span class="chip">3 Private Rooms</span>
+          <span class="chip">1 Hall Available</span>
         </div>
-        <div class="adv-amount" id="advance-amount">₹299</div>
+        <input placeholder="Name">
+        <input placeholder="Phone">
+        <textarea placeholder="Special request"></textarea>
+        <button class="btn" style="width:100%;margin-top:18px;">Send Request</button>
       </div>
-
-      <button type="submit" class="submit-btn">
-        <div class="submit-shine"></div>
-        <span id="submit-label">Confirm Reservation</span>
-      </button>
-
-    </form>
-  </div>
-</section>
-
-</div><!-- /page -->
-
-<!-- BOTTOM BAR -->
-<div class="bottom-bar">
-  <div class="bar-info">
-    <div class="bar-mode" id="bar-mode">Table Dining · Advance</div>
-    <div class="bar-price" id="bar-price">₹299</div>
-  </div>
-  <button class="bar-btn" onclick="scrollToReservation()">Reserve →</button>
-</div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
-  <div class="modal-sheet" id="modal-sheet">
-    <div class="modal-handle"></div>
-
-    <div class="modal-gem-wrap" id="gem-wrap">
-      <div class="gem-ring"></div>
-      <div class="gem-ring gem-ring-inner"></div>
-      <div class="gem-core"></div>
     </div>
+  </section>
 
-    <div class="modal-tag-row">
-      <div class="modal-tag" id="modal-tag">Table Dining</div>
+  <!-- 5 APPLE TESLA MINIMAL -->
+  <section id="tesla" style="background:linear-gradient(to bottom,#030305,#000);">
+    <div class="concept">
+      <div>
+        <div class="chip">APPLE × TESLA × AMAN STYLE</div>
+        <h1>Quiet luxury. <span class="gold">Instant booking.</span></h1>
+        <p style="margin-top:28px;">The most premium version: less noise, huge typography, soft motion, and strong classy finish.</p>
+        <button class="btn" style="margin-top:28px;">Start Reservation</button>
+      </div>
+      <div class="card glass">
+        <h2>Reserve</h2>
+        <input placeholder="Full name">
+        <input placeholder="Phone">
+        <input type="date">
+        <input type="time">
+        <select>
+          <option>Table</option>
+          <option>Private Room</option>
+          <option>Banquet Hall</option>
+        </select>
+        <button class="btn" style="width:100%;margin-top:18px;">Continue</button>
+      </div>
     </div>
-    <div class="modal-title">Confirm &amp; Pay Advance</div>
-    <div class="modal-desc" id="modal-desc">Secure your table with a small advance. The remaining balance is settled gracefully at the restaurant.</div>
+  </section>
 
-    <div class="amount-card">
-      <div class="amount-label">Advance Amount</div>
-      <div class="amount-value" id="modal-amount">₹299</div>
-      <div class="amount-note" id="modal-note">Balance due at restaurant · Demo only</div>
-    </div>
-
-    <button class="pay-btn" onclick="simulateSuccess()">
-      <div class="pay-btn-shine"></div>
-      Simulate Payment
-    </button>
-    <button type="button" class="cancel-btn" onclick="cancelBooking()">🕯 Cancel Reservation</button>
-    <div class="modal-legal">This is a demonstration. No real payment is processed.<br>Our team will reach out to confirm your booking.</div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast">
-  <div class="toast-gem">✓</div>
-  <div>
-    <div class="toast-title">Reservation Confirmed</div>
-    <div class="toast-body" id="toast-body">Your table is secured. We look forward to welcoming you.</div>
-  </div>
-</div>
-
-<script>
-/* ── CANVAS STARFIELD + NEBULA ── */
-(function(){
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, stars=[], nebulas=[];
-
-  function resize(){
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Stars
-  for(let i=0;i<200;i++){
-    stars.push({
-      x:Math.random(),y:Math.random(),
-      r:Math.random()*1.2+0.2,
-      a:Math.random(),
-      da:0.003+Math.random()*0.008,
-      phase:Math.random()*Math.PI*2
-    });
-  }
-
-  // Nebula blobs
-  const nebulaColors=[
-    [139,26,46],[74,16,96],[201,168,76],[5,4,8]
-  ];
-  for(let i=0;i<6;i++){
-    const c=nebulaColors[i%nebulaColors.length];
-    nebulas.push({
-      x:Math.random(),y:Math.random(),
-      rx:0.15+Math.random()*0.25,
-      ry:0.1+Math.random()*0.18,
-      a:0.04+Math.random()*0.06,
-      phase:Math.random()*Math.PI*2,
-      speed:0.0004+Math.random()*0.0006,
-      col:c
-    });
-  }
-
-  let t=0;
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-
-    // Deep background
-    const bg=ctx.createRadialGradient(W/2,H*0.35,0,W/2,H*0.35,Math.max(W,H)*0.8);
-    bg.addColorStop(0,'rgba(14,10,20,1)');
-    bg.addColorStop(0.4,'rgba(8,6,14,1)');
-    bg.addColorStop(1,'rgba(3,2,6,1)');
-    ctx.fillStyle=bg;
-    ctx.fillRect(0,0,W,H);
-
-    // Nebulas
-    nebulas.forEach(n=>{
-      const nx=(n.x+Math.sin(t*n.speed+n.phase)*0.05)*W;
-      const ny=(n.y+Math.cos(t*n.speed*0.7+n.phase)*0.04)*H;
-      const rx=n.rx*W, ry=n.ry*H;
-      const grd=ctx.createRadialGradient(nx,ny,0,nx,ny,Math.max(rx,ry));
-      grd.addColorStop(0,`rgba(${n.col[0]},${n.col[1]},${n.col[2]},${n.a})`);
-      grd.addColorStop(1,`rgba(${n.col[0]},${n.col[1]},${n.col[2]},0)`);
-      ctx.save();
-      ctx.translate(nx,ny);
-      ctx.scale(1,ry/rx);
-      ctx.translate(-nx,-ny);
-      ctx.fillStyle=grd;
-      ctx.beginPath();
-      ctx.arc(nx,ny,rx,0,Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-    });
-
-    // Stars
-    stars.forEach(s=>{
-      const flicker=Math.sin(t*s.da+s.phase)*0.4;
-      const alpha=Math.max(0.05,s.a+flicker);
-      const sx=s.x*W, sy=s.y*H;
-      ctx.beginPath();
-      ctx.arc(sx,sy,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(245,238,232,${alpha})`;
-      ctx.fill();
-      // occasional glow
-      if(s.r>0.9 && alpha>0.6){
-        const glow=ctx.createRadialGradient(sx,sy,0,sx,sy,s.r*5);
-        glow.addColorStop(0,`rgba(201,168,76,${alpha*0.3})`);
-        glow.addColorStop(1,'rgba(201,168,76,0)');
-        ctx.beginPath();
-        ctx.arc(sx,sy,s.r*5,0,Math.PI*2);
-        ctx.fillStyle=glow;
-        ctx.fill();
-      }
-    });
-
-    // Gold horizon mist
-    const horizon=ctx.createLinearGradient(0,H*0.55,0,H*0.75);
-    horizon.addColorStop(0,'rgba(201,168,76,0.0)');
-    horizon.addColorStop(0.4,'rgba(139,26,46,0.04)');
-    horizon.addColorStop(1,'rgba(74,16,96,0.0)');
-    ctx.fillStyle=horizon;
-    ctx.fillRect(0,H*0.55,W,H*0.2);
-
-    t++;
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-/* ── PARTICLES ── */
-(function(){
-  const wrap=document.createElement('div');
-  wrap.style.cssText='position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden';
-  document.body.appendChild(wrap);
-  const colors=['rgba(201,168,76,','rgba(245,238,232,','rgba(232,180,200,','rgba(139,26,46,'];
-  for(let i=0;i<32;i++){
-    const el=document.createElement('div');
-    el.style.cssText=[
-      'position:absolute;border-radius:50%;opacity:0',
-      `left:${Math.random()*100}%`,
-      `top:${50+Math.random()*55}%`,
-      `width:${1.5+Math.random()*2.5}px`,
-      `height:${1.5+Math.random()*2.5}px`,
-      `background:${colors[Math.floor(Math.random()*colors.length)]}${0.3+Math.random()*0.5})`,
-      `animation:floatUp ${8+Math.random()*14}s ${Math.random()*12}s ease-in-out infinite`
-    ].join(';');
-    wrap.appendChild(el);
-  }
-  const style=document.createElement('style');
-  style.textContent=`@keyframes floatUp{0%{opacity:0;transform:translateY(0) scale(0.5)}15%{opacity:1}85%{opacity:0.4}100%{opacity:0;transform:translateY(-85vh) scale(1.1)}}`;
-  document.head.appendChild(style);
-})();
-
-/* ── STATE ── */
-let mode='table';
-const AMOUNTS={table:'₹299',hall:'₹1,999'};
-
-/* ── MIN DATE ── */
-(function(){
-  const d=document.getElementById('f-date');
-  const now=new Date();
-  d.min=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-})();
-
-/* ── MODE SWITCH ── */
-function setMode(m){
-  mode=m;
-  const isHall=m==='hall';
-  document.getElementById('card-table').classList.toggle('active',!isHall);
-  document.getElementById('card-hall').classList.toggle('active',isHall);
-  document.getElementById('hall-fields').classList.toggle('open',isHall);
-  ['f-event','f-space'].forEach(id=>{
-    isHall
-      ? document.getElementById(id).setAttribute('required','')
-      : document.getElementById(id).removeAttribute('required');
-  });
-  const amount=AMOUNTS[m];
-  const label=isHall?'Private Hall':'Table Dining';
-  document.getElementById('advance-amount').textContent=amount;
-  document.getElementById('advance-desc').textContent=isHall?'Hall & event deposit':'Table booking deposit';
-  document.getElementById('bar-mode').textContent=`${label} · Advance`;
-  document.getElementById('bar-price').textContent=amount;
-  document.getElementById('form-title').textContent=isHall?'Hall Reservation':'Table Reservation';
-  document.getElementById('submit-label').textContent=isHall?'Reserve the Hall':'Confirm Reservation';
-  document.getElementById('modal-tag').textContent=label;
-  document.getElementById('modal-amount').textContent=amount;
-  document.getElementById('modal-desc').textContent=isHall
-    ?'Secure your hall with a deposit. Our events team will personally confirm your booking.'
-    :'Secure your table with a small advance. The remaining balance is settled gracefully at the restaurant.';
-  document.getElementById('modal-note').textContent=isHall
-    ?'Full balance due before event · Demo only'
-    :'Balance due at restaurant · Demo only';
-}
-
-/* ── SCROLL ── */
-function scrollToReservation(){
-  document.getElementById('reservation').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-/* ── MODAL ── */
-function openModal(e){
-  e.preventDefault();
-  document.getElementById('modal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){
-  document.getElementById('modal').classList.remove('open');
-  document.body.style.overflow='';
-  const wrap=document.getElementById('gem-wrap');
-  wrap.classList.remove('snuffing');
-}
-function handleOverlayClick(e){
-  if(e.target===document.getElementById('modal')) closeModal();
-}
-document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal()});
-
-function cancelBooking(){
-  document.getElementById('gem-wrap').classList.add('snuffing');
-  setTimeout(closeModal,700);
-}
-
-/* ── SUCCESS ── */
-function simulateSuccess(){
-  closeModal();
-  const isHall=mode==='hall';
-  document.getElementById('toast-body').textContent=isHall
-    ?'Your hall is secured. Our events team will reach out shortly.'
-    :'Your table is confirmed. We look forward to welcoming you.';
-  const toast=document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),4800);
-  document.getElementById('res-form').reset();
-}
-
-/* ── SCROLL REVEAL ── */
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}
-  });
-},{threshold:0.08});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-</script>
 </body>
 </html>
