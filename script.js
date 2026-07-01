@@ -1,158 +1,147 @@
-const modes = {
+const data = {
   table: {
-    core: "TABLE",
     title: "Premium Table",
-    modal: "Premium Table Booking",
-    text: "Best for lunch, dinner, family dining and VIP table experiences.",
     price: "₹299",
-    seat: "A1 Premium Table"
+    first: "I would like to reserve a premium table.",
+    reply: "Of course. A premium table is perfect for lunch, dinner and family dining.",
+    ask: "How many guests should I prepare the table for?"
   },
   private: {
-    core: "PRIVATE",
     title: "Private Room",
-    modal: "Private Room Booking",
-    text: "Perfect for couples, family celebrations, business meetings and private dining.",
     price: "₹999",
-    seat: "VIP Private Room"
+    first: "I would like to book a private room.",
+    reply: "Beautiful choice. A private room is ideal for VIP dining, meetings and special evenings.",
+    ask: "Should we prepare this for a couple, family or business gathering?"
   },
   banquet: {
-    core: "BANQUET",
     title: "Banquet Hall",
-    modal: "Banquet Hall Booking",
-    text: "Designed for birthdays, parties, events, corporate dinners and grand celebrations.",
     price: "₹1999",
-    seat: "Grand Banquet Hall"
+    first: "I would like to book a banquet hall.",
+    reply: "Certainly. The banquet hall is suitable for parties, functions and grand celebrations.",
+    ask: "What type of event would you like us to arrange?"
   }
 };
 
+const chatWindow = document.getElementById("chatWindow");
+const choices = document.querySelectorAll(".choice");
+const dockOptions = document.querySelectorAll(".dock-option");
+
+const selectedTitle = document.getElementById("selectedTitle");
+const selectedPrice = document.getElementById("selectedPrice");
+
+const navReserve = document.getElementById("navReserve");
+const dockReserve = document.getElementById("dockReserve");
+const conciergeCard = document.getElementById("conciergeCard");
+
+const form = document.getElementById("reservationForm");
+
 let activeMode = "table";
 
-const cursorGlow = document.querySelector(".cursor-glow");
-const modeCards = document.querySelectorAll(".mode-card");
-const spaceNodes = document.querySelectorAll(".space-node");
-const tableDots = document.querySelectorAll(".table-dot");
-
-const coreTitle = document.getElementById("coreTitle");
-const consoleTitle = document.getElementById("consoleTitle");
-const consoleText = document.getElementById("consoleText");
-const price = document.getElementById("price");
-const dockMode = document.getElementById("dockMode");
-const dockPrice = document.getElementById("dockPrice");
-const modalTitle = document.getElementById("modalTitle");
-const modalPrice = document.getElementById("modalPrice");
-const selectedSeat = document.getElementById("selectedSeat");
-
-const modal = document.getElementById("bookingModal");
-const closeModal = document.getElementById("closeModal");
-const openButtons = document.querySelectorAll(".open-booking");
-const bookingForm = document.getElementById("bookingForm");
-const focusMap = document.getElementById("focusMap");
-const chamber = document.querySelector(".chamber");
-
-document.addEventListener("mousemove", (event) => {
-  cursorGlow.style.left = `${event.clientX}px`;
-  cursorGlow.style.top = `${event.clientY}px`;
-
-  if (window.innerWidth > 1000) {
-    const x = (event.clientX / window.innerWidth - 0.5) * 12;
-    const y = (event.clientY / window.innerHeight - 0.5) * -12;
-    chamber.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
-  }
-});
-
-document.addEventListener("mouseleave", () => {
-  chamber.style.transform = "rotateY(0deg) rotateX(0deg)";
-});
-
-function setMode(mode) {
-  activeMode = mode;
-  const data = modes[mode];
-
-  coreTitle.textContent = data.core;
-  consoleTitle.textContent = data.title;
-  consoleText.textContent = data.text;
-  price.textContent = data.price;
-  dockMode.textContent = data.title;
-  dockPrice.textContent = data.price;
-  modalTitle.textContent = data.modal;
-  modalPrice.textContent = data.price;
-  selectedSeat.textContent = data.seat;
-
-  modeCards.forEach((card) => {
-    card.classList.toggle("active", card.dataset.mode === mode);
-  });
-
-  spaceNodes.forEach((node) => {
-    node.classList.toggle("active", node.dataset.mode === mode);
-  });
+function addMessage(type, text) {
+  const msg = document.createElement("div");
+  msg.className = `message ${type}`;
+  msg.textContent = text;
+  chatWindow.appendChild(msg);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-modeCards.forEach((card) => {
-  card.addEventListener("click", () => setMode(card.dataset.mode));
-});
+function addTyping() {
+  const typing = document.createElement("div");
+  typing.className = "typing";
+  typing.innerHTML = "<i></i><i></i><i></i>";
+  chatWindow.appendChild(typing);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  return typing;
+}
 
-spaceNodes.forEach((node) => {
-  node.addEventListener("click", () => setMode(node.dataset.mode));
-});
+function botMessage(text, delay = 650) {
+  const typing = addTyping();
 
-tableDots.forEach((dot) => {
-  dot.addEventListener("click", () => {
-    tableDots.forEach((item) => item.classList.remove("active"));
-    dot.classList.add("active");
+  setTimeout(() => {
+    typing.remove();
+    addMessage("bot", text);
+  }, delay);
+}
 
-    const seat = dot.dataset.seat;
+function setMode(mode, fromUser = true) {
+  activeMode = mode;
+  const item = data[mode];
 
-    if (seat === "VIP") {
-      setMode("private");
-      selectedSeat.textContent = "VIP Private Room";
-    } else if (seat === "HALL") {
-      setMode("banquet");
-      selectedSeat.textContent = "Grand Banquet Hall";
-    } else {
-      setMode("table");
-      selectedSeat.textContent = `${seat} Premium Table`;
-    }
+  document.body.dataset.mode = mode;
+
+  selectedTitle.textContent = item.title;
+  selectedPrice.textContent = item.price;
+
+  choices.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.mode === mode);
   });
-});
 
-openButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    modal.classList.add("show");
+  dockOptions.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.mode === mode);
   });
-});
 
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("show");
-});
-
-modal.addEventListener("click", (event) => {
-  if (event.target === modal) {
-    modal.classList.remove("show");
+  if (fromUser) {
+    addMessage("user", item.first);
+    botMessage(item.reply, 700);
+    setTimeout(() => botMessage(item.ask, 700), 1250);
   }
+}
+
+choices.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setMode(btn.dataset.mode);
+  });
 });
 
-bookingForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  alert(`${modes[activeMode].title} request created for testing UI.`);
-  modal.classList.remove("show");
+dockOptions.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setMode(btn.dataset.mode);
+    conciergeCard.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
 });
 
-focusMap.addEventListener("click", () => {
-  chamber.scrollIntoView({ behavior: "smooth", block: "center" });
-  chamber.animate(
+navReserve.addEventListener("click", () => {
+  conciergeCard.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+dockReserve.addEventListener("click", () => {
+  conciergeCard.scrollIntoView({ behavior: "smooth", block: "center" });
+  conciergeCard.animate(
     [
       { transform: "scale(1)" },
-      { transform: "scale(1.06)" },
+      { transform: "scale(1.025)" },
       { transform: "scale(1)" }
     ],
     {
-      duration: 850,
+      duration: 700,
       easing: "ease-in-out"
     }
   );
 });
 
-const canvas = document.getElementById("particles");
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  addMessage("user", "I have shared my reservation details.");
+  botMessage(
+    `Thank you. Your ${data[activeMode].title.toLowerCase()} request is ready for reception confirmation.`,
+    800
+  );
+
+  form.reset();
+});
+
+function startConversation() {
+  setTimeout(() => {
+    botMessage("Good evening. Welcome to Demo Concierge.", 700);
+  }, 2300);
+
+  setTimeout(() => {
+    botMessage("What experience would you like us to arrange tonight?", 700);
+  }, 3300);
+}
+
+const canvas = document.getElementById("goldDust");
 const ctx = canvas.getContext("2d");
 
 let particles = [];
@@ -164,16 +153,15 @@ function resizeCanvas() {
 
 function createParticles() {
   particles = [];
-  const count = Math.min(90, Math.floor(window.innerWidth / 14));
+  const total = Math.min(85, Math.floor(window.innerWidth / 15));
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < total; i++) {
     particles.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       r: Math.random() * 1.8 + 0.4,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      alpha: Math.random() * 0.55 + 0.15
+      speed: Math.random() * 0.35 + 0.12,
+      alpha: Math.random() * 0.45 + 0.12
     });
   }
 }
@@ -182,15 +170,16 @@ function drawParticles() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((p) => {
-    p.x += p.vx;
-    p.y += p.vy;
+    p.y -= p.speed;
 
-    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    if (p.y < -10) {
+      p.y = canvas.height + 10;
+      p.x = Math.random() * canvas.width;
+    }
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(216, 183, 106, ${p.alpha})`;
+    ctx.fillStyle = `rgba(232, 201, 130, ${p.alpha})`;
     ctx.fill();
   });
 
@@ -205,4 +194,5 @@ window.addEventListener("resize", () => {
 resizeCanvas();
 createParticles();
 drawParticles();
-setMode("table");
+startConversation();
+setMode("table", false);
