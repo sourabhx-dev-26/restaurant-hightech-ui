@@ -1,25 +1,64 @@
-const tabButtons = document.querySelectorAll(".mode-tabs button");
-const price = document.getElementById("price");
+const modeData = {
+  table: {
+    strip: "Table Dining",
+  },
+  private: {
+    strip: "Private Room",
+  },
+  banquet: {
+    strip: "Banquet Hall",
+  },
+};
 
-tabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach((item) => item.classList.remove("active"));
-    button.classList.add("active");
-    price.textContent = button.dataset.price;
+const experiences = document.querySelectorAll(".experience");
+const tabs = document.querySelectorAll(".tabs button");
+const stripMode = document.getElementById("stripMode");
+const confirmBtn = document.getElementById("confirmBtn");
+const toast = document.getElementById("toast");
+
+function setMode(mode) {
+  experiences.forEach((item) => {
+    item.classList.toggle("active", item.dataset.mode === mode);
+  });
+
+  tabs.forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.mode === mode);
+  });
+
+  stripMode.textContent = modeData[mode].strip;
+}
+
+experiences.forEach((item) => {
+  item.addEventListener("click", () => {
+    setMode(item.dataset.mode);
   });
 });
 
-const card = document.querySelector(".reservation-card");
-
-document.addEventListener("mousemove", (event) => {
-  if (window.innerWidth < 900) return;
-
-  const x = (event.clientX / window.innerWidth - 0.5) * 10;
-  const y = (event.clientY / window.innerHeight - 0.5) * -10;
-
-  card.style.transform = `rotateY(${x - 4}deg) rotateX(${y}deg)`;
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setMode(tab.dataset.mode);
+  });
 });
 
-document.addEventListener("mouseleave", () => {
-  card.style.transform = "rotateY(-4deg) rotateX(0deg)";
+confirmBtn.addEventListener("click", () => {
+  toast.classList.add("show");
+
+  confirmBtn.animate(
+    [
+      { transform: "rotate(-6deg) scale(1)" },
+      { transform: "rotate(-6deg) scale(0.9)" },
+      { transform: "rotate(-6deg) scale(1.05)" },
+      { transform: "rotate(-6deg) scale(1)" },
+    ],
+    {
+      duration: 650,
+      easing: "ease-in-out",
+    }
+  );
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
 });
+
+setMode("table");
