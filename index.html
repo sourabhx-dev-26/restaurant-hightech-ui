@@ -1,295 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Luxury Reservation UI</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  min-height:100vh;
-  background:#020204;
-  color:white;
-  font-family:Arial,Helvetica,sans-serif;
-  overflow-x:hidden;
-}
-.bg{
-  position:fixed;inset:0;
-  background:
-    radial-gradient(circle at 18% 20%,rgba(214,178,94,.28),transparent 30%),
-    radial-gradient(circle at 85% 15%,rgba(255,225,150,.14),transparent 28%),
-    linear-gradient(135deg,#020204,#090910 55%,#000);
-  z-index:-3;
-}
-.grid{
-  position:fixed;inset:0;
-  background:
-    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
-  background-size:44px 44px;
-  mask-image:radial-gradient(circle,black,transparent 75%);
-  z-index:-2;
-  animation:moveGrid 12s linear infinite;
-}
-.orb{
-  position:fixed;
-  width:360px;height:360px;border-radius:50%;
-  right:-120px;top:120px;
-  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(214,178,94,.22) 38%,rgba(255,255,255,.04) 70%,transparent);
-  filter:blur(.2px);
-  animation:float 5s ease-in-out infinite;
-  z-index:-1;
-}
-.wrapper{
-  width:min(1180px,100%);
-  min-height:100vh;
-  margin:auto;
-  padding:22px;
-  display:grid;
-  grid-template-rows:auto 1fr;
-}
-nav{
-  display:flex;justify-content:space-between;align-items:center;
-  animation:down .8s ease both;
-}
-.logo{display:flex;gap:12px;align-items:center}
-.logo-icon{
-  width:48px;height:48px;border-radius:18px;
-  display:grid;place-items:center;
-  border:1px solid rgba(214,178,94,.35);
-  background:rgba(214,178,94,.1);
-  box-shadow:0 0 45px rgba(214,178,94,.22);
-}
-.logo small{color:#d6b25e;letter-spacing:.4em;font-size:10px}
-.logo b{font-size:18px}
-.nav-pill{
-  display:none;
-  padding:12px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.05);
-  backdrop-filter:blur(18px);
-  color:rgba(255,255,255,.6);
-}
-.hero{
-  display:grid;
-  grid-template-columns:1fr 440px;
-  gap:34px;
-  align-items:center;
-}
-.left{animation:rise .9s ease both .1s}
-.badge{
-  display:inline-flex;
-  padding:10px 15px;
-  border-radius:999px;
-  border:1px solid rgba(214,178,94,.25);
-  background:rgba(214,178,94,.1);
-  color:#f7dda0;
-  margin-bottom:22px;
-}
-h1{
-  font-size:clamp(52px,9vw,108px);
-  line-height:.84;
-  letter-spacing:-.08em;
-}
-.gold{
-  color:#d6b25e;
-  text-shadow:0 0 45px rgba(214,178,94,.35);
-}
-.desc{
-  margin-top:24px;
-  max-width:620px;
-  color:rgba(255,255,255,.58);
-  font-size:18px;
-  line-height:1.7;
-}
-.chips{
-  display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;
-}
-.chip{
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.055);
-  color:rgba(255,255,255,.58);
-  backdrop-filter:blur(16px);
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:28px;
-  max-width:640px;
-}
-.stat{
-  padding:18px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.05);
-  backdrop-filter:blur(18px);
-}
-.stat b{display:block;color:#f7dda0;font-size:26px}
-.stat span{font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.18em}
-.panel{
-  position:relative;
-  overflow:hidden;
-  border-radius:36px;
-  padding:24px;
-  border:1px solid rgba(214,178,94,.28);
-  background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),rgba(0,0,0,.5);
-  backdrop-filter:blur(28px);
-  box-shadow:0 50px 130px rgba(0,0,0,.75);
-  animation:pop .9s ease both .2s;
-}
-.panel:before{
-  content:"";
-  position:absolute;left:18px;right:18px;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,#f7dda0,transparent);
-  animation:scan 3s ease-in-out infinite;
-}
-.panel h2{font-size:30px;margin-bottom:8px}
-.panel p{color:rgba(255,255,255,.42);line-height:1.6;font-size:14px}
-.tabs{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:8px;margin:20px 0;
-  padding:7px;border-radius:22px;
-  background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.1);
-}
-.tabs button{
-  border:0;border-radius:16px;padding:12px 8px;
-  background:transparent;color:rgba(255,255,255,.45);
-  font-weight:900;
-}
-.tabs button.active{
-  background:linear-gradient(90deg,#ffe8a8,#d6b25e,#9c6c24);
-  color:#050505;
-  box-shadow:0 0 35px rgba(214,178,94,.22);
-}
-input,select,textarea{
-  width:100%;
-  margin-top:12px;
-  padding:16px 17px;
-  border-radius:19px;
-  border:1px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.06);
-  color:white;
-  outline:none;
-}
-textarea{min-height:86px;resize:none}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.price{
-  margin-top:14px;padding:16px;
-  border-radius:22px;
-  border:1px solid rgba(214,178,94,.24);
-  background:rgba(214,178,94,.1);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.price b{font-size:28px;color:#f7dda0}
-.btn{
-  width:100%;margin-top:14px;
-  border:0;border-radius:20px;
-  padding:17px;
-  background:linear-gradient(90deg,#ffe8a8,#d6b25e,#9c6c24);
-  color:#050505;font-weight:950;
-  box-shadow:0 0 55px rgba(214,178,94,.25);
-}
-.btn:active{transform:scale(.98)}
-@keyframes float{50%{transform:translateY(-28px) scale(1.04)}}
-@keyframes moveGrid{to{background-position:44px 44px}}
-@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes down{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pop{from{opacity:0;transform:translateX(35px) scale(.94)}to{opacity:1;transform:none}}
-@keyframes scan{50%{top:100%;opacity:.85}}
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr;gap:24px;padding-top:38px}
-  .panel{border-radius:30px}
-  .stats{grid-template-columns:1fr 1fr}
-  .nav-pill{display:none}
-}
-@media(min-width:700px){.nav-pill{display:block}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Noir Reservation UI</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-<div class="bg"></div>
-<div class="grid"></div>
-<div class="orb"></div>
+  <div class="bg-glow"></div>
+  <div class="noise"></div>
 
-<div class="wrapper">
-  <nav>
-    <div class="logo">
-      <div class="logo-icon">✦</div>
-      <div>
-        <small>DEMO</small><br>
-        <b>Luxury Reservations</b>
-      </div>
-    </div>
-    <div class="nav-pill">Table · Private Room · Banquet</div>
-  </nav>
-
-  <main class="hero">
-    <section class="left">
-      <div class="badge">Premium animated reservation experience</div>
-      <h1>Reserve with <span class="gold">class.</span></h1>
-      <p class="desc">
-        A futuristic luxury booking page for table reservations, private rooms,
-        banquet halls, advance payments, and reception confirmation.
-      </p>
-
-      <div class="chips">
-        <span class="chip">Live Reception Flow</span>
-        <span class="chip">Advance Payment</span>
-        <span class="chip">VIP Dining</span>
-      </div>
-
-      <div class="stats">
-        <div class="stat"><b>₹299</b><span>TABLE</span></div>
-        <div class="stat"><b>₹999</b><span>PRIVATE</span></div>
-        <div class="stat"><b>₹1999</b><span>BANQUET</span></div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>Reservation Console</h2>
-      <p>Select your experience and send a premium reservation request.</p>
-
-      <div class="tabs">
-        <button class="active" onclick="setMode(this,'₹299')">Table</button>
-        <button onclick="setMode(this,'₹999')">Private</button>
-        <button onclick="setMode(this,'₹1999')">Banquet</button>
-      </div>
-
-      <input placeholder="Guest name">
-      <input placeholder="+91 Mobile number">
-
-      <div class="row">
-        <input type="date">
-        <input type="time">
-      </div>
-
-      <input placeholder="Number of guests">
-      <textarea placeholder="Special request"></textarea>
-
-      <div class="price">
+  <main class="app">
+    <nav class="navbar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
         <div>
-          <small>ADVANCE PREVIEW</small>
-          <b id="price">₹299</b>
+          <span>DEMO</span>
+          <h1>Reserve OS</h1>
         </div>
-        <span class="chip">Pending</span>
       </div>
 
-      <button class="btn">Continue Reservation</button>
+      <button class="nav-btn">Book Now</button>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow">NEON NOIR LUXURY DINING</div>
+
+        <h2>
+          Reserve your
+          <span>premium table</span>
+          like never before.
+        </h2>
+
+        <p>
+          A futuristic reservation experience for tables, private rooms,
+          banquet halls, advance payments, and reception confirmation.
+        </p>
+
+        <div class="hero-actions">
+          <button class="primary-btn">Start Reservation</button>
+          <button class="ghost-btn">View Spaces</button>
+        </div>
+
+        <div class="stats">
+          <div>
+            <strong>₹299</strong>
+            <small>Table Advance</small>
+          </div>
+          <div>
+            <strong>₹999</strong>
+            <small>Private Room</small>
+          </div>
+          <div>
+            <strong>₹1999</strong>
+            <small>Banquet Hall</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="reservation-card">
+        <div class="card-light"></div>
+
+        <div class="card-head">
+          <div>
+            <span>LIVE CONSOLE</span>
+            <h3>Reservation Request</h3>
+          </div>
+          <div class="live-dot">Live</div>
+        </div>
+
+        <div class="mode-tabs">
+          <button class="active" data-price="₹299">Table</button>
+          <button data-price="₹999">Private</button>
+          <button data-price="₹1999">Banquet</button>
+        </div>
+
+        <form>
+          <input type="text" placeholder="Guest name" />
+          <input type="tel" placeholder="+91 Mobile number" />
+
+          <div class="two-grid">
+            <input type="date" />
+            <input type="time" />
+          </div>
+
+          <input type="text" placeholder="Number of guests" />
+          <textarea placeholder="Special request"></textarea>
+
+          <div class="price-box">
+            <div>
+              <small>ADVANCE PREVIEW</small>
+              <strong id="price">₹299</strong>
+            </div>
+            <span>Pending</span>
+          </div>
+
+          <button class="submit-btn" type="button">
+            Continue Reservation
+          </button>
+        </form>
+      </div>
     </section>
   </main>
-</div>
 
-<script>
-function setMode(btn, price){
-  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('price').innerText = price;
-}
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
