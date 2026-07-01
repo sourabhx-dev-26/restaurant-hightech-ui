@@ -1,284 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Premium Reservation UI Concepts</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      background:#020204;
-      color:white;
-      overflow-x:hidden;
-    }
-    section {
-      min-height:100vh;
-      padding:28px;
-      position:relative;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .gold { color:#d6b25e; }
-    .glass {
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      backdrop-filter:blur(25px);
-      box-shadow:0 40px 120px rgba(0,0,0,.6);
-    }
-    .btn {
-      border:none;
-      padding:18px 28px;
-      border-radius:999px;
-      background:linear-gradient(90deg,#ffe9aa,#d6b25e,#946820);
-      color:#050505;
-      font-weight:900;
-      cursor:pointer;
-      box-shadow:0 0 50px rgba(214,178,94,.25);
-    }
-    .grid-bg {
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size:50px 50px;
-      mask-image:radial-gradient(circle,black,transparent 72%);
-      opacity:.6;
-    }
-    .orb {
-      position:absolute;
-      width:420px;
-      height:420px;
-      border-radius:50%;
-      background:radial-gradient(circle at 35% 25%,rgba(255,255,255,.8),rgba(214,178,94,.18) 35%,rgba(255,255,255,.04) 65%,transparent);
-      filter:blur(.2px);
-      animation:float 6s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%,100% { transform:translateY(0) scale(1); }
-      50% { transform:translateY(-28px) scale(1.04); }
-    }
-    @keyframes scan {
-      0% { transform:translateY(-100%); opacity:0; }
-      50% { opacity:1; }
-      100% { transform:translateY(100vh); opacity:0; }
-    }
-    .concept {
-      width:min(1200px,100%);
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:40px;
-      align-items:center;
-      position:relative;
-      z-index:2;
-    }
-    h1 {
-      font-size:clamp(48px,9vw,118px);
-      line-height:.85;
-      letter-spacing:-.08em;
-    }
-    p { color:rgba(255,255,255,.58); line-height:1.7; font-size:18px; }
-    .card {
-      border-radius:38px;
-      padding:28px;
-    }
-    input, select, textarea {
-      width:100%;
-      margin-top:14px;
-      padding:17px 18px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.07);
-      color:white;
-      outline:none;
-    }
-    textarea { min-height:100px; }
-    .chips {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:28px 0;
-    }
-    .chip {
-      padding:10px 15px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:rgba(255,255,255,.62);
-    }
-    .scanline {
-      position:absolute;
-      left:0;
-      right:0;
-      height:2px;
-      background:linear-gradient(90deg,transparent,#d6b25e,transparent);
-      animation:scan 4s infinite;
-    }
-    .nav {
-      position:fixed;
-      top:15px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:50;
-      padding:10px;
-      border-radius:999px;
-      display:flex;
-      gap:8px;
-    }
-    .nav a {
-      color:white;
-      text-decoration:none;
-      font-size:12px;
-      padding:10px 14px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-    }
-    @media(max-width:850px){
-      .concept{grid-template-columns:1fr;}
-      section{padding:90px 18px 30px;}
-      h1{font-size:56px;}
-      .nav{width:94%; overflow:auto; justify-content:flex-start;}
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Luxury Reservation UI</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  min-height:100vh;
+  background:#020204;
+  color:white;
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+}
+.bg{
+  position:fixed;inset:0;
+  background:
+    radial-gradient(circle at 18% 20%,rgba(214,178,94,.28),transparent 30%),
+    radial-gradient(circle at 85% 15%,rgba(255,225,150,.14),transparent 28%),
+    linear-gradient(135deg,#020204,#090910 55%,#000);
+  z-index:-3;
+}
+.grid{
+  position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:radial-gradient(circle,black,transparent 75%);
+  z-index:-2;
+  animation:moveGrid 12s linear infinite;
+}
+.orb{
+  position:fixed;
+  width:360px;height:360px;border-radius:50%;
+  right:-120px;top:120px;
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.75),rgba(214,178,94,.22) 38%,rgba(255,255,255,.04) 70%,transparent);
+  filter:blur(.2px);
+  animation:float 5s ease-in-out infinite;
+  z-index:-1;
+}
+.wrapper{
+  width:min(1180px,100%);
+  min-height:100vh;
+  margin:auto;
+  padding:22px;
+  display:grid;
+  grid-template-rows:auto 1fr;
+}
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  animation:down .8s ease both;
+}
+.logo{display:flex;gap:12px;align-items:center}
+.logo-icon{
+  width:48px;height:48px;border-radius:18px;
+  display:grid;place-items:center;
+  border:1px solid rgba(214,178,94,.35);
+  background:rgba(214,178,94,.1);
+  box-shadow:0 0 45px rgba(214,178,94,.22);
+}
+.logo small{color:#d6b25e;letter-spacing:.4em;font-size:10px}
+.logo b{font-size:18px}
+.nav-pill{
+  display:none;
+  padding:12px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(18px);
+  color:rgba(255,255,255,.6);
+}
+.hero{
+  display:grid;
+  grid-template-columns:1fr 440px;
+  gap:34px;
+  align-items:center;
+}
+.left{animation:rise .9s ease both .1s}
+.badge{
+  display:inline-flex;
+  padding:10px 15px;
+  border-radius:999px;
+  border:1px solid rgba(214,178,94,.25);
+  background:rgba(214,178,94,.1);
+  color:#f7dda0;
+  margin-bottom:22px;
+}
+h1{
+  font-size:clamp(52px,9vw,108px);
+  line-height:.84;
+  letter-spacing:-.08em;
+}
+.gold{
+  color:#d6b25e;
+  text-shadow:0 0 45px rgba(214,178,94,.35);
+}
+.desc{
+  margin-top:24px;
+  max-width:620px;
+  color:rgba(255,255,255,.58);
+  font-size:18px;
+  line-height:1.7;
+}
+.chips{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;
+}
+.chip{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  color:rgba(255,255,255,.58);
+  backdrop-filter:blur(16px);
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:28px;
+  max-width:640px;
+}
+.stat{
+  padding:18px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(18px);
+}
+.stat b{display:block;color:#f7dda0;font-size:26px}
+.stat span{font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.18em}
+.panel{
+  position:relative;
+  overflow:hidden;
+  border-radius:36px;
+  padding:24px;
+  border:1px solid rgba(214,178,94,.28);
+  background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),rgba(0,0,0,.5);
+  backdrop-filter:blur(28px);
+  box-shadow:0 50px 130px rgba(0,0,0,.75);
+  animation:pop .9s ease both .2s;
+}
+.panel:before{
+  content:"";
+  position:absolute;left:18px;right:18px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,#f7dda0,transparent);
+  animation:scan 3s ease-in-out infinite;
+}
+.panel h2{font-size:30px;margin-bottom:8px}
+.panel p{color:rgba(255,255,255,.42);line-height:1.6;font-size:14px}
+.tabs{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin:20px 0;
+  padding:7px;border-radius:22px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.1);
+}
+.tabs button{
+  border:0;border-radius:16px;padding:12px 8px;
+  background:transparent;color:rgba(255,255,255,.45);
+  font-weight:900;
+}
+.tabs button.active{
+  background:linear-gradient(90deg,#ffe8a8,#d6b25e,#9c6c24);
+  color:#050505;
+  box-shadow:0 0 35px rgba(214,178,94,.22);
+}
+input,select,textarea{
+  width:100%;
+  margin-top:12px;
+  padding:16px 17px;
+  border-radius:19px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.06);
+  color:white;
+  outline:none;
+}
+textarea{min-height:86px;resize:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.price{
+  margin-top:14px;padding:16px;
+  border-radius:22px;
+  border:1px solid rgba(214,178,94,.24);
+  background:rgba(214,178,94,.1);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.price b{font-size:28px;color:#f7dda0}
+.btn{
+  width:100%;margin-top:14px;
+  border:0;border-radius:20px;
+  padding:17px;
+  background:linear-gradient(90deg,#ffe8a8,#d6b25e,#9c6c24);
+  color:#050505;font-weight:950;
+  box-shadow:0 0 55px rgba(214,178,94,.25);
+}
+.btn:active{transform:scale(.98)}
+@keyframes float{50%{transform:translateY(-28px) scale(1.04)}}
+@keyframes moveGrid{to{background-position:44px 44px}}
+@keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes down{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{from{opacity:0;transform:translateX(35px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes scan{50%{top:100%;opacity:.85}}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:24px;padding-top:38px}
+  .panel{border-radius:30px}
+  .stats{grid-template-columns:1fr 1fr}
+  .nav-pill{display:none}
+}
+@media(min-width:700px){.nav-pill{display:block}}
+</style>
 </head>
+
 <body>
+<div class="bg"></div>
+<div class="grid"></div>
+<div class="orb"></div>
 
-  <div class="nav glass">
-    <a href="#lobby">Lobby</a>
-    <a href="#hologram">Hologram</a>
-    <a href="#magazine">Magazine</a>
-    <a href="#orb">Orb</a>
-    <a href="#tesla">Minimal</a>
-  </div>
-
-  <!-- 1 DIGITAL LOBBY -->
-  <section id="lobby">
-    <div class="grid-bg"></div>
-    <div class="orb" style="right:-120px;top:80px;"></div>
-    <div class="concept">
+<div class="wrapper">
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">✦</div>
       <div>
-        <div class="chip">DIGITAL LOBBY EXPERIENCE</div>
-        <h1>Enter the <span class="gold">reservation lounge.</span></h1>
-        <p style="margin-top:28px;">A cinematic luxury welcome page that feels like entering a premium hotel lobby before booking a table, room or banquet.</p>
-        <div class="chips">
-          <span class="chip">Golden particles</span>
-          <span class="chip">Glass reception</span>
-          <span class="chip">Premium entry</span>
-        </div>
-        <button class="btn">Enter Reservation Lounge</button>
-      </div>
-      <div class="card glass">
-        <div class="scanline"></div>
-        <h2>Reception Console</h2>
-        <input placeholder="Guest name">
-        <input placeholder="Mobile number">
-        <input type="date">
-        <select>
-          <option>Table Booking</option>
-          <option>Private Room</option>
-          <option>Banquet Hall</option>
-        </select>
-        <button class="btn" style="width:100%;margin-top:18px;">Request Reservation</button>
+        <small>DEMO</small><br>
+        <b>Luxury Reservations</b>
       </div>
     </div>
-  </section>
+    <div class="nav-pill">Table · Private Room · Banquet</div>
+  </nav>
 
-  <!-- 2 HOLOGRAM -->
-  <section id="hologram" style="background:radial-gradient(circle at center,rgba(214,178,94,.13),#020204 55%);">
-    <div class="grid-bg"></div>
-    <div class="concept">
-      <div>
-        <div class="chip">HOLOGRAPHIC RESTAURANT MAP</div>
-        <h1>Select your <span class="gold">space.</span></h1>
-        <p style="margin-top:28px;">A futuristic interface where guests select dining zones like a holographic restaurant map.</p>
-      </div>
-      <div class="card glass" style="text-align:center;">
-        <div style="height:350px;border-radius:34px;border:1px solid rgba(214,178,94,.28);display:grid;place-items:center;background:radial-gradient(circle,rgba(214,178,94,.22),transparent 60%);">
-          <div style="width:210px;height:210px;border-radius:50%;border:1px solid #d6b25e;display:grid;place-items:center;box-shadow:0 0 80px rgba(214,178,94,.25);animation:float 5s infinite;">
-            <b class="gold">3D VENUE</b>
-          </div>
-        </div>
-        <div class="chips">
-          <span class="chip">Dining Area</span>
-          <span class="chip">Rooftop</span>
-          <span class="chip">Private Room</span>
-          <span class="chip">Banquet</span>
-        </div>
-        <button class="btn">Book Selected Space</button>
-      </div>
-    </div>
-  </section>
+  <main class="hero">
+    <section class="left">
+      <div class="badge">Premium animated reservation experience</div>
+      <h1>Reserve with <span class="gold">class.</span></h1>
+      <p class="desc">
+        A futuristic luxury booking page for table reservations, private rooms,
+        banquet halls, advance payments, and reception confirmation.
+      </p>
 
-  <!-- 3 MAGAZINE -->
-  <section id="magazine" style="background:linear-gradient(120deg,#030305,#101014);">
-    <div class="concept">
-      <div>
-        <div class="chip">LUXURY EDITORIAL STYLE</div>
-        <h1>Dining as an <span class="gold">occasion.</span></h1>
-        <p style="margin-top:28px;">Clean, classy, minimal, high-fashion layout. Less UI, more emotion. Best for premium restaurant branding.</p>
-        <button class="btn" style="margin-top:28px;">Reserve Now</button>
+      <div class="chips">
+        <span class="chip">Live Reception Flow</span>
+        <span class="chip">Advance Payment</span>
+        <span class="chip">VIP Dining</span>
       </div>
-      <div class="card glass">
-        <h2 style="font-size:42px;">Tonight’s Signature</h2>
-        <p style="margin:20px 0;">Private dinners, candlelight tables, celebration halls and premium guest handling.</p>
-        <input placeholder="Your name">
-        <input placeholder="Guests">
-        <button class="btn" style="width:100%;margin-top:18px;">Open Booking</button>
-      </div>
-    </div>
-  </section>
 
-  <!-- 4 ORB -->
-  <section id="orb">
-    <div class="orb" style="left:50%;top:50%;transform:translate(-50%,-50%);"></div>
-    <div class="concept">
-      <div>
-        <div class="chip">GLASS ORB INTERFACE</div>
-        <h1>One orb. <span class="gold">All bookings.</span></h1>
-        <p style="margin-top:28px;">A unique premium UI with a floating glass orb showing live reservation status and booking energy.</p>
+      <div class="stats">
+        <div class="stat"><b>₹299</b><span>TABLE</span></div>
+        <div class="stat"><b>₹999</b><span>PRIVATE</span></div>
+        <div class="stat"><b>₹1999</b><span>BANQUET</span></div>
       </div>
-      <div class="card glass">
-        <h2>Live Availability</h2>
-        <div class="chips">
-          <span class="chip">12 Tables Free</span>
-          <span class="chip">3 Private Rooms</span>
-          <span class="chip">1 Hall Available</span>
-        </div>
-        <input placeholder="Name">
-        <input placeholder="Phone">
-        <textarea placeholder="Special request"></textarea>
-        <button class="btn" style="width:100%;margin-top:18px;">Send Request</button>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 5 APPLE TESLA MINIMAL -->
-  <section id="tesla" style="background:linear-gradient(to bottom,#030305,#000);">
-    <div class="concept">
-      <div>
-        <div class="chip">APPLE × TESLA × AMAN STYLE</div>
-        <h1>Quiet luxury. <span class="gold">Instant booking.</span></h1>
-        <p style="margin-top:28px;">The most premium version: less noise, huge typography, soft motion, and strong classy finish.</p>
-        <button class="btn" style="margin-top:28px;">Start Reservation</button>
+    <section class="panel">
+      <h2>Reservation Console</h2>
+      <p>Select your experience and send a premium reservation request.</p>
+
+      <div class="tabs">
+        <button class="active" onclick="setMode(this,'₹299')">Table</button>
+        <button onclick="setMode(this,'₹999')">Private</button>
+        <button onclick="setMode(this,'₹1999')">Banquet</button>
       </div>
-      <div class="card glass">
-        <h2>Reserve</h2>
-        <input placeholder="Full name">
-        <input placeholder="Phone">
+
+      <input placeholder="Guest name">
+      <input placeholder="+91 Mobile number">
+
+      <div class="row">
         <input type="date">
         <input type="time">
-        <select>
-          <option>Table</option>
-          <option>Private Room</option>
-          <option>Banquet Hall</option>
-        </select>
-        <button class="btn" style="width:100%;margin-top:18px;">Continue</button>
       </div>
-    </div>
-  </section>
+
+      <input placeholder="Number of guests">
+      <textarea placeholder="Special request"></textarea>
+
+      <div class="price">
+        <div>
+          <small>ADVANCE PREVIEW</small>
+          <b id="price">₹299</b>
+        </div>
+        <span class="chip">Pending</span>
+      </div>
+
+      <button class="btn">Continue Reservation</button>
+    </section>
+  </main>
+</div>
+
+<script>
+function setMode(btn, price){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('price').innerText = price;
+}
+</script>
 
 </body>
 </html>
